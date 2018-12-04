@@ -43,6 +43,7 @@
             this.buttonOpenCreateCros.TabIndex = 0;
             this.buttonOpenCreateCros.Text = "Создать кроссворд";
             this.buttonOpenCreateCros.UseVisualStyleBackColor = true;
+            this.buttonOpenCreateCros.Click += new System.EventHandler(this.buttonOpenCreateCros_Click);
             // 
             // buttonOpenEditCros
             // 

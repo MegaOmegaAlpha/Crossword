@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crossword.Admin;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +13,7 @@ namespace Crossword
 {
     public partial class FormAdmin : Form
     {
-        FormMain formMain;
+        private FormMain formMain;
         public FormAdmin(FormMain formMain)
         {
             this.formMain = formMain;
@@ -23,6 +24,13 @@ namespace Crossword
         {           
             formMain.Visible = true;
             Close();
+        }
+
+        private void buttonOpenCreateCros_Click(object sender, EventArgs e)
+        {
+            FormBeforeCreate formBefore = new FormBeforeCreate(this);
+            formBefore.Show();
+            Visible = false;
         }
     }
 }
