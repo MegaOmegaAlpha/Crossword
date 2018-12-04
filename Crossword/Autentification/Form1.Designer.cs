@@ -35,6 +35,7 @@
             this.labelPassword = new System.Windows.Forms.Label();
             this.buttonRegistration = new System.Windows.Forms.Button();
             this.buttonInfo = new System.Windows.Forms.Button();
+            this.labelConnect = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBoxLogin
@@ -99,11 +100,22 @@
             this.buttonInfo.Text = "Информация";
             this.buttonInfo.UseVisualStyleBackColor = true;
             // 
+            // labelConnect
+            // 
+            this.labelConnect.AutoSize = true;
+            this.labelConnect.Location = new System.Drawing.Point(9, 9);
+            this.labelConnect.Name = "labelConnect";
+            this.labelConnect.Size = new System.Drawing.Size(35, 13);
+            this.labelConnect.TabIndex = 8;
+            this.labelConnect.Text = "label1";
+            this.labelConnect.Visible = false;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(260, 215);
+            this.Controls.Add(this.labelConnect);
             this.Controls.Add(this.buttonInfo);
             this.Controls.Add(this.buttonRegistration);
             this.Controls.Add(this.labelPassword);
@@ -129,6 +141,7 @@
         private System.Windows.Forms.Label labelPassword;
         private System.Windows.Forms.Button buttonRegistration;
         private System.Windows.Forms.Button buttonInfo;
+        private System.Windows.Forms.Label labelConnect;
     }
 }
 
