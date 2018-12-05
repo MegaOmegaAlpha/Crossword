@@ -89,50 +89,58 @@ namespace Crossword.Admin
             //таблицу в контейнер
             TableContainer.Controls.Add(tableLayoutPanel);
 
+            textBoxCurrentDict.Text = fileDict;
+
             //dictionary
-            StreamReader reader = new StreamReader(fileDict);
+            StreamReader reader = new StreamReader(fileDict, Encoding.GetEncoding("Windows-1251"));
             string dataFromFile = "";
             dictionary = new Dictionary<string, string>();
-            while (dataFromFile != null)
+            try
             {
-                dataFromFile = reader.ReadLine();
-                if (dataFromFile != null)
+                while (dataFromFile != null)
                 {
-                    string[] stringArr = dataFromFile.Split(' ');
-                    string notion = stringArr[0];
-                    string def = "";
-                    for (int i = 1; i < stringArr.Length; i++)
+                    dataFromFile = reader.ReadLine();
+                    if (dataFromFile != null)
                     {
-                        def += " " + stringArr[i];
+                        string[] stringArr = dataFromFile.Split(' ');
+                        string notion = stringArr[0];
+                        string def = "";
+                        for (int i = 1; i < stringArr.Length; i++)
+                        {
+                            def += " " + stringArr[i];
+                        }
+                        dictionary.Add(notion.ToUpper(), def.ToLower());
+                        listBoxDict.Items.Add(notion);
                     }
-                    dictionary.Add(notion.ToUpper(), def.ToLower());
-                    listBoxDict.Items.Add(notion);
                 }
+            }
+            catch(ArgumentException)
+            {
+                MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+                formBefore.Visible = true;
+                Close();
             }
         }
 
-        private void buttonSortLen_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private bool isSorted;
-        private void sort()
+        private bool isSortedLet;
+        private void sortLetter()
         {
             List<string> strings = new List<string>();
             for (int i = 0; i < listBoxDict.Items.Count; i++)
             {
                 strings.Add(listBoxDict.Items[i].ToString());
             }
-            if (!isSorted)
+            if (!isSortedLet)
             {
                 strings.Sort();
-                isSorted = true;
+                isSortedLet = true;
             }
             else
             {
                 strings.Sort(delegate (string s1, string s2) { return -s1.CompareTo(s2); });
-                isSorted = false;
+                isSortedLet = false;
             }
             listBoxDict.Items.Clear();
             foreach (string str in strings)
@@ -140,15 +148,90 @@ namespace Crossword.Admin
                 listBoxDict.Items.Add(str);
             }
         }
+
         private void buttonSort_Click(object sender, EventArgs e)
         {
-            sort();
+            sortLetter();
+        }
+
+        private bool isSortLen;
+        private void sortLen()
+        {
+            List<string> strings = new List<string>();
+            for (int i = 0; i < listBoxDict.Items.Count; i++)
+            {
+                strings.Add(listBoxDict.Items[i].ToString());
+            }
+            if (!isSortLen)
+            {
+                strings.Sort(delegate (string s1, string s2) { return s1.Length.CompareTo(s2.Length); });
+                isSortLen = true;
+            }
+            else
+            {
+                strings.Sort(delegate (string s1, string s2) { return -s1.Length.CompareTo(s2.Length); });
+                isSortLen = false;
+            }
+            listBoxDict.Items.Clear();
+            foreach (string str in strings)
+            {
+                listBoxDict.Items.Add(str);
+            }
+        }
+
+        private void buttonSortLen_Click(object sender, EventArgs e)
+        {
+            sortLen();
         }
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
             formBefore.Visible = true;
             Close();
+        }
+
+        private void buttonDir_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text |*.txt";
+            openFileDialog.Title = "Открыть словарь";
+            openFileDialog.ShowDialog();
+            if (openFileDialog.FileName != null)
+            {
+                textBoxCurrentDict.Text = openFileDialog.FileName;
+                fileDict = openFileDialog.FileName;
+                StreamReader reader = new StreamReader(fileDict, Encoding.GetEncoding("Windows-1251"));
+                string dataFromFile = "";
+                dictionary.Clear();
+                listBoxDict.Items.Clear();
+                try
+                {
+                    while (dataFromFile != null)
+                    {
+                        dataFromFile = reader.ReadLine();
+                        if (dataFromFile != null)
+                        {
+                            string[] stringArr = dataFromFile.Split(' ');
+                            string notion = stringArr[0];
+                            string def = "";
+                            for (int i = 1; i < stringArr.Length; i++)
+                            {
+                                def += " " + stringArr[i];
+                            }
+                            dictionary.Add(notion.ToUpper(), def.ToLower());
+                            listBoxDict.Items.Add(notion);
+                        }
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                    formBefore.Visible = true;
+                    Close();
+                }
+            }
         }
 
         private void GridButtonClicked(object sender, EventArgs e)

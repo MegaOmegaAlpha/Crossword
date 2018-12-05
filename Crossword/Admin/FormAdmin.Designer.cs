@@ -63,6 +63,7 @@
             this.buttonOpenCreateDict.TabIndex = 2;
             this.buttonOpenCreateDict.Text = "Создать словарь понятий";
             this.buttonOpenCreateDict.UseVisualStyleBackColor = true;
+            this.buttonOpenCreateDict.Click += new System.EventHandler(this.buttonOpenCreateDict_Click);
             // 
             // buttonOpenEditDict
             // 
@@ -72,6 +73,7 @@
             this.buttonOpenEditDict.TabIndex = 3;
             this.buttonOpenEditDict.Text = "Редактировать словарь понятий";
             this.buttonOpenEditDict.UseVisualStyleBackColor = true;
+            this.buttonOpenEditDict.Click += new System.EventHandler(this.buttonOpenEditDict_Click);
             // 
             // buttonClose
             // 

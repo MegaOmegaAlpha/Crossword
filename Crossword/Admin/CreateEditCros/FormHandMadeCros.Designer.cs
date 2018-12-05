@@ -44,6 +44,9 @@
             this.listBoxDict = new System.Windows.Forms.ListBox();
             this.buttonSaveCros = new System.Windows.Forms.Button();
             this.buttonBack = new System.Windows.Forms.Button();
+            this.labelCurrentDict = new System.Windows.Forms.Label();
+            this.textBoxCurrentDict = new System.Windows.Forms.TextBox();
+            this.buttonDir = new System.Windows.Forms.Button();
             this.groupBoxTasks.SuspendLayout();
             this.groupBoxDict.SuspendLayout();
             this.SuspendLayout();
@@ -131,15 +134,15 @@
             // 
             // textBoxSearch
             // 
-            this.textBoxSearch.Location = new System.Drawing.Point(139, 38);
+            this.textBoxSearch.Location = new System.Drawing.Point(123, 38);
             this.textBoxSearch.Name = "textBoxSearch";
-            this.textBoxSearch.Size = new System.Drawing.Size(138, 20);
+            this.textBoxSearch.Size = new System.Drawing.Size(154, 20);
             this.textBoxSearch.TabIndex = 10;
             // 
             // buttonSortLen
             // 
             this.buttonSortLen.Image = ((System.Drawing.Image)(resources.GetObject("buttonSortLen.Image")));
-            this.buttonSortLen.Location = new System.Drawing.Point(91, 179);
+            this.buttonSortLen.Location = new System.Drawing.Point(75, 179);
             this.buttonSortLen.Name = "buttonSortLen";
             this.buttonSortLen.Size = new System.Drawing.Size(42, 43);
             this.buttonSortLen.TabIndex = 9;
@@ -159,7 +162,7 @@
             // buttonAddNotion
             // 
             this.buttonAddNotion.Image = ((System.Drawing.Image)(resources.GetObject("buttonAddNotion.Image")));
-            this.buttonAddNotion.Location = new System.Drawing.Point(46, 239);
+            this.buttonAddNotion.Location = new System.Drawing.Point(37, 239);
             this.buttonAddNotion.Name = "buttonAddNotion";
             this.buttonAddNotion.Size = new System.Drawing.Size(49, 45);
             this.buttonAddNotion.TabIndex = 6;
@@ -168,9 +171,9 @@
             // listBoxDict
             // 
             this.listBoxDict.FormattingEnabled = true;
-            this.listBoxDict.Location = new System.Drawing.Point(139, 64);
+            this.listBoxDict.Location = new System.Drawing.Point(123, 64);
             this.listBoxDict.Name = "listBoxDict";
-            this.listBoxDict.Size = new System.Drawing.Size(138, 368);
+            this.listBoxDict.Size = new System.Drawing.Size(154, 368);
             this.listBoxDict.TabIndex = 4;
             // 
             // buttonSaveCros
@@ -192,11 +195,40 @@
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
             // 
+            // labelCurrentDict
+            // 
+            this.labelCurrentDict.AutoSize = true;
+            this.labelCurrentDict.Location = new System.Drawing.Point(709, 18);
+            this.labelCurrentDict.Name = "labelCurrentDict";
+            this.labelCurrentDict.Size = new System.Drawing.Size(50, 13);
+            this.labelCurrentDict.TabIndex = 6;
+            this.labelCurrentDict.Text = "Словарь";
+            // 
+            // textBoxCurrentDict
+            // 
+            this.textBoxCurrentDict.Location = new System.Drawing.Point(765, 15);
+            this.textBoxCurrentDict.Name = "textBoxCurrentDict";
+            this.textBoxCurrentDict.Size = new System.Drawing.Size(192, 20);
+            this.textBoxCurrentDict.TabIndex = 7;
+            // 
+            // buttonDir
+            // 
+            this.buttonDir.Location = new System.Drawing.Point(963, 13);
+            this.buttonDir.Name = "buttonDir";
+            this.buttonDir.Size = new System.Drawing.Size(75, 23);
+            this.buttonDir.TabIndex = 8;
+            this.buttonDir.Text = "Обзор...";
+            this.buttonDir.UseVisualStyleBackColor = true;
+            this.buttonDir.Click += new System.EventHandler(this.buttonDir_Click);
+            // 
             // FormHandMadeCros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1060, 508);
+            this.Controls.Add(this.buttonDir);
+            this.Controls.Add(this.textBoxCurrentDict);
+            this.Controls.Add(this.labelCurrentDict);
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.buttonSaveCros);
             this.Controls.Add(this.groupBoxDict);
@@ -212,6 +244,7 @@
             this.groupBoxDict.ResumeLayout(false);
             this.groupBoxDict.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -232,5 +265,8 @@
         private System.Windows.Forms.Button buttonSaveCros;
         private System.Windows.Forms.Button buttonBack;
         private System.Windows.Forms.TextBox textBoxSearch;
+        private System.Windows.Forms.Label labelCurrentDict;
+        private System.Windows.Forms.TextBox textBoxCurrentDict;
+        private System.Windows.Forms.Button buttonDir;
     }
 }

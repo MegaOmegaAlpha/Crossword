@@ -38,6 +38,7 @@
             this.buttonDir = new System.Windows.Forms.Button();
             this.numericUpDownWidth = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
+            this.buttonBack = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             this.SuspendLayout();
@@ -149,11 +150,22 @@
             0,
             0});
             // 
+            // buttonBack
+            // 
+            this.buttonBack.Image = ((System.Drawing.Image)(resources.GetObject("buttonBack.Image")));
+            this.buttonBack.Location = new System.Drawing.Point(12, 12);
+            this.buttonBack.Name = "buttonBack";
+            this.buttonBack.Size = new System.Drawing.Size(40, 32);
+            this.buttonBack.TabIndex = 11;
+            this.buttonBack.UseVisualStyleBackColor = true;
+            this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
+            // 
             // FormBeforeCreate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(317, 238);
+            this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.numericUpDownHeight);
             this.Controls.Add(this.numericUpDownWidth);
             this.Controls.Add(this.buttonDir);
@@ -187,5 +199,6 @@
         private System.Windows.Forms.Button buttonDir;
         private System.Windows.Forms.NumericUpDown numericUpDownWidth;
         private System.Windows.Forms.NumericUpDown numericUpDownHeight;
+        private System.Windows.Forms.Button buttonBack;
     }
 }

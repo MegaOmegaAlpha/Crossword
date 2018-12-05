@@ -62,19 +62,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\FormBeforeCreate.cs">
+    <Compile Include="Admin\CreateEditCros\FormBeforeCreate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Admin\FormBeforeCreate.Designer.cs">
+    <Compile Include="Admin\CreateEditCros\FormBeforeCreate.Designer.cs">
       <DependentUpon>FormBeforeCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Admin\FormHandMadeCros.cs">
+    <Compile Include="Admin\CreateEditCros\FormHandMadeCros.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Admin\FormHandMadeCros.Designer.cs">
+    <Compile Include="Admin\CreateEditCros\FormHandMadeCros.Designer.cs">
       <DependentUpon>FormHandMadeCros.cs</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Grid.cs" />
+    <Compile Include="Admin\CreateEditCros\Grid.cs" />
+    <Compile Include="Admin\CreateEditDict\FormAddNotion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\CreateEditDict\FormAddNotion.Designer.cs">
+      <DependentUpon>FormAddNotion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CreateEditDict\FormCreateDict.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\CreateEditDict\FormCreateDict.Designer.cs">
+      <DependentUpon>FormCreateDict.cs</DependentUpon>
+    </Compile>
     <Compile Include="Autentification\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,11 +107,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Admin\FormBeforeCreate.resx">
+    <EmbeddedResource Include="Admin\CreateEditCros\FormBeforeCreate.resx">
       <DependentUpon>FormBeforeCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\FormHandMadeCros.resx">
+    <EmbeddedResource Include="Admin\CreateEditCros\FormHandMadeCros.resx">
       <DependentUpon>FormHandMadeCros.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\CreateEditDict\FormAddNotion.resx">
+      <DependentUpon>FormAddNotion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\CreateEditDict\FormCreateDict.resx">
+      <DependentUpon>FormCreateDict.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Autentification\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -154,5 +172,6 @@
       <DependentUpon>UsersDB.mdf</DependentUpon>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -21,9 +21,24 @@ namespace Crossword
         SqlConnection sqlConnection;
         private void Form1_Load(object sender, EventArgs e)
         {
-            string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Пользователь\Documents\GitHub\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
-            sqlConnection = new SqlConnection(connect);
-            sqlConnection.Open();
+            try
+            {
+                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Repository\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
+                sqlConnection = new SqlConnection(connect);
+                sqlConnection.Open();
+                labelConnect.ForeColor = Color.Green;
+                labelConnect.Text = "Соединено";
+                labelConnect.Visible = true;
+            }
+            catch (Exception)
+            {
+                labelConnect.ForeColor = Color.Red;
+                labelConnect.Text = "Соединение отсутствует";
+                labelConnect.Visible = true;
+                MessageBox.Show("Проблемы с соединением. Требуется перезапуск", "Ошибка", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)

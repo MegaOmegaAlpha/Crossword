@@ -1,4 +1,5 @@
 ﻿using Crossword.Admin;
+using Crossword.Admin.CreateEditDict;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,6 +32,27 @@ namespace Crossword
             FormBeforeCreate formBefore = new FormBeforeCreate(this);
             formBefore.Show();
             Visible = false;
+        }
+
+        private void buttonOpenCreateDict_Click(object sender, EventArgs e)
+        {
+            FormCreateDict formDict = new FormCreateDict(this);
+            formDict.Show();
+            Visible = false;
+        }
+
+        private void buttonOpenEditDict_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text |*.txt";
+            openFileDialog.Title = "Открыть словарь";
+            openFileDialog.ShowDialog();
+            if (openFileDialog.FileName != "")
+            {
+                FormCreateDict formDict = new FormCreateDict(this, openFileDialog.FileName);
+                formDict.Show();
+                Visible = false;
+            }
         }
     }
 }

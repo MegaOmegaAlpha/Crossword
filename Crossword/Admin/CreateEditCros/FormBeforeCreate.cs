@@ -42,6 +42,12 @@ namespace Crossword.Admin
             }
         }
 
+        private void buttonBack_Click(object sender, EventArgs e)
+        {
+            formAdmin.Visible = true;
+            Close();
+        }
+
         private void buttonDir_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
