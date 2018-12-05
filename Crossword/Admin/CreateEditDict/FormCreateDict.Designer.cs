@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCreateDict));
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Notion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Definition = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonSaveDict = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
@@ -38,8 +40,6 @@
             this.buttonBack = new System.Windows.Forms.Button();
             this.buttonSortLen = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.Notion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Definition = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,6 +60,21 @@
             this.dataGridView.ReadOnly = true;
             this.dataGridView.Size = new System.Drawing.Size(543, 367);
             this.dataGridView.TabIndex = 0;
+            // 
+            // Notion
+            // 
+            this.Notion.HeaderText = "Понятие";
+            this.Notion.Name = "Notion";
+            this.Notion.ReadOnly = true;
+            this.Notion.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Notion.Width = 150;
+            // 
+            // Definition
+            // 
+            this.Definition.HeaderText = "Определение";
+            this.Definition.Name = "Definition";
+            this.Definition.ReadOnly = true;
+            this.Definition.Width = 800;
             // 
             // buttonSaveDict
             // 
@@ -142,21 +157,6 @@
             this.button1.TabIndex = 9;
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // Notion
-            // 
-            this.Notion.HeaderText = "Понятие";
-            this.Notion.Name = "Notion";
-            this.Notion.ReadOnly = true;
-            this.Notion.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Notion.Width = 150;
-            // 
-            // Definition
-            // 
-            this.Definition.HeaderText = "Определение";
-            this.Definition.Name = "Definition";
-            this.Definition.ReadOnly = true;
-            this.Definition.Width = 800;
-            // 
             // FormCreateDict
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -172,6 +172,7 @@
             this.Controls.Add(this.buttonSaveDict);
             this.Controls.Add(this.dataGridView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCreateDict";
             this.Text = "СОЗДАНИЕ/РЕДАКТИРОВАНИЕ СЛОВАРЯ ПОНЯТИЙ";
             this.Load += new System.EventHandler(this.FormCreateDict_Load);

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAddNotion));
             this.textBoxNotion = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.richTextBoxDef = new System.Windows.Forms.RichTextBox();
@@ -99,6 +100,7 @@
             this.Controls.Add(this.richTextBoxDef);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxNotion);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormAddNotion";
             this.Text = "ДОБАВЛЕНИЕ/ИЗМЕНЕНИЕ ПОНЯТИЯ";
             this.ResumeLayout(false);
