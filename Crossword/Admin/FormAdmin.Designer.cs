@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAdmin));
             this.buttonOpenCreateCros = new System.Windows.Forms.Button();
             this.buttonOpenEditCros = new System.Windows.Forms.Button();
             this.buttonOpenCreateDict = new System.Windows.Forms.Button();
@@ -93,6 +94,9 @@
             this.Controls.Add(this.buttonOpenEditCros);
             this.Controls.Add(this.buttonOpenCreateCros);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormAdmin";
             this.Text = "РЕЖИМ АДМИНИСТРАТОРА";
             this.ResumeLayout(false);

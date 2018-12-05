@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.textBoxLogin = new System.Windows.Forms.TextBox();
             this.buttonLogIn = new System.Windows.Forms.Button();
             this.textBoxPas = new System.Windows.Forms.TextBox();
@@ -98,6 +99,7 @@
             this.buttonInfo.TabIndex = 7;
             this.buttonInfo.Text = "Информация";
             this.buttonInfo.UseVisualStyleBackColor = true;
+            this.buttonInfo.Click += new System.EventHandler(this.buttonInfo_Click);
             // 
             // FormMain
             // 
@@ -112,6 +114,9 @@
             this.Controls.Add(this.buttonLogIn);
             this.Controls.Add(this.textBoxLogin);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormMain";
             this.Text = "АВТОРИЗАЦИЯ";
             this.Load += new System.EventHandler(this.Form1_Load);

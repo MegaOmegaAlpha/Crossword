@@ -203,6 +203,7 @@
             this.Controls.Add(this.groupBoxTasks);
             this.Controls.Add(this.TableContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormHandMadeCros";
             this.Text = "СОЗДАНИЕ/РЕДАКТИРОВАНИЕ КРОССВОРДА";
             this.Load += new System.EventHandler(this.FormHandMadeCros_Load);

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBeforeCreate));
             this.labelWidth = new System.Windows.Forms.Label();
             this.textBoxFile = new System.Windows.Forms.TextBox();
             this.buttonGen = new System.Windows.Forms.Button();
@@ -162,6 +163,9 @@
             this.Controls.Add(this.buttonGen);
             this.Controls.Add(this.textBoxFile);
             this.Controls.Add(this.labelWidth);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormBeforeCreate";
             this.Text = "СОЗДАНИЕ КРОССВОРДА";
             this.Load += new System.EventHandler(this.FormCreateCros_Load);
