@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Crossword.Admin
 {
+    [Serializable]
     class Grid
     {
         private int height;
@@ -43,6 +44,11 @@ namespace Crossword.Admin
         {
             get { return width; }
             set { width = value; }
+        }
+
+        public List<Word> GetWords()
+        {
+            return words;
         }
 
         public void AddWord(Word word)

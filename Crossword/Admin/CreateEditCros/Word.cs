@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace Crossword.Admin.CreateEditCros
 {
+    [Serializable]
     enum Direction
     {
         Horizontal,
         Vertical
     }
 
+    [Serializable]
     class Word
     {
 
@@ -43,5 +45,9 @@ namespace Crossword.Admin.CreateEditCros
             return notion;
         }
 
+        public Direction GetDirection()
+        {
+            return direction;
+        }
     }
 }

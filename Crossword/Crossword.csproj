@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CreateEditCros\Crossik.cs" />
+    <Compile Include="Admin\CreateEditCros\CrosswordCont.cs" />
     <Compile Include="Admin\CreateEditCros\FormBeforeCreate.cs">
       <SubType>Form</SubType>
     </Compile>

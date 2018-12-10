@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -17,6 +18,7 @@ namespace Crossword.Admin
     public partial class FormHandMadeCros : Form
     {
         private FormBeforeCreate formBefore;
+        private FormAdmin formAdmin;
         private int width, height;
         private Button[,] buttons;
         private string fileDict;
@@ -28,6 +30,8 @@ namespace Crossword.Admin
         Crossik _board;
         Random _rand = new Random();
         private string[] notions;
+        CrosswordCont mainCros;
+        bool editing;
         public FormHandMadeCros(FormBeforeCreate formBefore, int width, int height, string fileName)
         {
             this.formBefore = formBefore;
@@ -45,6 +49,17 @@ namespace Crossword.Admin
             this.fileDict = fileName;
         }
 
+        public FormHandMadeCros(FormAdmin formBefore, string fileName)
+        {
+            InitializeComponent();
+            Stream stream = new FileStream(fileName, FileMode.Open);
+            BinaryFormatter deserializer = new BinaryFormatter();
+            mainCros = (CrosswordCont)deserializer.Deserialize(stream);
+            formAdmin = formBefore;
+            formAdmin.Visible = false;
+            editing = true;
+        }
+
         private void tableLayoutPanel_Paint(object sender, PaintEventArgs e)
         {
 
@@ -54,7 +69,7 @@ namespace Crossword.Admin
         {
             private int i;
             private int j;
-            public Node (int i, int j)
+            public Node(int i, int j)
             {
                 this.i = i;
                 this.j = j;
@@ -71,81 +86,152 @@ namespace Crossword.Admin
 
         private void FormHandMadeCros_Load(object sender, EventArgs e)
         {
-            _board = new Crossik(width, height);
-
-            listButton = new List<Button>();
-            grid = new Grid(width, height);
-            buttons = new Button[width, height];
-            var tableLayoutPanel = new TableLayoutPanel();
-            tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel.Visible = true;
-            tableLayoutPanel.ColumnCount = width;
-            tableLayoutPanel.RowCount = height;
-            //размер колонки и строки в процентах
-            int widthT = 100 / tableLayoutPanel.ColumnCount;
-            int heightT = 100 / tableLayoutPanel.RowCount;
-            // добавляем колонки и строки
-            for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
+            if (!editing)
             {
-                //добавляем колонку
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
-                for (int row = 0; row < tableLayoutPanel.RowCount; row++)
-                {
-                    //строка
-                    if (col == 0)
-                    {
-                        tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
-                    }
-                    buttons[col, row] = new Button();
-                    buttons[col, row].Dock = DockStyle.Fill;
-                    buttons[col, row].BackColor = Color.Black;
-                    buttons[col, row].Click += GridButtonClicked;
-                    buttons[col, row].Tag = new Node(col, row);
-                    grid.SetGridItem(col, row, false);
-                    tableLayoutPanel.Controls.Add(buttons[col, row], col, row);
-                }
-            }
-            //таблицу в контейнер
-            TableContainer.Controls.Add(tableLayoutPanel);
+                _board = new Crossik(width, height);
 
-            textBoxCurrentDict.Text = fileDict;
-
-            //dictionary
-            StreamReader reader = new StreamReader(fileDict, Encoding.GetEncoding("Windows-1251"));
-            string dataFromFile = "";
-            dictionary = new Dictionary<string, string>();
-            try
-            {
-                while (dataFromFile != null)
+                listButton = new List<Button>();
+                grid = new Grid(width, height);
+                buttons = new Button[width, height];
+                var tableLayoutPanel = new TableLayoutPanel();
+                tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+                tableLayoutPanel.Visible = true;
+                tableLayoutPanel.ColumnCount = width;
+                tableLayoutPanel.RowCount = height;
+                //размер колонки и строки в процентах
+                int widthT = 100 / tableLayoutPanel.ColumnCount;
+                int heightT = 100 / tableLayoutPanel.RowCount;
+                // добавляем колонки и строки
+                for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
                 {
-                    dataFromFile = reader.ReadLine();
-                    if (dataFromFile != null)
+                    //добавляем колонку
+                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
+                    for (int row = 0; row < tableLayoutPanel.RowCount; row++)
                     {
-                        string[] stringArr = dataFromFile.Split(' ');
-                        string notion = stringArr[0];
-                        string def = "";
-                        for (int i = 1; i < stringArr.Length; i++)
+                        //строка
+                        if (col == 0)
                         {
-                            def += " " + stringArr[i];
+                            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
                         }
-                        dictionary.Add(notion, def);
-                        listBoxDict.Items.Add(notion);
+                        buttons[col, row] = new Button();
+                        buttons[col, row].Dock = DockStyle.Fill;
+                        buttons[col, row].BackColor = Color.Black;
+                        buttons[col, row].Click += GridButtonClicked;
+                        buttons[col, row].Tag = new Node(col, row);
+                        grid.SetGridItem(col, row, false);
+                        tableLayoutPanel.Controls.Add(buttons[col, row], col, row);
                     }
                 }
-                notions = new string[dictionary.Count];
-                notions = dictionary.Keys.ToArray();
+                //таблицу в контейнер
+                TableContainer.Controls.Add(tableLayoutPanel);
+
+                textBoxCurrentDict.Text = fileDict;
+
+                //dictionary
+                StreamReader reader = new StreamReader(fileDict, Encoding.GetEncoding("Windows-1251"));
+                string dataFromFile = "";
+                dictionary = new Dictionary<string, string>();
+                try
+                {
+                    while (dataFromFile != null)
+                    {
+                        dataFromFile = reader.ReadLine();
+                        if (dataFromFile != null)
+                        {
+                            string[] stringArr = dataFromFile.Split(' ');
+                            string notion = stringArr[0];
+                            string def = "";
+                            for (int i = 1; i < stringArr.Length; i++)
+                            {
+                                def += " " + stringArr[i];
+                            }
+                            dictionary.Add(notion, def);
+                            listBoxDict.Items.Add(notion);
+                        }
+                    }
+                    notions = new string[dictionary.Count];
+                    notions = dictionary.Keys.ToArray();
+                }
+                catch (ArgumentException)
+                {
+                    MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                    formBefore.Visible = true;
+                    Close();
+                }
             }
-            catch(ArgumentException)
+            else
             {
-                MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
-                formBefore.Visible = true;
-                Close();
+                dictionary = new Dictionary<string, string>();
+                listButton = new List<Button>();
+                grid = mainCros.GetGrid();
+                List<Word> words = grid.GetWords();
+                buttons = new Button[grid.Height, grid.Width];
+                var tableLayoutPanel = new TableLayoutPanel();
+                tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+                tableLayoutPanel.Visible = true;
+                tableLayoutPanel.ColumnCount = grid.Width;
+                tableLayoutPanel.RowCount = grid.Height;
+                width = grid.Width;
+                height = grid.Height;
+                //размер колонки и строки в процентах
+                int widthT = 100 / tableLayoutPanel.ColumnCount;
+                int heightT = 100 / tableLayoutPanel.RowCount;
+                // добавляем колонки и строки
+                for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
+                {
+                    //добавляем колонку
+                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
+                    for (int row = 0; row < tableLayoutPanel.RowCount; row++)
+                    {
+                        //строка
+                        if (col == 0)
+                        {
+                            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
+                        }
+                        buttons[col, row] = new Button();
+                        buttons[col, row].Dock = DockStyle.Fill;
+                        buttons[col, row].BackColor = Color.Black;
+                        buttons[col, row].Click += GridButtonClicked;
+                        buttons[col, row].Tag = new Node(col, row);
+                        tableLayoutPanel.Controls.Add(buttons[col, row], col, row);
+
+                    }
+                }
+                //таблицу в контейнер
+                TableContainer.Controls.Add(tableLayoutPanel);
+
+                textBoxCurrentDict.Text = fileDict;
+                foreach (Word word in words)
+                {
+                    if (word.GetDirection().Equals(Direction.Horizontal))
+                    {
+                        for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
+                        {
+                            buttons[i, word.GetI()].BackColor = Color.Gray;
+                            buttons[i, word.GetI()].Text = word.GetNotion().ElementAt(j).ToString();
+                        }
+                        listBoxHor.Items.Add(word.GetNotion());
+                        dictionary.Add(word.GetNotion(), mainCros.GetDictionary()[word.GetNotion()]);
+                    }
+                    else
+                    {
+                        for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
+                        {
+                            buttons[word.GetJ(), i].BackColor = Color.Gray;
+                            buttons[word.GetJ(), i].Text = word.GetNotion().ElementAt(j).ToString();
+                        }
+                        listBoxVert.Items.Add(word.GetNotion());
+                        dictionary.Add(word.GetNotion(), mainCros.GetDictionary()[word.GetNotion()]);
+                    }
+                }
+
             }
         }
 
         private bool isSortedLet;
+        //сортировка по алфавиту
         private void sortLetter()
         {
             List<string> strings = new List<string>();
@@ -176,6 +262,7 @@ namespace Crossword.Admin
         }
 
         private bool isSortLen;
+        //сортировка по длине
         private void sortLen()
         {
             List<string> strings = new List<string>();
@@ -207,7 +294,14 @@ namespace Crossword.Admin
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-            formBefore.Visible = true;
+            if (editing)
+            {
+                formAdmin.Visible = true;
+            }
+            else
+            {
+                formBefore.Visible = true;
+            }
             Close();
         }
 
@@ -241,6 +335,8 @@ namespace Crossword.Admin
                             }
                             dictionary.Add(notion.ToUpper(), def.ToLower());
                             listBoxDict.Items.Add(notion);
+                            notions = new string[dictionary.Count];
+                            notions = dictionary.Keys.ToArray();
                         }
                     }
                 }
@@ -254,6 +350,7 @@ namespace Crossword.Admin
                 }
             }
         }
+
         private int length;
         private void buttonAddNotion_Click(object sender, EventArgs e)
         {
@@ -265,7 +362,8 @@ namespace Crossword.Admin
                 {
                     node1 = (Node)listButton.ElementAt(i).Tag;
                     node2 = (Node)listButton.ElementAt(i + 1).Tag;
-                    if (node2.I - node1.I > 1 || node2.J - node1.J > 1)
+                    if ((node2.I - node1.I != 1 && node2.J - node1.J == 0) ||
+                        (node2.I - node1.I == 0 && node2.J - node1.J != 1))
                     {
                         check = false;
                     }
@@ -313,97 +411,127 @@ namespace Crossword.Admin
         private List<Button> listButton;
         private void GridButtonClicked(object sender, EventArgs e)
         {
-            Button button = (Button) sender;
+            Button button = (Button)sender;
             //если на эту кнопку ничего не добавлено
             if (!button.BackColor.Equals(Color.Gray))
             {
                 Node node = (Node)button.Tag;
-                grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
-                button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
-                if (button.BackColor.Equals(Color.White))
+                try
                 {
-                    listButton.Add(button);
-                }
-                else
-                {
-                    length--;
-                    listButton.Remove(button);
-                }
-                #region searching of neighbours
-                //поиск соседних добавленных букв
-                for (int i = node.J - 1; i <= node.J + 1; i++)
-                {
-                    for (int j = node.I - 1; j <= node.I + 1; j++)
+                    button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
+                    grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));                   
+                    if (button.BackColor.Equals(Color.White))
                     {
-                        if (i >= 0 && j >= 0 && i < width && j < height && !(j == width && i == height))
+                        listButton.Add(button);
+                    }
+                    else
+                    {
+                        length--;
+                        listButton.Remove(button);
+                    }
+                    #region searching of neighbours
+                    //поиск соседних клеток
+                    for (int i = node.J - 1; i <= node.J + 1; i++)
+                    {
+                        for (int j = node.I - 1; j <= node.I + 1; j++)
                         {
-                            //игнорирование диагональных соседей
-                            if ((!(i == node.J - 1 && j == node.I - 1) &&
-                                 !(i == node.J + 1 && j == node.I + 1) &&
-                                 !(i == node.J - 1 && j == node.I + 1) &&
-                                 !(i == node.J + 1 && j == node.I - 1)))
+                            if (i >= 0 && j >= 0 && i < width && j < height && !(j == width && i == height))
                             {
-                                //если сосед содержит букву
-                                if (buttons[j, i].BackColor.Equals(Color.Gray))
+                                //игнорирование диагональных соседей
+                                if ((!(i == node.J - 1 && j == node.I - 1) &&
+                                     !(i == node.J + 1 && j == node.I + 1) &&
+                                     !(i == node.J - 1 && j == node.I + 1) &&
+                                     !(i == node.J + 1 && j == node.I - 1)))
                                 {
-                                    Button buttoneg = buttons[j, i];
-                                    if (!listButton.Contains(buttoneg))
+                                    //если сосед содержит букву
+                                    if (buttons[j, i].BackColor.Equals(Color.Gray))
                                     {
-                                        if (!button.BackColor.Equals(Color.Black))
+                                        Button buttoneg = buttons[j, i];
+                                        if (!listButton.Contains(buttoneg))
                                         {
-                                            //установка пересечения
-                                            grid.SetInters(j, i, true);
-                                            Button added = listButton.First();
-                                            Node addedNode = (Node)added.Tag;
-                                            //если сосед идет перед новой буквой, то добвить перед ней
-                                            if ((i == addedNode.J - 1 && j == addedNode.I) ||
-                                                (i == addedNode.J && j == addedNode.I - 1))
+                                            if (!button.BackColor.Equals(Color.Black))
                                             {
-                                                listButton.Insert(0, buttoneg);
+                                                //установка пересечения
+                                                grid.SetInters(j, i, true);
+                                                Button added = listButton.First();
+                                                Node addedNode = (Node)added.Tag;
+                                                //если сосед идет перед новой буквой, то добвить перед ней
+                                                if ((i == addedNode.J - 1 && j == addedNode.I) ||
+                                                    (i == addedNode.J && j == addedNode.I - 1))
+                                                {
+                                                    listButton.Insert(0, buttoneg);
+                                                }
+                                                else
+                                                {
+                                                    listButton.Add(buttoneg);
+                                                }
                                             }
                                             else
                                             {
-                                                listButton.Add(buttoneg);
+                                                listButton.Remove(buttoneg);
                                             }
                                         }
                                         else
                                         {
-                                            listButton.Remove(buttoneg);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (button.BackColor.Equals(Color.Black))
-                                        {
-                                            listButton.Remove(buttoneg);
+                                            if (button.BackColor.Equals(Color.Black))
+                                            {
+                                                listButton.Remove(buttoneg);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                #endregion
-                #region searching notion by mask
-                string mask = GetMask();
-                length = listButton.Count;
-                if (length > 0)
-                {
-                    listBoxDict.Items.Clear();
-                    foreach (string notion in notions)
+                    #endregion
+                    #region searching notion by mask
+                    string mask = GetMask();
+                    length = listButton.Count;
+                    if (length > 0)
                     {
-                        if (Regex.IsMatch(notion, mask, RegexOptions.IgnoreCase))
+                        listBoxDict.Items.Clear();
+                        foreach (string notion in notions)
                         {
-                            listBoxDict.Items.Add(notion);
+                            if (Regex.IsMatch(notion, mask, RegexOptions.IgnoreCase))
+                            {
+                                listBoxDict.Items.Add(notion);
+                            }
                         }
                     }
+                    else
+                    {
+                        listBoxDict.Items.AddRange(notions);
+                    }
+                    #endregion
+                }
+                catch (ArgumentNullException)
+                {
+                    MessageBox.Show("Для редактирования кроссворда нужен словарь!", "Ошибка", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                    button.BackColor = Color.White;
+                    grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
+                }
+            }
+        }
+
+        private string GetMask()
+        {
+            string mask = @"";
+            foreach (Button button in listButton)
+            {
+                if (!button.Text.Equals(""))
+                {
+                    mask += button.Text;
                 }
                 else
                 {
-                    listBoxDict.Items.AddRange(notions);
+                    mask += ".";
                 }
-                #endregion
             }
+            mask += "$";
+            mask = "^" + mask;
+            return mask;
         }
 
         private void buttonDelNotion_Click(object sender, EventArgs e)
@@ -458,7 +586,30 @@ namespace Crossword.Admin
 
         private void buttonSaveCros_Click(object sender, EventArgs e)
         {
-
+            Dictionary<string, string> dictCross = new Dictionary<string, string>();
+            foreach (string item in listBoxHor.Items)
+            {
+                dictCross.Add(item, dictionary[item]);
+            }
+            foreach (string item in listBoxVert.Items)
+            {
+                dictCross.Add(item, dictionary[item]);
+            }
+            CrosswordCont crossword = new CrosswordCont(grid, dictCross);
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "CrosswordFile |*.crwd";
+            saveFileDialog.Title = "Сохранить кроссворд";
+            saveFileDialog.ShowDialog();
+            if (saveFileDialog.FileName != "")
+            {
+                Stream s = new FileStream(saveFileDialog.FileName, FileMode.Create);
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(s, crossword);
+                MessageBox.Show("Кроссворд сохранен", "Сохранение", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1,
+                                MessageBoxOptions.DefaultDesktopOnly);
+                s.Close();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -523,23 +674,6 @@ namespace Crossword.Admin
             var temp = a.Length.CompareTo(b.Length);
             return temp == 0 ? a.CompareTo(b) : temp;
         }
-        private string GetMask()
-        {
-            string mask = @"";
-            foreach (Button button in listButton)
-            {
-                if (!button.Text.Equals(""))
-                {
-                    mask += button.Text;
-                }
-                else
-                {
-                    mask += ".";
-                }
-            }
-            mask += "$";
-            mask = "^" + mask;
-            return mask;
-        }
+
     }
 }

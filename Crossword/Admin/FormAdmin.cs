@@ -54,5 +54,20 @@ namespace Crossword
                 Visible = false;
             }
         }
+
+        private void buttonOpenEditCros_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "CrosswordFile |*.crwd";
+            openFileDialog.Title = "Открыть кроссворд";
+            openFileDialog.ShowDialog();
+            if (openFileDialog.FileName != "")
+            {
+                bool editing = true;
+                FormHandMadeCros formDict = new FormHandMadeCros(this, openFileDialog.FileName);
+                formDict.Show();
+                Visible = false;
+            }
+        }
     }
 }

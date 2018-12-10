@@ -54,6 +54,7 @@
             this.buttonOpenEditCros.TabIndex = 1;
             this.buttonOpenEditCros.Text = "Редактировать кроссворд";
             this.buttonOpenEditCros.UseVisualStyleBackColor = true;
+            this.buttonOpenEditCros.Click += new System.EventHandler(this.buttonOpenEditCros_Click);
             // 
             // buttonOpenCreateDict
             // 
