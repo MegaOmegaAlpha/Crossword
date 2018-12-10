@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crossword.Admin.CreateEditCros;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,6 +22,11 @@ namespace Crossword.Admin
         private string fileDict;
         private Dictionary<string, string> dictionary;
         private Grid grid;
+        private readonly List<Button> _buttons;
+        private readonly List<string> _words = new List<string>();
+        private List<string> _order;
+        Crossik _board;
+        Random _rand = new Random();
         private string[] notions;
         public FormHandMadeCros(FormBeforeCreate formBefore, int width, int height, string fileName)
         {
@@ -34,8 +40,8 @@ namespace Crossword.Admin
         public FormHandMadeCros(string fileName)
         {
             InitializeComponent();
-            height = 7;
-            width = 7;
+            height = 10;
+            width = 10;
             this.fileDict = fileName;
         }
 
@@ -65,6 +71,8 @@ namespace Crossword.Admin
 
         private void FormHandMadeCros_Load(object sender, EventArgs e)
         {
+            _board = new Crossik(width, height);
+
             listButton = new List<Button>();
             grid = new Grid(width, height);
             buttons = new Button[width, height];
@@ -249,109 +257,269 @@ namespace Crossword.Admin
         private int length;
         private void buttonAddNotion_Click(object sender, EventArgs e)
         {
-            string not = listBoxDict.SelectedItem.ToString();
-            char[] charNot = not.ToCharArray();
-            Node node1 = (Node) listButton.ElementAt(0).Tag;
-            Node node2 = (Node)listButton.ElementAt(1).Tag;
-            string orient;
-            if (node1.I == node2.I - 1)
+            if (listBoxDict.SelectedItem != null && listButton.Count > 0)
             {
-                orient = "vertical";
+                bool check = true;
+                Node node1, node2;
+                for (int i = 0; i < listButton.Count - 1; i++)
+                {
+                    node1 = (Node)listButton.ElementAt(i).Tag;
+                    node2 = (Node)listButton.ElementAt(i + 1).Tag;
+                    if (node2.I - node1.I > 1 || node2.J - node1.J > 1)
+                    {
+                        check = false;
+                    }
+
+                }
+                if (check)
+                {
+                    string not = listBoxDict.SelectedItem.ToString();
+                    char[] charNot = not.ToCharArray();
+                    node1 = (Node)listButton.ElementAt(0).Tag;
+                    node2 = (Node)listButton.ElementAt(1).Tag;
+                    Direction dir;
+                    Word word;
+                    if (node1.I == node2.I - 1)
+                    {
+                        dir = Direction.Horizontal;
+                        listBoxHor.Items.Add(not);
+                    }
+                    else
+                    {
+                        dir = Direction.Vertical;
+                        listBoxVert.Items.Add(not);
+                    }
+                    int intI = node1.I;
+                    int intJ = node1.J;
+                    word = new Word(intJ, intI, not, dir);
+                    for (int i = 0; i < charNot.Length; i++)
+                    {
+                        listButton.ElementAt(i).BackColor = Color.Gray;
+                        listButton.ElementAt(i).Text = charNot[i].ToString();
+                    }
+                    grid.AddWord(word);
+                    length = 0;
+                    listButton.Clear();
+                }
+                else
+                {
+                    MessageBox.Show("Область выделена неверно!", "Ошибка", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
+                                MessageBoxOptions.DefaultDesktopOnly);
+                }
             }
-            else
-            {
-                orient = "horizontal";
-            }
-            for (int i = 0; i < charNot.Length; i++)
-            {
-                listButton.ElementAt(i).BackColor = Color.Gray;
-                listButton.ElementAt(i).Text = charNot[i].ToString();
-            }
-            length = 0;
-            listButton.Clear();
         }
 
-        private class Intercsect
-        {
-            private Button buttonAdded;
-            int[,] matr = new int[5, 5];
-
-        }
-
-        private List<Intercsect> listInt = new List<Intercsect>();
         private List<Button> listButton;
         private void GridButtonClicked(object sender, EventArgs e)
         {
             Button button = (Button) sender;
-            Node node = (Node) button.Tag;
-            grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
-            button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
-            if (button.BackColor.Equals(Color.White))
+            //если на эту кнопку ничего не добавлено
+            if (!button.BackColor.Equals(Color.Gray))
             {
-                listButton.Add(button);
-            }
-            else
-            {
-                listButton.Remove(button);
-            }
-            bool flag = true;
-            for (int i = node.J - 1; i <= node.J + 1; i++)
-            {
-                for (int j = node.I - 1; j <= node.I + 1; j++)
+                Node node = (Node)button.Tag;
+                grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
+                button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
+                if (button.BackColor.Equals(Color.White))
                 {
-                    if (i >= 0 && j >= 0 && i < width && j < height && !(j == width && i == height))
+                    listButton.Add(button);
+                }
+                else
+                {
+                    length--;
+                    listButton.Remove(button);
+                }
+                #region searching of neighbours
+                //поиск соседних добавленных букв
+                for (int i = node.J - 1; i <= node.J + 1; i++)
+                {
+                    for (int j = node.I - 1; j <= node.I + 1; j++)
                     {
-                        if ((!(i == node.J - 1 && j == node.I - 1) &&
-                             !(i == node.J + 1 && j == node.I + 1) &&
-                             !(i == node.J - 1 && j == node.I + 1) &&
-                             !(i == node.J + 1 && j == node.I - 1)))
+                        if (i >= 0 && j >= 0 && i < width && j < height && !(j == width && i == height))
                         {
-                            flag = true;
-                            if (buttons[j, i].BackColor.Equals(Color.Gray))
+                            //игнорирование диагональных соседей
+                            if ((!(i == node.J - 1 && j == node.I - 1) &&
+                                 !(i == node.J + 1 && j == node.I + 1) &&
+                                 !(i == node.J - 1 && j == node.I + 1) &&
+                                 !(i == node.J + 1 && j == node.I - 1)))
                             {
-                                Button buttoneg = buttons[j, i];
-                                if (!listButton.Contains(buttoneg))
+                                //если сосед содержит букву
+                                if (buttons[j, i].BackColor.Equals(Color.Gray))
                                 {
-                                    Button added = listButton.First();
-                                    Node addedNode = (Node)added.Tag;
-                                    if ((i == addedNode.J + 1 && j == addedNode.I) || 
-                                        (i == addedNode.J - 1 && j == addedNode.I) || 
-                                        (i == addedNode.J && j == addedNode.I + 1) || 
-                                        (i == addedNode.J && j == addedNode.I - 1))
+                                    Button buttoneg = buttons[j, i];
+                                    if (!listButton.Contains(buttoneg))
                                     {
-                                        listButton.Insert(0, buttoneg);
+                                        if (!button.BackColor.Equals(Color.Black))
+                                        {
+                                            //установка пересечения
+                                            grid.SetInters(j, i, true);
+                                            Button added = listButton.First();
+                                            Node addedNode = (Node)added.Tag;
+                                            //если сосед идет перед новой буквой, то добвить перед ней
+                                            if ((i == addedNode.J - 1 && j == addedNode.I) ||
+                                                (i == addedNode.J && j == addedNode.I - 1))
+                                            {
+                                                listButton.Insert(0, buttoneg);
+                                            }
+                                            else
+                                            {
+                                                listButton.Add(buttoneg);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            listButton.Remove(buttoneg);
+                                        }
                                     }
                                     else
                                     {
-                                        listButton.Add(buttoneg);
+                                        if (button.BackColor.Equals(Color.Black))
+                                        {
+                                            listButton.Remove(buttoneg);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            #region cewg
-            string mask = GetMask();
-            length++;
-            if (length > 1)
-            {
-                listBoxDict.Items.Clear();
-                foreach (string notion in notions)
+                #endregion
+                #region searching notion by mask
+                string mask = GetMask();
+                length = listButton.Count;
+                if (length > 0)
                 {
-                    if (Regex.IsMatch(notion, mask, RegexOptions.IgnoreCase))
+                    listBoxDict.Items.Clear();
+                    foreach (string notion in notions)
                     {
-                        listBoxDict.Items.Add(notion);
+                        if (Regex.IsMatch(notion, mask, RegexOptions.IgnoreCase))
+                        {
+                            listBoxDict.Items.Add(notion);
+                        }
                     }
                 }
+                else
+                {
+                    listBoxDict.Items.AddRange(notions);
+                }
+                #endregion
+            }
+        }
+
+        private void buttonDelNotion_Click(object sender, EventArgs e)
+        {
+            if (listBoxHor.SelectedItem != null)
+            {
+                string word = listBoxHor.SelectedItem.ToString();
+                Word w = grid.GetWord(word);
+                for (int i = w.GetJ(); i < w.GetNotion().Length; i++)
+                {
+                    if (!grid.GetInters(i, w.GetI()))
+                    {
+                        buttons[i, w.GetI()].BackColor = Color.Black;
+                        buttons[i, w.GetI()].Text = "";
+                        grid.SetGridItem(i, w.GetI(), false);
+                    }
+                    else
+                    {
+                        grid.SetInters(i, w.GetI(), false);
+                    }
+                }
+                grid.DeleteWord(w);
+                listBoxHor.Items.Remove(listBoxHor.SelectedItem);
             }
             else
             {
-                listBoxDict.Items.AddRange(notions);
+                if (listBoxVert.SelectedItem != null)
+                {
+                    string word = listBoxVert.SelectedItem.ToString();
+                    Word w = grid.GetWord(word);
+                    for (int i = w.GetI(); i < w.GetNotion().Length; i++)
+                    {
+                        if (!grid.GetInters(w.GetJ(), i))
+                        {
+                            buttons[w.GetJ(), i].BackColor = Color.Black;
+                            buttons[w.GetJ(), i].Text = "";
+                            grid.SetGridItem(i, w.GetI(), false);
+                        }
+                        else
+                        {
+                            grid.SetInters(w.GetJ(), i, false);
+                        }
+                    }
+                    grid.DeleteWord(w);
+                    listBoxVert.Items.Remove(listBoxVert.SelectedItem);
+                }
             }
-            #endregion
         }
 
+        private void buttonSaveCros_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            List<string> keyList = new List<string>(dictionary.Keys);
+            for (int i = 0; i < 1000; i++)
+            {
+                string randomKey = keyList[_rand.Next(keyList.Count)];
+                if (randomKey.Length <= height)
+                {
+                    _words.Add(randomKey);
+                }
+            }
+            _words.Sort(Comparer);
+            _words.Reverse();
+            _order = _words;
+            GenCrossword();
+
+        }
+        void GenCrossword()
+        {
+            listBoxHor.Items.Clear();
+            listBoxVert.Items.Clear();
+            _board.Reset();
+
+            foreach (var word in _order)
+            {
+                //var wordToInsert = ((bool)RTLRadioButton.IsChecked) ? word.Reverse().Aggregate("",(x,y) => x + y) : word; 
+                switch (_board.AddWord(word))
+                {
+                    case 1:
+                        listBoxHor.Items.Add(word);
+                        break;
+                    case 0:
+                        listBoxVert.Items.Add(word);
+                        break;
+                }
+            }
+            ActualizeData();
+        }
+        void ActualizeData()
+        {
+            var count = _board.N * _board.M;
+            var board = _board.GetBoard;
+            var p = 0;
+            for (var i = 0; i < _board.N; i++)
+            {
+                for (var j = 0; j < _board.M; j++)
+                {
+                    var letter = board[i, j] == '*' ? ' ' : board[i, j];
+                    if (letter != ' ') count--;
+                    //((Button)grid1.Children[p]).Content = letter.ToString(); 
+                    //((Button)grid1.Children[p]).Background = letter != ' ' ? _buttons[4].Background : _buttons[0].Background; 
+                    buttons[i, j].Text = letter.ToString();
+                    buttons[i, j].BackColor = Color.Gray;
+                    p++;
+                }
+            }
+        }
+        static int Comparer(string a, string b)
+        {
+            var temp = a.Length.CompareTo(b.Length);
+            return temp == 0 ? a.CompareTo(b) : temp;
+        }
         private string GetMask()
         {
             string mask = @"";

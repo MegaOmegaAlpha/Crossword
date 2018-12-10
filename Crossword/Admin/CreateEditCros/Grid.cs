@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crossword.Admin.CreateEditCros;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,20 +12,23 @@ namespace Crossword.Admin
         private int height;
         private int width;
 
+        private List<Word> words;
+
         private bool[,] gridMatr;
-        private string[,] gridChar;
+        private bool[,] isInters;
 
         public Grid(int width, int height)
         {
+            words = new List<Word>();
             this.height = height;
             this.width = width;
             gridMatr = new bool[width, height];
-            gridChar = new string[width, height];
+            isInters = new bool[width, height];
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
-                    gridChar[i, j] = "";
+                    isInters[i, j] = false;
                 }
             }
         }
@@ -41,14 +45,41 @@ namespace Crossword.Admin
             set { width = value; }
         }
 
-        public string GetGridChar(int i, int j)
+        public void AddWord(Word word)
         {
-            return gridChar[i, j];
+            words.Add(word);
         }
 
-        public void SetGridChar(int i, int j, string val)
+        public void DeleteWord(Word word)
         {
-            gridChar[i, j] = val;
+            for (int i = 0; i < words.Count; i++)
+            {
+                if (words.ElementAt(i).GetNotion().Equals(word.GetNotion()))
+                {
+                    words.Remove(word);
+                }
+            }
+        }
+
+        public Word GetWord(string word)
+        {
+            foreach (Word w in words) {
+                if (w.GetNotion().Equals(word))
+                {
+                    return w;
+                }
+            }
+            return null;
+        }
+
+        public bool GetInters(int i, int j)
+        {
+            return isInters[i, j];
+        }
+
+        public void SetInters(int i, int j, bool val)
+        {
+            isInters[i, j] = val;
         }
 
         public bool GetGridItem(int i, int j)
@@ -59,24 +90,6 @@ namespace Crossword.Admin
         public void SetGridItem(int i, int j, bool val)
         {
             gridMatr[i, j] = val;
-        }
-
-        public int GetWordLength()
-        {
-            int len = 0;
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    if (gridMatr[i, j])
-                    {
-                        len++;
-                    }
-                }
-            }
-            return len;
-        }
-
-        
+        }       
     }
 }

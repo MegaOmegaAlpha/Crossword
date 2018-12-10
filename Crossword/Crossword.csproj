@@ -76,6 +76,7 @@
       <DependentUpon>FormHandMadeCros.cs</DependentUpon>
     </Compile>
     <Compile Include="Admin\CreateEditCros\Grid.cs" />
+    <Compile Include="Admin\CreateEditCros\Word.cs" />
     <Compile Include="Admin\CreateEditDict\FormAddNotion.cs">
       <SubType>Form</SubType>
     </Compile>
