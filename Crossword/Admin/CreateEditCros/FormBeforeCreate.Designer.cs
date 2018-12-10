@@ -58,6 +58,7 @@
             this.textBoxFile.Name = "textBoxFile";
             this.textBoxFile.Size = new System.Drawing.Size(192, 20);
             this.textBoxFile.TabIndex = 2;
+          
             // 
             // buttonGen
             // 
