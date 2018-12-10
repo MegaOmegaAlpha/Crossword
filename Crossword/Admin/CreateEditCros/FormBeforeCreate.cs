@@ -48,6 +48,11 @@ namespace Crossword.Admin
             Close();
         }
 
+        private void buttonGen_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void buttonDir_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();

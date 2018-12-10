@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crossword.Admin.CreateEditCros;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,6 +21,15 @@ namespace Crossword.Admin
         private string fileDict;
         private Dictionary<string, string> dictionary;
         private Grid grid;
+        
+        private readonly List<Button> _buttons;
+        private readonly List<string> _words = new List<string>();
+        private List<string> _order;
+
+        Crossik _board;
+         Random _rand = new Random();
+
+
         public FormHandMadeCros(FormBeforeCreate formBefore, int width, int height, string fileName)
         {
             this.formBefore = formBefore;
@@ -55,6 +65,7 @@ namespace Crossword.Admin
 
         private void FormHandMadeCros_Load(object sender, EventArgs e)
         {
+             _board = new Crossik(width, height);
             grid = new Grid(width, height);
             buttons = new Button[width, height];
             var tableLayoutPanel = new TableLayoutPanel();
@@ -232,6 +243,75 @@ namespace Crossword.Admin
                     Close();
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            List<string> keyList = new List<string>(dictionary.Keys);
+            for (int i = 0; i < 1000; i++)
+            {
+                string randomKey = keyList[_rand.Next(keyList.Count)];
+                if (randomKey.Length <= height)
+                {
+                    _words.Add(randomKey);
+                }
+            }
+
+            _words.Sort(Comparer);
+            _words.Reverse();
+            _order = _words;
+            GenCrossword();
+        }
+        void GenCrossword()
+        {
+            listBoxHor.Items.Clear();
+            listBoxVert.Items.Clear();
+            _board.Reset();
+            
+            foreach (var word in _order)
+            {
+                //var wordToInsert = ((bool)RTLRadioButton.IsChecked) ? word.Reverse().Aggregate("",(x,y) => x + y) : word;
+
+                switch (_board.AddWord(word))
+                {
+                    case 1:
+                        listBoxHor.Items.Add(word);
+                        break;
+                    case 0:
+                        listBoxVert.Items.Add(word);
+                        break;                
+
+                }
+            }
+
+            ActualizeData();
+        }
+        void ActualizeData()
+        {
+
+            var count = _board.N * _board.M;
+
+            var board = _board.GetBoard;
+            var p = 0;
+
+            for (var i = 0; i < _board.N; i++)
+            {
+                for (var j = 0; j < _board.M; j++)
+                {
+                    var letter = board[i, j] == '*' ? ' ' : board[i, j];
+                    if (letter != ' ') count--;
+                    //((Button)grid1.Children[p]).Content = letter.ToString();
+                    //((Button)grid1.Children[p]).Background = letter != ' ' ? _buttons[4].Background : _buttons[0].Background;
+                    buttons[i, j].Text = letter.ToString();
+                    buttons[i, j].BackColor = Color.Gray;
+                    p++;
+                }
+            }
+        }
+        static int Comparer(string a, string b)
+        {
+            var temp = a.Length.CompareTo(b.Length);
+            return temp == 0 ? a.CompareTo(b) : temp;
         }
 
         private void GridButtonClicked(object sender, EventArgs e)
