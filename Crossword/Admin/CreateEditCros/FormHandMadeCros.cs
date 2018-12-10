@@ -1,5 +1,4 @@
-﻿using Crossword.Admin.CreateEditCros;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,15 +21,7 @@ namespace Crossword.Admin
         private string fileDict;
         private Dictionary<string, string> dictionary;
         private Grid grid;
-        
-        private readonly List<Button> _buttons;
-        private readonly List<string> _words = new List<string>();
-        private List<string> _order;
-
-        Crossik _board;
-         Random _rand = new Random();
-
-
+        private string[] notions;
         public FormHandMadeCros(FormBeforeCreate formBefore, int width, int height, string fileName)
         {
             this.formBefore = formBefore;
@@ -37,6 +29,14 @@ namespace Crossword.Admin
             this.height = height;
             fileDict = fileName;
             InitializeComponent();
+        }
+
+        public FormHandMadeCros(string fileName)
+        {
+            InitializeComponent();
+            height = 7;
+            width = 7;
+            this.fileDict = fileName;
         }
 
         private void tableLayoutPanel_Paint(object sender, PaintEventArgs e)
@@ -65,7 +65,7 @@ namespace Crossword.Admin
 
         private void FormHandMadeCros_Load(object sender, EventArgs e)
         {
-             _board = new Crossik(width, height);
+            listButton = new List<Button>();
             grid = new Grid(width, height);
             buttons = new Button[width, height];
             var tableLayoutPanel = new TableLayoutPanel();
@@ -120,10 +120,12 @@ namespace Crossword.Admin
                         {
                             def += " " + stringArr[i];
                         }
-                        dictionary.Add(notion.ToUpper(), def.ToLower());
+                        dictionary.Add(notion, def);
                         listBoxDict.Items.Add(notion);
                     }
                 }
+                notions = new string[dictionary.Count];
+                notions = dictionary.Keys.ToArray();
             }
             catch(ArgumentException)
             {
@@ -244,82 +246,129 @@ namespace Crossword.Admin
                 }
             }
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private int length;
+        private void buttonAddNotion_Click(object sender, EventArgs e)
         {
-            List<string> keyList = new List<string>(dictionary.Keys);
-            for (int i = 0; i < 1000; i++)
+            string not = listBoxDict.SelectedItem.ToString();
+            char[] charNot = not.ToCharArray();
+            Node node1 = (Node) listButton.ElementAt(0).Tag;
+            Node node2 = (Node)listButton.ElementAt(1).Tag;
+            string orient;
+            if (node1.I == node2.I - 1)
             {
-                string randomKey = keyList[_rand.Next(keyList.Count)];
-                if (randomKey.Length <= height)
-                {
-                    _words.Add(randomKey);
-                }
+                orient = "vertical";
             }
-
-            _words.Sort(Comparer);
-            _words.Reverse();
-            _order = _words;
-            GenCrossword();
-        }
-        void GenCrossword()
-        {
-            listBoxHor.Items.Clear();
-            listBoxVert.Items.Clear();
-            _board.Reset();
-            
-            foreach (var word in _order)
+            else
             {
-                //var wordToInsert = ((bool)RTLRadioButton.IsChecked) ? word.Reverse().Aggregate("",(x,y) => x + y) : word;
-
-                switch (_board.AddWord(word))
-                {
-                    case 1:
-                        listBoxHor.Items.Add(word);
-                        break;
-                    case 0:
-                        listBoxVert.Items.Add(word);
-                        break;                
-
-                }
+                orient = "horizontal";
             }
-
-            ActualizeData();
-        }
-        void ActualizeData()
-        {
-
-            var count = _board.N * _board.M;
-
-            var board = _board.GetBoard;
-            var p = 0;
-
-            for (var i = 0; i < _board.N; i++)
+            for (int i = 0; i < charNot.Length; i++)
             {
-                for (var j = 0; j < _board.M; j++)
-                {
-                    var letter = board[i, j] == '*' ? ' ' : board[i, j];
-                    if (letter != ' ') count--;
-                    //((Button)grid1.Children[p]).Content = letter.ToString();
-                    //((Button)grid1.Children[p]).Background = letter != ' ' ? _buttons[4].Background : _buttons[0].Background;
-                    buttons[i, j].Text = letter.ToString();
-                    buttons[i, j].BackColor = Color.Gray;
-                    p++;
-                }
+                listButton.ElementAt(i).BackColor = Color.Gray;
+                listButton.ElementAt(i).Text = charNot[i].ToString();
             }
-        }
-        static int Comparer(string a, string b)
-        {
-            var temp = a.Length.CompareTo(b.Length);
-            return temp == 0 ? a.CompareTo(b) : temp;
+            length = 0;
+            listButton.Clear();
         }
 
+        private class Intercsect
+        {
+            private Button buttonAdded;
+            int[,] matr = new int[5, 5];
+
+        }
+
+        private List<Intercsect> listInt = new List<Intercsect>();
+        private List<Button> listButton;
         private void GridButtonClicked(object sender, EventArgs e)
         {
             Button button = (Button) sender;
             Node node = (Node) button.Tag;
             grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
             button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
+            if (button.BackColor.Equals(Color.White))
+            {
+                listButton.Add(button);
+            }
+            else
+            {
+                listButton.Remove(button);
+            }
+            bool flag = true;
+            for (int i = node.J - 1; i <= node.J + 1; i++)
+            {
+                for (int j = node.I - 1; j <= node.I + 1; j++)
+                {
+                    if (i >= 0 && j >= 0 && i < width && j < height && !(j == width && i == height))
+                    {
+                        if ((!(i == node.J - 1 && j == node.I - 1) &&
+                             !(i == node.J + 1 && j == node.I + 1) &&
+                             !(i == node.J - 1 && j == node.I + 1) &&
+                             !(i == node.J + 1 && j == node.I - 1)))
+                        {
+                            flag = true;
+                            if (buttons[j, i].BackColor.Equals(Color.Gray))
+                            {
+                                Button buttoneg = buttons[j, i];
+                                if (!listButton.Contains(buttoneg))
+                                {
+                                    Button added = listButton.First();
+                                    Node addedNode = (Node)added.Tag;
+                                    if ((i == addedNode.J + 1 && j == addedNode.I) || 
+                                        (i == addedNode.J - 1 && j == addedNode.I) || 
+                                        (i == addedNode.J && j == addedNode.I + 1) || 
+                                        (i == addedNode.J && j == addedNode.I - 1))
+                                    {
+                                        listButton.Insert(0, buttoneg);
+                                    }
+                                    else
+                                    {
+                                        listButton.Add(buttoneg);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            #region cewg
+            string mask = GetMask();
+            length++;
+            if (length > 1)
+            {
+                listBoxDict.Items.Clear();
+                foreach (string notion in notions)
+                {
+                    if (Regex.IsMatch(notion, mask, RegexOptions.IgnoreCase))
+                    {
+                        listBoxDict.Items.Add(notion);
+                    }
+                }
+            }
+            else
+            {
+                listBoxDict.Items.AddRange(notions);
+            }
+            #endregion
+        }
+
+        private string GetMask()
+        {
+            string mask = @"";
+            foreach (Button button in listButton)
+            {
+                if (!button.Text.Equals(""))
+                {
+                    mask += button.Text;
+                }
+                else
+                {
+                    mask += ".";
+                }
+            }
+            mask += "$";
+            mask = "^" + mask;
+            return mask;
         }
     }
 }

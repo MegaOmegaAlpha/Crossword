@@ -168,6 +168,7 @@
             this.buttonAddNotion.Size = new System.Drawing.Size(49, 45);
             this.buttonAddNotion.TabIndex = 6;
             this.buttonAddNotion.UseVisualStyleBackColor = true;
+            this.buttonAddNotion.Click += new System.EventHandler(this.buttonAddNotion_Click);
             // 
             // listBoxDict
             // 
