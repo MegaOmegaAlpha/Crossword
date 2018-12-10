@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\CreateEditCros\Crossword.cs" />
     <Compile Include="Admin\CreateEditCros\FormBeforeCreate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +76,7 @@
       <DependentUpon>FormHandMadeCros.cs</DependentUpon>
     </Compile>
     <Compile Include="Admin\CreateEditCros\Grid.cs" />
+    <Compile Include="Admin\CreateEditCros\Word.cs" />
     <Compile Include="Admin\CreateEditDict\FormAddNotion.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -82,6 +82,7 @@
             this.buttonDelNotion.Size = new System.Drawing.Size(49, 45);
             this.buttonDelNotion.TabIndex = 5;
             this.buttonDelNotion.UseVisualStyleBackColor = true;
+            this.buttonDelNotion.Click += new System.EventHandler(this.buttonDelNotion_Click);
             // 
             // labelHor
             // 
@@ -185,6 +186,7 @@
             this.buttonSaveCros.Size = new System.Drawing.Size(57, 45);
             this.buttonSaveCros.TabIndex = 3;
             this.buttonSaveCros.UseVisualStyleBackColor = true;
+            this.buttonSaveCros.Click += new System.EventHandler(this.buttonSaveCros_Click);
             // 
             // buttonBack
             // 
