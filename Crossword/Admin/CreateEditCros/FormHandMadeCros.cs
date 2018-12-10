@@ -40,8 +40,8 @@ namespace Crossword.Admin
         public FormHandMadeCros(string fileName)
         {
             InitializeComponent();
-            height = 10;
-            width = 10;
+            height = 7;
+            width = 7;
             this.fileDict = fileName;
         }
 
@@ -408,47 +408,50 @@ namespace Crossword.Admin
 
         private void buttonDelNotion_Click(object sender, EventArgs e)
         {
-            if (listBoxHor.SelectedItem != null)
+            if (!(listBoxHor.SelectedItem != null && listBoxVert.SelectedItem != null))
             {
-                string word = listBoxHor.SelectedItem.ToString();
-                Word w = grid.GetWord(word);
-                for (int i = w.GetJ(); i < w.GetNotion().Length; i++)
+                if (listBoxHor.SelectedItem != null)
                 {
-                    if (!grid.GetInters(i, w.GetI()))
-                    {
-                        buttons[i, w.GetI()].BackColor = Color.Black;
-                        buttons[i, w.GetI()].Text = "";
-                        grid.SetGridItem(i, w.GetI(), false);
-                    }
-                    else
-                    {
-                        grid.SetInters(i, w.GetI(), false);
-                    }
-                }
-                grid.DeleteWord(w);
-                listBoxHor.Items.Remove(listBoxHor.SelectedItem);
-            }
-            else
-            {
-                if (listBoxVert.SelectedItem != null)
-                {
-                    string word = listBoxVert.SelectedItem.ToString();
+                    string word = listBoxHor.SelectedItem.ToString();
                     Word w = grid.GetWord(word);
-                    for (int i = w.GetI(); i < w.GetNotion().Length; i++)
+                    for (int i = w.GetJ(); i < w.GetJ() + w.GetNotion().Length; i++)
                     {
-                        if (!grid.GetInters(w.GetJ(), i))
+                        if (!grid.GetInters(i, w.GetI()))
                         {
-                            buttons[w.GetJ(), i].BackColor = Color.Black;
-                            buttons[w.GetJ(), i].Text = "";
+                            buttons[i, w.GetI()].BackColor = Color.Black;
+                            buttons[i, w.GetI()].Text = "";
                             grid.SetGridItem(i, w.GetI(), false);
                         }
                         else
                         {
-                            grid.SetInters(w.GetJ(), i, false);
+                            grid.SetInters(i, w.GetI(), false);
                         }
                     }
                     grid.DeleteWord(w);
-                    listBoxVert.Items.Remove(listBoxVert.SelectedItem);
+                    listBoxHor.Items.Remove(listBoxHor.SelectedItem);
+                }
+                else
+                {
+                    if (listBoxVert.SelectedItem != null)
+                    {
+                        string word = listBoxVert.SelectedItem.ToString();
+                        Word w = grid.GetWord(word);
+                        for (int i = w.GetI(); i < w.GetI() + w.GetNotion().Length; i++)
+                        {
+                            if (!grid.GetInters(w.GetJ(), i))
+                            {
+                                buttons[w.GetJ(), i].BackColor = Color.Black;
+                                buttons[w.GetJ(), i].Text = "";
+                                grid.SetGridItem(i, w.GetI(), false);
+                            }
+                            else
+                            {
+                                grid.SetInters(w.GetJ(), i, false);
+                            }
+                        }
+                        grid.DeleteWord(w);
+                        listBoxVert.Items.Remove(listBoxVert.SelectedItem);
+                    }
                 }
             }
         }

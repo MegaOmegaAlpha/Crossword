@@ -17,7 +17,7 @@ namespace Crossword
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormHandMadeCros(@"C:\Users\nikit\Desktop\Главный.txt"));
+            Application.Run(new FormHandMadeCros(@"C:\Users\User\Desktop\ТП\main.txt"));
         }
     }
 }
