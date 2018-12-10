@@ -67,6 +67,7 @@
             this.buttonGen.TabIndex = 3;
             this.buttonGen.Text = "Сгенерировать";
             this.buttonGen.UseVisualStyleBackColor = true;
+            this.buttonGen.Click += new System.EventHandler(this.buttonGen_Click);
             // 
             // labelHeight
             // 
