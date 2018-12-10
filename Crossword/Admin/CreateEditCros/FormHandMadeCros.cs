@@ -12,8 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Crossword.Admin.CreateEditCros;
-
 namespace Crossword.Admin
 {
     public partial class FormHandMadeCros : Form
