@@ -12,12 +12,21 @@ namespace Crossword.Admin
         private int width;
 
         private bool[,] gridMatr;
+        private string[,] gridChar;
 
         public Grid(int width, int height)
         {
             this.height = height;
             this.width = width;
             gridMatr = new bool[width, height];
+            gridChar = new string[width, height];
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    gridChar[i, j] = "";
+                }
+            }
         }
 
         public int Height
@@ -32,6 +41,16 @@ namespace Crossword.Admin
             set { width = value; }
         }
 
+        public string GetGridChar(int i, int j)
+        {
+            return gridChar[i, j];
+        }
+
+        public void SetGridChar(int i, int j, string val)
+        {
+            gridChar[i, j] = val;
+        }
+
         public bool GetGridItem(int i, int j)
         {
             return gridMatr[i, j];
@@ -41,5 +60,23 @@ namespace Crossword.Admin
         {
             gridMatr[i, j] = val;
         }
+
+        public int GetWordLength()
+        {
+            int len = 0;
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (gridMatr[i, j])
+                    {
+                        len++;
+                    }
+                }
+            }
+            return len;
+        }
+
+        
     }
 }

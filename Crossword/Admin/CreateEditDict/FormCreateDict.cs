@@ -52,7 +52,7 @@ namespace Crossword.Admin.CreateEditDict
                 }
                 updateGrid();
             }
-            catch (System.ArgumentException)
+            catch (ArgumentException)
             {
                 MessageBox.Show("Понятие повторяется!", "Ошибка", MessageBoxButtons.OK,
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
@@ -130,12 +130,12 @@ namespace Crossword.Admin.CreateEditDict
                 string def = dataGridView.CurrentRow.Cells[1].Value.ToString();
                 oldNot = not;
                 formAdd = new FormAddNotion(not, def);
-                formAdd.buttonSave.Click += new EventHandler(buttonSaveNotion1_Click);
+                formAdd.buttonSave.Click += new EventHandler(buttonSaveEditedNotion_Click);
                 formAdd.Show();
             }
         }
 
-        private void buttonSaveNotion1_Click(object sender, EventArgs e)
+        private void buttonSaveEditedNotion_Click(object sender, EventArgs e)
         {
             try
             {
@@ -166,7 +166,7 @@ namespace Crossword.Admin.CreateEditDict
                     }
                 }
             }
-            catch
+            catch (ArgumentException)
             {
                 MessageBox.Show("Понятие повторяется!", "Ошибка", MessageBoxButtons.OK,
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
