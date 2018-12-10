@@ -1,4 +1,5 @@
 ﻿using Crossword.Autentification;
+using Crossword.User;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,12 +49,29 @@ namespace Crossword
             if (!login.Equals("") && !password.Equals(""))
             {
                 SqlCommand sqlCommand = new SqlCommand("SELECT* FROM Users Where login ='" + login + "' " +
-                    "and password ='" + password + "' and isAdmin = 1;", sqlConnection);
+                    "and password ='" + password + "';", sqlConnection);
                 SqlDataReader reader = sqlCommand.ExecuteReader();
                 if (reader.Read())
                 {
-                    FormAdmin formAdmin = new FormAdmin(this);
-                    formAdmin.Show();
+                    bool isAdmin = (bool)reader["isAdmin"];
+                    if (isAdmin)
+                    {
+                        FormAdmin formAdmin = new FormAdmin(this);
+                        formAdmin.Show();
+                    }
+                    else
+                    {
+                        OpenFileDialog openFileDialog = new OpenFileDialog();
+                        openFileDialog.Filter = "CrosswordFile |*.crwd";
+                        openFileDialog.Title = "Открыть кроссворд";
+                        openFileDialog.ShowDialog();
+                        if (openFileDialog.FileName != "")
+                        {
+                            FormUser formUser = new FormUser(this, openFileDialog.FileName);
+                            formUser.Show();
+                            Visible = false;
+                        }                       
+                    }
                     textBoxLogin.Clear();
                     textBoxPas.Clear();
                     Visible = false;
