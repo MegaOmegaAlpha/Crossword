@@ -65,6 +65,7 @@ namespace Crossword.Admin
 
         }
 
+        #region class Node definition
         private class Node
         {
             private int i;
@@ -83,6 +84,7 @@ namespace Crossword.Admin
                 get { return j; }
             }
         }
+        #endregion 
 
         private void FormHandMadeCros_Load(object sender, EventArgs e)
         {
@@ -113,6 +115,7 @@ namespace Crossword.Admin
                         {
                             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
                         }
+                        //инициализация экземпляра
                         buttons[col, row] = new Button();
                         buttons[col, row].Dock = DockStyle.Fill;
                         buttons[col, row].BackColor = Color.Black;
@@ -127,7 +130,7 @@ namespace Crossword.Admin
 
                 textBoxCurrentDict.Text = fileDict;
 
-                //dictionary
+                //заполнение словаря
                 StreamReader reader = new StreamReader(fileDict, Encoding.GetEncoding("Windows-1251"));
                 string dataFromFile = "";
                 dictionary = new Dictionary<string, string>();
@@ -203,6 +206,7 @@ namespace Crossword.Admin
                 TableContainer.Controls.Add(tableLayoutPanel);
 
                 textBoxCurrentDict.Text = fileDict;
+                //размещение букв на сетке
                 foreach (Word word in words)
                 {
                     if (word.GetDirection().Equals(Direction.Horizontal))
@@ -357,7 +361,7 @@ namespace Crossword.Admin
             if (listBoxDict.SelectedItem != null && listButton.Count > 0)
             {
                 bool check = true;
-                Node node1, node2;
+                Node node1, node2, nodeL;
                 for (int i = 0; i < listButton.Count - 1; i++)
                 {
                     node1 = (Node)listButton.ElementAt(i).Tag;
@@ -375,17 +379,63 @@ namespace Crossword.Admin
                     char[] charNot = not.ToCharArray();
                     node1 = (Node)listButton.ElementAt(0).Tag;
                     node2 = (Node)listButton.ElementAt(1).Tag;
+                    nodeL = (Node)listButton.Last().Tag;
                     Direction dir;
                     Word word;
+                    //определение направления
                     if (node1.I == node2.I - 1)
                     {
                         dir = Direction.Horizontal;
                         listBoxHor.Items.Add(not);
+                        #region block outside buttons
+                        //блокировка крайних положений, чтобы на них нельзя было кликать
+                        if (0 < node1.I && nodeL.I < width - 1)
+                        {
+                            buttons[node1.I - 1, node1.J].Enabled = false;
+                            buttons[nodeL.I + 1, node1.J].Enabled = false;
+                        }
+                        else
+                        {
+                            if (0 < node1.I && nodeL.I == width - 1)
+                            {
+                                buttons[node1.I - 1, node1.J].Enabled = false;
+                            }
+                            else
+                            {
+                                if (0 == node1.I && nodeL.I < width - 1)
+                                {
+                                    buttons[nodeL.I + 1, node1.J].Enabled = false;
+                                }
+                            }
+                        }
+                        #endregion
                     }
                     else
                     {
                         dir = Direction.Vertical;
                         listBoxVert.Items.Add(not);
+                        #region block outside buttons
+                        //блокировка крайних положений, чтобы на них нельзя было кликать
+                        if (0 < node1.J && nodeL.J < height - 1)
+                        {
+                            buttons[node1.I, node1.J - 1].Enabled = false;
+                            buttons[node1.I, nodeL.J + 1].Enabled = false;
+                        }
+                        else
+                        {
+                            if (0 < node1.J && nodeL.J == width - 1)
+                            {
+                                buttons[node1.I, node1.J - 1].Enabled = false;
+                            }
+                            else
+                            {
+                                if (0 == node1.J && nodeL.J < width - 1)
+                                {
+                                    buttons[node1.I, nodeL.J + 1].Enabled = false;
+                                }
+                            }
+                        }
+                        #endregion
                     }
                     int intI = node1.I;
                     int intJ = node1.J;
@@ -539,18 +589,21 @@ namespace Crossword.Admin
         {
             if (!(listBoxHor.SelectedItem != null && listBoxVert.SelectedItem != null))
             {
+                //удаляется "горизонтальное" понятие
                 if (listBoxHor.SelectedItem != null)
                 {
                     string word = listBoxHor.SelectedItem.ToString();
                     Word w = grid.GetWord(word);
                     for (int i = w.GetJ(); i < w.GetJ() + w.GetNotion().Length; i++)
                     {
+                        //если буква не является пересечением, то ее можно удалить
                         if (!grid.GetInters(i, w.GetI()))
                         {
                             buttons[i, w.GetI()].BackColor = Color.Black;
                             buttons[i, w.GetI()].Text = "";
                             grid.SetGridItem(i, w.GetI(), false);
                         }
+                        //иначе снимаем пересечение
                         else
                         {
                             grid.SetInters(i, w.GetI(), false);
@@ -558,7 +611,30 @@ namespace Crossword.Admin
                     }
                     grid.DeleteWord(w);
                     listBoxHor.Items.Remove(listBoxHor.SelectedItem);
+                    #region set ouside buttons enabled=true
+                    //разблокировка крайних кнопок для дальнийшего использования
+                    if (0 < w.GetJ() && w.GetJ() + w.GetNotion().Length - 1 < width - 1)
+                    {
+                        buttons[w.GetJ() - 1, w.GetI()].Enabled = true;
+                        buttons[w.GetJ() + w.GetNotion().Length, w.GetI()].Enabled = true;
+                    }
+                    else
+                    {
+                        if (0 < w.GetJ() && w.GetJ() + w.GetNotion().Length - 1 == width - 1)
+                        {
+                            buttons[w.GetJ() - 1, w.GetI()].Enabled = true;
+                        }
+                        else
+                        {
+                            if (0 == w.GetJ() && w.GetJ() + w.GetNotion().Length - 1 < width - 1)
+                            {
+                                buttons[w.GetJ() + w.GetNotion().Length, w.GetI()].Enabled = true;
+                            }
+                        }
+                    }
+                    #endregion
                 }
+                //удаляется "вертикальное" понятие
                 else
                 {
                     if (listBoxVert.SelectedItem != null)
@@ -580,6 +656,28 @@ namespace Crossword.Admin
                         }
                         grid.DeleteWord(w);
                         listBoxVert.Items.Remove(listBoxVert.SelectedItem);
+                        #region set outside buttons enabled=true
+                        //восстановление недоступных конопок
+                        if (0 < w.GetI() && w.GetI() + w.GetNotion().Length - 1 < height - 1)
+                        {
+                            buttons[w.GetJ(), w.GetI() - 1].Enabled = true;
+                            buttons[w.GetJ(), w.GetI() + w.GetNotion().Length].Enabled = true;
+                        }
+                        else
+                        {
+                            if (0 < w.GetI() && w.GetI() + w.GetNotion().Length - 1 < height - 1)
+                            {
+                                buttons[w.GetJ(), w.GetI() - 1].Enabled = true;
+                            }
+                            else
+                            {
+                                if (0 == w.GetI() && w.GetI() + w.GetNotion().Length - 1 < height - 1)
+                                {
+                                    buttons[w.GetJ(), w.GetI() + w.GetNotion().Length].Enabled = true;
+                                }
+                            }
+                        }
+                        #endregion
                     }
                 }
             }
@@ -674,6 +772,16 @@ namespace Crossword.Admin
             _order = _words;
             GenCrossword();
 
+        }
+
+        private void listBoxVert_Click(object sender, EventArgs e)
+        {
+            listBoxHor.SelectedIndex = -1;
+        }
+
+        private void listBoxHor_Click(object sender, EventArgs e)
+        {
+            listBoxVert.SelectedIndex = -1;
         }
 
         static int Comparer(string a, string b)
