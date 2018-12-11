@@ -56,14 +56,13 @@ namespace Crossword.Autentification
                     else
                     {
                         MessageBox.Show("Такой пользователь уже есть", "Ошибка", MessageBoxButtons.OK, 
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, 
-                            MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     }
                 }
                 else
                 {
                     MessageBox.Show("Пароли не совпадают", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error,
-                        MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxDefaultButton.Button1);
                 }
             }
         }

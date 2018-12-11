@@ -37,8 +37,7 @@ namespace Crossword.Admin
             else
             {
                 MessageBox.Show("Укажите файл словаря", "Ошибка", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 

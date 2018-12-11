@@ -23,7 +23,7 @@ namespace Crossword.Admin
             words = new List<Word>();
             this.height = height;
             this.width = width;
-            gridMatr = new bool[width, height];
+            gridMatr = new bool[width, height]; //возможно, это следует убрать
             isInters = new bool[width, height];
             for (int i = 0; i < width; i++)
             {

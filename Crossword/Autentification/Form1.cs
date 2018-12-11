@@ -37,8 +37,7 @@ namespace Crossword
                 labelConnect.Text = "Соединение отсутствует";
                 labelConnect.Visible = true;
                 MessageBox.Show("Проблемы с соединением. Требуется перезапуск", "Ошибка", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 
@@ -79,8 +78,7 @@ namespace Crossword
                 else
                 {
                     MessageBox.Show("Логин или пароль введен неверно", "Ошибка", MessageBoxButtons.OK, 
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, 
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
                 reader.Close();
             }

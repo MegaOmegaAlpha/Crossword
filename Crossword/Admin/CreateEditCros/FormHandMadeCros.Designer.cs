@@ -54,10 +54,9 @@
             // 
             // TableContainer
             // 
-            this.TableContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TableContainer.Location = new System.Drawing.Point(12, 53);
             this.TableContainer.Name = "TableContainer";
-            this.TableContainer.Size = new System.Drawing.Size(443, 443);
+            this.TableContainer.Size = new System.Drawing.Size(600, 600);
             this.TableContainer.TabIndex = 0;
             // 
             // groupBoxTasks
@@ -68,9 +67,9 @@
             this.groupBoxTasks.Controls.Add(this.labelVert);
             this.groupBoxTasks.Controls.Add(this.listBoxHor);
             this.groupBoxTasks.Controls.Add(this.listBoxVert);
-            this.groupBoxTasks.Location = new System.Drawing.Point(461, 53);
+            this.groupBoxTasks.Location = new System.Drawing.Point(619, 53);
             this.groupBoxTasks.Name = "groupBoxTasks";
-            this.groupBoxTasks.Size = new System.Drawing.Size(298, 443);
+            this.groupBoxTasks.Size = new System.Drawing.Size(298, 600);
             this.groupBoxTasks.TabIndex = 1;
             this.groupBoxTasks.TabStop = false;
             this.groupBoxTasks.Text = "Редактирование кроссворда";
@@ -78,7 +77,7 @@
             // buttonDelNotion
             // 
             this.buttonDelNotion.Image = ((System.Drawing.Image)(resources.GetObject("buttonDelNotion.Image")));
-            this.buttonDelNotion.Location = new System.Drawing.Point(122, 387);
+            this.buttonDelNotion.Location = new System.Drawing.Point(128, 549);
             this.buttonDelNotion.Name = "buttonDelNotion";
             this.buttonDelNotion.Size = new System.Drawing.Size(49, 45);
             this.buttonDelNotion.TabIndex = 5;
@@ -108,7 +107,7 @@
             this.listBoxHor.FormattingEnabled = true;
             this.listBoxHor.Location = new System.Drawing.Point(154, 44);
             this.listBoxHor.Name = "listBoxHor";
-            this.listBoxHor.Size = new System.Drawing.Size(138, 329);
+            this.listBoxHor.Size = new System.Drawing.Size(138, 498);
             this.listBoxHor.TabIndex = 1;
             this.listBoxHor.Click += new System.EventHandler(this.listBoxHor_Click);
             // 
@@ -117,7 +116,7 @@
             this.listBoxVert.FormattingEnabled = true;
             this.listBoxVert.Location = new System.Drawing.Point(6, 44);
             this.listBoxVert.Name = "listBoxVert";
-            this.listBoxVert.Size = new System.Drawing.Size(138, 329);
+            this.listBoxVert.Size = new System.Drawing.Size(138, 498);
             this.listBoxVert.TabIndex = 0;
             this.listBoxVert.Click += new System.EventHandler(this.listBoxVert_Click);
             // 
@@ -129,9 +128,9 @@
             this.groupBoxDict.Controls.Add(this.buttonSort);
             this.groupBoxDict.Controls.Add(this.buttonAddNotion);
             this.groupBoxDict.Controls.Add(this.listBoxDict);
-            this.groupBoxDict.Location = new System.Drawing.Point(765, 53);
+            this.groupBoxDict.Location = new System.Drawing.Point(923, 53);
             this.groupBoxDict.Name = "groupBoxDict";
-            this.groupBoxDict.Size = new System.Drawing.Size(283, 443);
+            this.groupBoxDict.Size = new System.Drawing.Size(283, 594);
             this.groupBoxDict.TabIndex = 2;
             this.groupBoxDict.TabStop = false;
             this.groupBoxDict.Text = "Работа со словарем";
@@ -146,7 +145,7 @@
             // buttonSortLen
             // 
             this.buttonSortLen.Image = ((System.Drawing.Image)(resources.GetObject("buttonSortLen.Image")));
-            this.buttonSortLen.Location = new System.Drawing.Point(75, 179);
+            this.buttonSortLen.Location = new System.Drawing.Point(75, 259);
             this.buttonSortLen.Name = "buttonSortLen";
             this.buttonSortLen.Size = new System.Drawing.Size(42, 43);
             this.buttonSortLen.TabIndex = 9;
@@ -156,7 +155,7 @@
             // buttonSort
             // 
             this.buttonSort.Image = ((System.Drawing.Image)(resources.GetObject("buttonSort.Image")));
-            this.buttonSort.Location = new System.Drawing.Point(6, 179);
+            this.buttonSort.Location = new System.Drawing.Point(6, 259);
             this.buttonSort.Name = "buttonSort";
             this.buttonSort.Size = new System.Drawing.Size(42, 43);
             this.buttonSort.TabIndex = 8;
@@ -166,7 +165,7 @@
             // buttonAddNotion
             // 
             this.buttonAddNotion.Image = ((System.Drawing.Image)(resources.GetObject("buttonAddNotion.Image")));
-            this.buttonAddNotion.Location = new System.Drawing.Point(37, 239);
+            this.buttonAddNotion.Location = new System.Drawing.Point(40, 308);
             this.buttonAddNotion.Name = "buttonAddNotion";
             this.buttonAddNotion.Size = new System.Drawing.Size(49, 45);
             this.buttonAddNotion.TabIndex = 6;
@@ -178,7 +177,7 @@
             this.listBoxDict.FormattingEnabled = true;
             this.listBoxDict.Location = new System.Drawing.Point(123, 64);
             this.listBoxDict.Name = "listBoxDict";
-            this.listBoxDict.Size = new System.Drawing.Size(154, 368);
+            this.listBoxDict.Size = new System.Drawing.Size(154, 524);
             this.listBoxDict.TabIndex = 4;
             // 
             // buttonSaveCros
@@ -243,7 +242,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1060, 508);
+            this.ClientSize = new System.Drawing.Size(1225, 666);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonDir);
             this.Controls.Add(this.textBoxCurrentDict);

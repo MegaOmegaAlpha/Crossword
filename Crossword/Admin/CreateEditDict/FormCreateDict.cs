@@ -55,8 +55,7 @@ namespace Crossword.Admin.CreateEditDict
             catch (ArgumentException)
             {
                 MessageBox.Show("Понятие повторяется!", "Ошибка", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 
@@ -100,8 +99,7 @@ namespace Crossword.Admin.CreateEditDict
                 if (notion.Equals("") || def.Equals(""))
                 {
                     MessageBox.Show("Поля не должны быть пустыми!", "Ошибка", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
                 else
                 {
@@ -116,8 +114,7 @@ namespace Crossword.Admin.CreateEditDict
             catch (System.ArgumentException)
             {
                 MessageBox.Show("Понятие повторяется!", "Ошибка", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 
@@ -144,8 +141,7 @@ namespace Crossword.Admin.CreateEditDict
                 if (not.Equals("") || def.Equals(""))
                 {
                     MessageBox.Show("Поля не должны быть пустыми!", "Ошибка", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
                 else
                 {
@@ -169,8 +165,7 @@ namespace Crossword.Admin.CreateEditDict
             catch (ArgumentException)
             {
                 MessageBox.Show("Понятие повторяется!", "Ошибка", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 
