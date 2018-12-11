@@ -196,6 +196,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.tableContainer);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormUser";
             this.Text = "РАЗГАДЫВАНИЕ КРОССВОРДА";
             this.Load += new System.EventHandler(this.FormUser_Load);

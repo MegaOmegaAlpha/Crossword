@@ -614,19 +614,7 @@ namespace Crossword.Admin
 
         private void button1_Click(object sender, EventArgs e)
         {
-            List<string> keyList = new List<string>(dictionary.Keys);
-            for (int i = 0; i < 1000; i++)
-            {
-                string randomKey = keyList[_rand.Next(keyList.Count)];
-                if (randomKey.Length <= height)
-                {
-                    _words.Add(randomKey);
-                }
-            }
-            _words.Sort(Comparer);
-            _words.Reverse();
-            _order = _words;
-            GenCrossword();
+           
 
         }
         void GenCrossword()
@@ -664,7 +652,9 @@ namespace Crossword.Admin
                     //((Button)grid1.Children[p]).Content = letter.ToString(); 
                     //((Button)grid1.Children[p]).Background = letter != ' ' ? _buttons[4].Background : _buttons[0].Background; 
                     buttons[i, j].Text = letter.ToString();
-                    buttons[i, j].BackColor = Color.Gray;
+                    if(!buttons[i,j].Text.Equals(" "))                              
+                        buttons[i, j].BackColor = Color.White;
+                   
                     p++;
                 }
             }
@@ -672,7 +662,50 @@ namespace Crossword.Admin
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            var count = _board.N * _board.M;
+            var board = _board.GetBoard;
+            for (var i = 0; i < _board.N; i++)
+            {
+                for (var j = 0; j < _board.M; j++)
+                {
+                        buttons[i, j].BackColor = Color.Black;                   
+                }
+            }
+            List<string> _words = new List<string>(dictionary.Keys);
+            _words.Sort(Comparer);
+            _words.Reverse();
+            _order = _words;
+            GenCrossword();
+                      
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Dictionary<string, string> dictCross = new Dictionary<string, string>();
+            foreach (string item in listBoxHor.Items)
+            {
+                dictCross.Add(item, dictionary[item]);
+            }
+            foreach (string item in listBoxVert.Items)
+            {
+                dictCross.Add(item, dictionary[item]);
+            }
+            Grid grid1 = new Grid(_board.N, _board.M);
+            CrosswordCont crossword = new CrosswordCont(grid1, dictCross);
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "CrosswordFile |*.crwd";
+            saveFileDialog.Title = "Сохранить кроссворд";
+            saveFileDialog.ShowDialog();
+            if (saveFileDialog.FileName != "")
+            {
+                Stream s = new FileStream(saveFileDialog.FileName, FileMode.Create);
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(s, crossword);
+                MessageBox.Show("Кроссворд сохранен", "Сохранение", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1,
+                                MessageBoxOptions.DefaultDesktopOnly);
+                s.Close();
+            }
         }
 
         static int Comparer(string a, string b)

@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBeforeCreate));
             this.labelWidth = new System.Windows.Forms.Label();
             this.textBoxFile = new System.Windows.Forms.TextBox();
-            this.buttonGen = new System.Windows.Forms.Button();
             this.labelHeight = new System.Windows.Forms.Label();
             this.labelFile = new System.Windows.Forms.Label();
             this.buttonCreate = new System.Windows.Forms.Button();
@@ -58,17 +57,6 @@
             this.textBoxFile.Name = "textBoxFile";
             this.textBoxFile.Size = new System.Drawing.Size(192, 20);
             this.textBoxFile.TabIndex = 2;
-          
-            // 
-            // buttonGen
-            // 
-            this.buttonGen.Location = new System.Drawing.Point(12, 203);
-            this.buttonGen.Name = "buttonGen";
-            this.buttonGen.Size = new System.Drawing.Size(106, 23);
-            this.buttonGen.TabIndex = 3;
-            this.buttonGen.Text = "Сгенерировать";
-            this.buttonGen.UseVisualStyleBackColor = true;
-            this.buttonGen.Click += new System.EventHandler(this.buttonGen_Click);
             // 
             // labelHeight
             // 
@@ -90,11 +78,11 @@
             // 
             // buttonCreate
             // 
-            this.buttonCreate.Location = new System.Drawing.Point(199, 203);
+            this.buttonCreate.Location = new System.Drawing.Point(113, 203);
             this.buttonCreate.Name = "buttonCreate";
-            this.buttonCreate.Size = new System.Drawing.Size(106, 23);
+            this.buttonCreate.Size = new System.Drawing.Size(123, 23);
             this.buttonCreate.TabIndex = 7;
-            this.buttonCreate.Text = "Создать вручную";
+            this.buttonCreate.Text = "Создать";
             this.buttonCreate.UseVisualStyleBackColor = true;
             this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
             // 
@@ -174,7 +162,6 @@
             this.Controls.Add(this.buttonCreate);
             this.Controls.Add(this.labelFile);
             this.Controls.Add(this.labelHeight);
-            this.Controls.Add(this.buttonGen);
             this.Controls.Add(this.textBoxFile);
             this.Controls.Add(this.labelWidth);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -194,7 +181,6 @@
 
         private System.Windows.Forms.Label labelWidth;
         private System.Windows.Forms.TextBox textBoxFile;
-        private System.Windows.Forms.Button buttonGen;
         private System.Windows.Forms.Label labelHeight;
         private System.Windows.Forms.Label labelFile;
         private System.Windows.Forms.Button buttonCreate;

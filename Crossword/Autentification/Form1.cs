@@ -24,7 +24,7 @@ namespace Crossword
         {
             try
             {
-                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Repository\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
+                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Пользователь\Documents\GitHub\Crossword\Crossword\bin\Debug\UsersDB.mdf;Integrated Security=True";
                 sqlConnection = new SqlConnection(connect);
                 sqlConnection.Open();
                 labelConnect.ForeColor = Color.Green;
@@ -97,5 +97,7 @@ namespace Crossword
         {
             MessageBox.Show("КЛАССИЧЕСКИЙ КРОССВОРД!\nРазработчики ПО:\n 1. Байрамов Владимир Алексеевич\n 2. Мавлютов Владимир Дмитриевич\n 3. Перевозчиков Никита Дмитриевич \n 4. Фёдоров Сергей Владимирович\n Самарский университет\n Группа 6402-090301D", "АВТОРЫ");
         }
+
+        
     }
 }
