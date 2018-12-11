@@ -418,8 +418,9 @@ namespace Crossword.Admin
                 Node node = (Node)button.Tag;
                 try
                 {
+                    grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
                     button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
-                    grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));                   
+                                       
                     if (button.BackColor.Equals(Color.White))
                     {
                         listButton.Add(button);
@@ -614,20 +615,7 @@ namespace Crossword.Admin
 
         private void button1_Click(object sender, EventArgs e)
         {
-            List<string> keyList = new List<string>(dictionary.Keys);
-            for (int i = 0; i < 1000; i++)
-            {
-                string randomKey = keyList[_rand.Next(keyList.Count)];
-                if (randomKey.Length <= height)
-                {
-                    _words.Add(randomKey);
-                }
-            }
-            _words.Sort(Comparer);
-            _words.Reverse();
-            _order = _words;
-            GenCrossword();
-
+            
         }
         void GenCrossword()
         {
@@ -672,6 +660,19 @@ namespace Crossword.Admin
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            List<string> keyList = new List<string>(dictionary.Keys);
+            for (int i = 0; i < 1000; i++)
+            {
+                string randomKey = keyList[_rand.Next(keyList.Count)];
+                if (randomKey.Length <= height)
+                {
+                    _words.Add(randomKey);
+                }
+            }
+            _words.Sort(Comparer);
+            _words.Reverse();
+            _order = _words;
+            GenCrossword();
 
         }
 

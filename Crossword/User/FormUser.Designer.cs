@@ -132,6 +132,7 @@
             this.buttonBack.Size = new System.Drawing.Size(64, 48);
             this.buttonBack.TabIndex = 10;
             this.buttonBack.UseVisualStyleBackColor = true;
+            this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
             // 
             // buttonSaveSolution
             // 

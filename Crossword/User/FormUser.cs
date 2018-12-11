@@ -65,15 +65,15 @@ namespace Crossword.User
                     textBoxes[col, row] = new RichTextBox();
                     textBoxes[col, row].Dock = DockStyle.Fill;
                     textBoxes[col, row].MaxLength = 1;
-                    //textBoxes[col, row].Tag = new Node(col, row, ' ');
                     textBoxes[col, row].Enabled = false;
                     textBoxes[col, row].KeyPress += textBox_KeyPress;
+                    textBoxes[col, row].ScrollBars = RichTextBoxScrollBars.None;
                     tableLayoutPanel.Controls.Add(textBoxes[col, row], col, row);
                 }
             }
             //таблицу в контейнер
             tableContainer.Controls.Add(tableLayoutPanel);
-
+            //заполнение сетки
             foreach (Word word in words)
             {
                 if (word.GetDirection().Equals(Direction.Horizontal))
@@ -108,8 +108,9 @@ namespace Crossword.User
         {
 
         }
-
+        bool changedH , changedV;
         private int indS1 = -1, indF1 = -1;
+        //выбрано пояснение из списка "по горизонтали"
         private void listBoxHor_SelectedIndexChanged(object sender, EventArgs e)
         {
             string dif = listBoxHor.SelectedItem.ToString();
@@ -117,13 +118,6 @@ namespace Crossword.User
             Word word = grid.GetWord(notion);
             if (indS1 != -1 && indF1 != -1)
             {
-                /*for (int i = indS; i < indF; i++)
-                {
-                    if (textBoxes[i, word.GetI()].BackColor.Equals(Color.Yellow))
-                    {
-                        textBoxes[i, word.GetI()].BackColor = Color.White;
-                    }
-                }*/
                 for (int i = 0; i < width; i++)
                 {
                     for (int j = 0; j < height; j++)
@@ -144,20 +138,14 @@ namespace Crossword.User
         }
 
         private int indS2 = -1, indF2 = -1;
+        //выбрано пояснение из списка "по вертикали"
         private void listBoxVert_SelectedIndexChanged(object sender, EventArgs e)
         {
             string dif = listBoxVert.SelectedItem.ToString();
             string notion = FindKey(dif);
             Word word = grid.GetWord(notion);
-            if (indS2 != -1 && indF2 != -1)
+            if (indS1 != -1 && indF1 != -1)
             {
-                /*for (int i = indS; i < indF; i++)
-                {
-                    if (textBoxes[i, word.GetI()].BackColor.Equals(Color.Yellow))
-                    {
-                        textBoxes[i, word.GetI()].BackColor = Color.White;
-                    }
-                }*/
                 for (int i = 0; i < width; i++)
                 {
                     for (int j = 0; j < height; j++)
@@ -175,8 +163,16 @@ namespace Crossword.User
             }
             indS2 = word.GetJ();
             indF2 = word.GetJ() + word.GetNotion().Length;
+
         }
 
+        private void buttonBack_Click(object sender, EventArgs e)
+        {
+            formMain.Visible = true;
+            Close();
+        }
+
+        //поиск ключа словаря по значению
         private string FindKey(string dif)
         {
             for (int i = 0; i < dictionary.Count; i++)
@@ -203,6 +199,7 @@ namespace Crossword.User
             }
         }
 
+        //проверка правильности разгадывания
         private bool CheckGrid()
         {
             for (int i = 0; i < width; i++)
@@ -210,12 +207,9 @@ namespace Crossword.User
                 for (int j = 0; j < height; j++)
                 {
                     string letter = textBoxes[i, j].Text;
-                    if (!letter.Equals(""))
+                    if (!letter.Equals(textBoxes[i, j].Tag.ToString()))
                     {
-                        if (!letter.Equals(textBoxes[i, j].Tag.ToString()))
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }
