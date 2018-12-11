@@ -66,6 +66,7 @@ namespace Crossword.Admin
         }
 
         #region class Node definition
+        //содержит координаты кнопки
         private class Node
         {
             private int i;
@@ -158,8 +159,7 @@ namespace Crossword.Admin
                 catch (ArgumentException)
                 {
                     MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                            MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     formBefore.Visible = true;
                     Close();
                 }
@@ -213,7 +213,7 @@ namespace Crossword.Admin
                     {
                         for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
                         {
-                            buttons[i, word.GetI()].BackColor = Color.Gray;
+                            buttons[i, word.GetI()].BackColor = Color.LightBlue;
                             buttons[i, word.GetI()].Text = word.GetNotion().ElementAt(j).ToString();
                         }
                         listBoxHor.Items.Add(word.GetNotion());
@@ -223,7 +223,7 @@ namespace Crossword.Admin
                     {
                         for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
                         {
-                            buttons[word.GetJ(), i].BackColor = Color.Gray;
+                            buttons[word.GetJ(), i].BackColor = Color.LightBlue;
                             buttons[word.GetJ(), i].Text = word.GetNotion().ElementAt(j).ToString();
                         }
                         listBoxVert.Items.Add(word.GetNotion());
@@ -347,8 +347,7 @@ namespace Crossword.Admin
                 catch (ArgumentException)
                 {
                     MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                            MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     formBefore.Visible = true;
                     Close();
                 }
@@ -362,16 +361,26 @@ namespace Crossword.Admin
             {
                 bool check = true;
                 Node node1, node2, nodeL;
+                //проверка корректности выделения области
                 for (int i = 0; i < listButton.Count - 1; i++)
                 {
                     node1 = (Node)listButton.ElementAt(i).Tag;
                     node2 = (Node)listButton.ElementAt(i + 1).Tag;
                     if ((node2.I - node1.I != 1 && node2.J - node1.J == 0) ||
-                        (node2.I - node1.I == 0 && node2.J - node1.J != 1))
+                        (node2.I - node1.I == 0 && node2.J - node1.J != 1) ||
+                        (node2.I - node1.I != 0 && node2.J - node1.J != 0))
+                    //между кнопками не должно быть разрывов, направление дожно соблюдаться
                     {
                         check = false;
                     }
 
+                }
+                node1 = (Node)listButton.First().Tag;
+                nodeL = (Node)listButton.Last().Tag;
+                //если первая и последняя кнопка не в одной плоскости, то ошибка
+                if (nodeL.I - node1.I != 0 && nodeL.J - node1.J != 0)
+                {
+                    check = false;
                 }
                 if (check)
                 {
@@ -442,7 +451,7 @@ namespace Crossword.Admin
                     word = new Word(intJ, intI, not, dir);
                     for (int i = 0; i < charNot.Length; i++)
                     {
-                        listButton.ElementAt(i).BackColor = Color.Gray;
+                        listButton.ElementAt(i).BackColor = Color.LightBlue;
                         listButton.ElementAt(i).Text = charNot[i].ToString();
                     }
                     grid.AddWord(word);
@@ -452,8 +461,7 @@ namespace Crossword.Admin
                 else
                 {
                     MessageBox.Show("Область выделена неверно!", "Ошибка", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                                MessageBoxOptions.DefaultDesktopOnly);
+                                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
         }
@@ -463,21 +471,21 @@ namespace Crossword.Admin
         {
             Button button = (Button)sender;
             //если на эту кнопку ничего не добавлено
-            if (!button.BackColor.Equals(Color.Gray))
+            if (!button.BackColor.Equals(Color.LightBlue))
             {
                 Node node = (Node)button.Tag;
                 try
                 {
+                    //установка флага на сетке
                     grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
                     button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
-                                       
+
                     if (button.BackColor.Equals(Color.White))
                     {
                         listButton.Add(button);
                     }
                     else
                     {
-                        length--;
                         listButton.Remove(button);
                     }
                     #region searching of neighbours
@@ -495,10 +503,11 @@ namespace Crossword.Admin
                                      !(i == node.J + 1 && j == node.I - 1)))
                                 {
                                     //если сосед содержит букву
-                                    if (buttons[j, i].BackColor.Equals(Color.Gray))
+                                    if (buttons[j, i].BackColor.Equals(Color.LightBlue))
                                     {
-                                        Button buttoneg = buttons[j, i];
-                                        if (!listButton.Contains(buttoneg))
+                                        Button buttonNeigh = buttons[j, i];
+                                        //если такая кнопка не встречалась
+                                        if (!listButton.Contains(buttonNeigh))
                                         {
                                             if (!button.BackColor.Equals(Color.Black))
                                             {
@@ -510,23 +519,23 @@ namespace Crossword.Admin
                                                 if ((i == addedNode.J - 1 && j == addedNode.I) ||
                                                     (i == addedNode.J && j == addedNode.I - 1))
                                                 {
-                                                    listButton.Insert(0, buttoneg);
+                                                    listButton.Insert(0, buttonNeigh);
                                                 }
                                                 else
                                                 {
-                                                    listButton.Add(buttoneg);
+                                                    listButton.Add(buttonNeigh);
                                                 }
                                             }
                                             else
                                             {
-                                                listButton.Remove(buttoneg);
+                                                listButton.Remove(buttonNeigh);
                                             }
                                         }
                                         else
                                         {
                                             if (button.BackColor.Equals(Color.Black))
                                             {
-                                                listButton.Remove(buttoneg);
+                                                listButton.Remove(buttonNeigh);
                                             }
                                         }
                                     }
@@ -558,8 +567,7 @@ namespace Crossword.Admin
                 catch (ArgumentNullException)
                 {
                     MessageBox.Show("Для редактирования кроссворда нужен словарь!", "Ошибка", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                            MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     button.BackColor = Color.White;
                     grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
                 }
@@ -713,7 +721,7 @@ namespace Crossword.Admin
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+
         }
         void GenCrossword()
         {
@@ -750,7 +758,9 @@ namespace Crossword.Admin
                     //((Button)grid1.Children[p]).Content = letter.ToString(); 
                     //((Button)grid1.Children[p]).Background = letter != ' ' ? _buttons[4].Background : _buttons[0].Background; 
                     buttons[i, j].Text = letter.ToString();
-                    buttons[i, j].BackColor = Color.Gray;
+                    buttons[i, j].BackColor = Color.Black;
+                    if (!buttons[i, j].Text.Equals(" "))
+                        buttons[i, j].BackColor = Color.LightBlue;
                     p++;
                 }
             }
