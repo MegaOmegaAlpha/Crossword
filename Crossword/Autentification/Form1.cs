@@ -24,7 +24,7 @@ namespace Crossword
         {
             try
             {
-                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Repository\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
+                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\Documents\GitHub\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
                 sqlConnection = new SqlConnection(connect);
                 sqlConnection.Open();
                 labelConnect.ForeColor = Color.Green;
@@ -40,7 +40,7 @@ namespace Crossword
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
-
+    
         private void button1_Click(object sender, EventArgs e)
         {
             string login = textBoxLogin.Text;
