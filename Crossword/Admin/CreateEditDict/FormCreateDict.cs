@@ -64,11 +64,16 @@ namespace Crossword.Admin.CreateEditDict
             if (dictionary.Count != 0)
             {
                 dataGridView.Rows.Clear();
+                progressBar1.Value = 0;
+                progressBar1.Minimum = 0;
+                progressBar1.Maximum = dictionary.Count;
+                progressBar1.Step = 1;
                 for (int i = 0; i < dictionary.Count; i++)
                 {
                     dataGridView.Rows.Add();
                     dataGridView.Rows[i].Cells[0].Value = dictionary.ElementAt(i).Key;
                     dataGridView.Rows[i].Cells[1].Value = dictionary.ElementAt(i).Value;
+                    progressBar1.PerformStep();
                 }
             }
         }
@@ -227,6 +232,34 @@ namespace Crossword.Admin.CreateEditDict
                     stream.WriteLine(dictionary.ElementAt(i).Key + " " + dictionary.ElementAt(i).Value);
                 }
                 stream.Close();
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (!textBoxSearch.Text.Equals(""))
+            {
+                dataGridView.Rows.Clear();
+                progressBar1.Value = 0;
+                progressBar1.Minimum = 0;
+                progressBar1.Maximum = dictionary.Count;
+                progressBar1.Step = 1;
+                for (int i = 0, j = 0; i < dictionary.Count; i++)
+                {
+                    string key = dictionary.ElementAt(i).Key;
+                    if (key.StartsWith(textBoxSearch.Text.ToUpper()))
+                    {
+                        dataGridView.Rows.Add();
+                        dataGridView.Rows[j].Cells[0].Value = key;
+                        dataGridView.Rows[j].Cells[1].Value = dictionary.ElementAt(i).Value;
+                        j++;
+                    }
+                    progressBar1.PerformStep();
+                }
+            }  
+            else
+            {
+                updateGrid();
             }
         }
     }

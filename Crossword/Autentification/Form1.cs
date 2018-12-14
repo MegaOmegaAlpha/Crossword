@@ -24,12 +24,14 @@ namespace Crossword
         {
             try
             {
-                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\Documents\GitHub\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
+                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Repository\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
                 sqlConnection = new SqlConnection(connect);
                 sqlConnection.Open();
                 labelConnect.ForeColor = Color.Green;
                 labelConnect.Text = "Соединено";
                 labelConnect.Visible = true;
+                buttonLogIn.Enabled = true;
+                buttonRegistration.Enabled = true;
             }
             catch (Exception)
             {

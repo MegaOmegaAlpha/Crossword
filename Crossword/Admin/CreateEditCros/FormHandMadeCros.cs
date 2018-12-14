@@ -24,7 +24,6 @@ namespace Crossword.Admin
         private string fileDict;
         private Dictionary<string, string> dictionary;
         private Grid grid;
-        private readonly List<Button> _buttons;
         private readonly List<string> _words = new List<string>();
         private List<string> _order;
         Crossik _board;
@@ -91,10 +90,10 @@ namespace Crossword.Admin
         {
             if (!editing)
             {
-                _board = new Crossik(width, height);
-
-                listButton = new List<Button>();
                 grid = new Grid(width, height);
+                _board = new Crossik(width, height, ref grid);
+
+                listButton = new List<Button>();                
                 buttons = new Button[width, height];
                 var tableLayoutPanel = new TableLayoutPanel();
                 tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -456,7 +455,7 @@ namespace Crossword.Admin
                     }
                     grid.AddWord(word);
                     length = 0;
-                    listButton.Clear();
+                    listButton.Clear();                    
                 }
                 else
                 {
@@ -693,29 +692,37 @@ namespace Crossword.Admin
 
         private void buttonSaveCros_Click(object sender, EventArgs e)
         {
-            Dictionary<string, string> dictCross = new Dictionary<string, string>();
-            foreach (string item in listBoxHor.Items)
+            try
             {
-                dictCross.Add(item, dictionary[item]);
+
+                Dictionary<string, string> dictCross = new Dictionary<string, string>();
+                foreach (string item in listBoxHor.Items)
+                {
+                    dictCross.Add(item, dictionary[item]);
+                }
+                foreach (string item in listBoxVert.Items)
+                {
+                    dictCross.Add(item, dictionary[item]);
+                }
+                CrosswordCont crossword = new CrosswordCont(grid, dictCross);
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "CrosswordFile |*.crwd";
+                saveFileDialog.Title = "Сохранить кроссворд";
+                saveFileDialog.ShowDialog();
+                if (saveFileDialog.FileName != "")
+                {
+                    Stream s = new FileStream(saveFileDialog.FileName, FileMode.Create);
+                    BinaryFormatter serializer = new BinaryFormatter();
+                    serializer.Serialize(s, crossword);
+                    MessageBox.Show("Кроссворд сохранен", "Сохранение", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    s.Close();
+                }
             }
-            foreach (string item in listBoxVert.Items)
+            catch(ArgumentException)
             {
-                dictCross.Add(item, dictionary[item]);
-            }
-            CrosswordCont crossword = new CrosswordCont(grid, dictCross);
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "CrosswordFile |*.crwd";
-            saveFileDialog.Title = "Сохранить кроссворд";
-            saveFileDialog.ShowDialog();
-            if (saveFileDialog.FileName != "")
-            {
-                Stream s = new FileStream(saveFileDialog.FileName, FileMode.Create);
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(s, crossword);
-                MessageBox.Show("Кроссворд сохранен", "Сохранение", MessageBoxButtons.OK,
-                                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1,
-                                MessageBoxOptions.DefaultDesktopOnly);
-                s.Close();
+                MessageBox.Show("На сетке повторяются слова!", "Ошибка", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 
@@ -728,7 +735,14 @@ namespace Crossword.Admin
             listBoxHor.Items.Clear();
             listBoxVert.Items.Clear();
             _board.Reset();
-
+            grid.GetWords().Clear();
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    grid.SetGridItem(i, j, false);
+                }
+            }
             foreach (var word in _order)
             {
                 //var wordToInsert = ((bool)RTLRadioButton.IsChecked) ? word.Reverse().Aggregate("",(x,y) => x + y) : word; 
@@ -757,9 +771,12 @@ namespace Crossword.Admin
                     if (letter != ' ') count--;
                     //((Button)grid1.Children[p]).Content = letter.ToString(); 
                     //((Button)grid1.Children[p]).Background = letter != ' ' ? _buttons[4].Background : _buttons[0].Background; 
-                    buttons[i, j].Text = letter.ToString();
-                    buttons[i, j].BackColor = Color.Black;
-                    if (!buttons[i, j].Text.Equals(" "))
+                    buttons[i, j].Text = letter.ToString().Equals(" ") ? "" : letter.ToString();
+                    //buttons[i, j].BackColor = Color.Black;
+                    /*if (!buttons[i, j].Text.Equals(" "))
+                        buttons[i, j].BackColor = Color.LightBlue;*/
+                    buttons[i, j].BackColor = grid.GetGridItem(i, j) ? Color.White : Color.Black;
+                    if (!buttons[i, j].Text.Equals(""))
                         buttons[i, j].BackColor = Color.LightBlue;
                     p++;
                 }
@@ -781,7 +798,7 @@ namespace Crossword.Admin
             _words.Reverse();
             _order = _words;
             GenCrossword();
-
+            //grid = _board.GetGrid();
         }
 
         private void listBoxVert_Click(object sender, EventArgs e)
