@@ -187,6 +187,7 @@
             this.MinimizeBox = false;
             this.Name = "FormCreateDict";
             this.Text = "СОЗДАНИЕ/РЕДАКТИРОВАНИЕ СЛОВАРЯ ПОНЯТИЙ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCreateDict_FormClosing);
             this.Load += new System.EventHandler(this.FormCreateDict_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);

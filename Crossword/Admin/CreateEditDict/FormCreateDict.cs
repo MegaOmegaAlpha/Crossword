@@ -80,7 +80,6 @@ namespace Crossword.Admin.CreateEditDict
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-            formAdmin.Visible = true;
             Close();
         }
 
@@ -261,6 +260,11 @@ namespace Crossword.Admin.CreateEditDict
             {
                 updateGrid();
             }
+        }
+
+        private void FormCreateDict_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            formAdmin.Visible = true;
         }
     }
 }

@@ -48,6 +48,7 @@
             this.textBoxCurrentDict = new System.Windows.Forms.TextBox();
             this.buttonDir = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.buttonSearch = new System.Windows.Forms.Button();
             this.groupBoxTasks.SuspendLayout();
             this.groupBoxDict.SuspendLayout();
             this.SuspendLayout();
@@ -123,6 +124,7 @@
             // groupBoxDict
             // 
             this.groupBoxDict.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxDict.Controls.Add(this.buttonSearch);
             this.groupBoxDict.Controls.Add(this.textBoxSearch);
             this.groupBoxDict.Controls.Add(this.buttonSortLen);
             this.groupBoxDict.Controls.Add(this.buttonSort);
@@ -238,6 +240,16 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // buttonSearch
+            // 
+            this.buttonSearch.Image = ((System.Drawing.Image)(resources.GetObject("buttonSearch.Image")));
+            this.buttonSearch.Location = new System.Drawing.Point(84, 29);
+            this.buttonSearch.Name = "buttonSearch";
+            this.buttonSearch.Size = new System.Drawing.Size(33, 36);
+            this.buttonSearch.TabIndex = 11;
+            this.buttonSearch.UseVisualStyleBackColor = true;
+            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
+            // 
             // FormHandMadeCros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -290,5 +302,6 @@
         private System.Windows.Forms.TextBox textBoxCurrentDict;
         private System.Windows.Forms.Button buttonDir;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonSearch;
     }
 }

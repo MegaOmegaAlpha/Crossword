@@ -106,6 +106,7 @@
             this.MinimizeBox = false;
             this.Name = "FormAddNotion";
             this.Text = "ДОБАВЛЕНИЕ/ИЗМЕНЕНИЕ ПОНЯТИЯ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormAddNotion_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

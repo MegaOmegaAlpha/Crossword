@@ -170,6 +170,7 @@
             this.MinimizeBox = false;
             this.Name = "FormBeforeCreate";
             this.Text = "СОЗДАНИЕ КРОССВОРДА";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBeforeCreate_FormClosing);
             this.Load += new System.EventHandler(this.FormCreateCros_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();

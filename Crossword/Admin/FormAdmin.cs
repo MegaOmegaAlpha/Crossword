@@ -23,7 +23,6 @@ namespace Crossword
 
         private void buttonClose_Click(object sender, EventArgs e)
         {           
-            formMain.Visible = true;
             Close();
         }
 
@@ -67,6 +66,11 @@ namespace Crossword
                 formDict.Show();
                 Visible = false;
             }
+        }
+
+        private void FormAdmin_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            formMain.Visible = true;
         }
     }
 }

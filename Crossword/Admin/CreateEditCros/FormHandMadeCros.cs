@@ -297,14 +297,6 @@ namespace Crossword.Admin
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-            if (editing)
-            {
-                formAdmin.Visible = true;
-            }
-            else
-            {
-                formBefore.Visible = true;
-            }
             Close();
         }
 
@@ -853,7 +845,26 @@ namespace Crossword.Admin
 
         private void FormHandMadeCros_FormClosing(object sender, FormClosingEventArgs e)
         {
-            formBefore.Visible = true;
+            if (editing)
+            {
+                formAdmin.Visible = true;
+            }
+            else
+            {
+                formBefore.Visible = true;
+            }
+        }
+
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            listBoxDict.Items.Clear();
+            foreach (string notion in notions)
+            {
+                if (notion.StartsWith(textBoxSearch.Text))
+                {
+                    listBoxDict.Items.Add(notion);
+                }
+            }
         }
 
         static int Comparer(string a, string b)

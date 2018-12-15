@@ -102,6 +102,7 @@
             this.MinimizeBox = false;
             this.Name = "FormAdmin";
             this.Text = "РЕЖИМ АДМИНИСТРАТОРА";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormAdmin_FormClosing);
             this.ResumeLayout(false);
 
         }
