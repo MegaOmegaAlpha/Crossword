@@ -36,13 +36,13 @@
             this.listBoxVert = new System.Windows.Forms.ListBox();
             this.listBoxHor = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonBack = new System.Windows.Forms.Button();
             this.buttonSaveSolution = new System.Windows.Forms.Button();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.buttonCheckSolution = new System.Windows.Forms.Button();
             this.pictureBoxUp = new System.Windows.Forms.PictureBox();
             this.pictureBoxDown = new System.Windows.Forms.PictureBox();
+            this.labelHelpCount = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDown)).BeginInit();
@@ -116,14 +116,6 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Текущее количество подсказок:";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(581, 28);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(21, 20);
-            this.textBox1.TabIndex = 9;
-            this.textBox1.Text = "1";
-            // 
             // buttonBack
             // 
             this.buttonBack.Image = ((System.Drawing.Image)(resources.GetObject("buttonBack.Image")));
@@ -142,6 +134,7 @@
             this.buttonSaveSolution.Size = new System.Drawing.Size(69, 51);
             this.buttonSaveSolution.TabIndex = 11;
             this.buttonSaveSolution.UseVisualStyleBackColor = true;
+            this.buttonSaveSolution.Click += new System.EventHandler(this.buttonSaveSolution_Click);
             // 
             // buttonHelp
             // 
@@ -151,6 +144,7 @@
             this.buttonHelp.Size = new System.Drawing.Size(48, 46);
             this.buttonHelp.TabIndex = 12;
             this.buttonHelp.UseVisualStyleBackColor = true;
+            this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click);
             // 
             // buttonCheckSolution
             // 
@@ -182,11 +176,21 @@
             this.pictureBoxDown.TabStop = false;
             this.pictureBoxDown.Visible = false;
             // 
+            // labelHelpCount
+            // 
+            this.labelHelpCount.AutoSize = true;
+            this.labelHelpCount.Location = new System.Drawing.Point(581, 31);
+            this.labelHelpCount.Name = "labelHelpCount";
+            this.labelHelpCount.Size = new System.Drawing.Size(13, 13);
+            this.labelHelpCount.TabIndex = 18;
+            this.labelHelpCount.Text = "1";
+            // 
             // FormUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1025, 680);
+            this.Controls.Add(this.labelHelpCount);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBoxDown);
             this.Controls.Add(this.pictureBoxUp);
@@ -194,7 +198,6 @@
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.buttonSaveSolution);
             this.Controls.Add(this.buttonBack);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tableContainer);
             this.MaximizeBox = false;
@@ -218,7 +221,6 @@
         private System.Windows.Forms.ListBox listBoxVert;
         private System.Windows.Forms.ListBox listBoxHor;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonBack;
@@ -227,5 +229,6 @@
         private System.Windows.Forms.Button buttonCheckSolution;
         private System.Windows.Forms.PictureBox pictureBoxUp;
         private System.Windows.Forms.PictureBox pictureBoxDown;
+        private System.Windows.Forms.Label labelHelpCount;
     }
 }

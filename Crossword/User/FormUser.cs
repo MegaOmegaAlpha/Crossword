@@ -24,6 +24,8 @@ namespace Crossword.User
         private int width, height;
         private Grid grid;
         private RichTextBox[,] textBoxes;
+        private int helpCount;
+        List<Word> words;
 
         public FormUser(FormMain formMain, string fileName)
         {
@@ -39,7 +41,7 @@ namespace Crossword.User
         {
             grid = mainCross.GetGrid();
             dictionary = mainCross.GetDictionary();
-            List<Word> words = grid.GetWords();
+            words = grid.GetWords();
             width = grid.Width;
             height = grid.Height;
             textBoxes = new RichTextBox[width, height];
@@ -80,7 +82,7 @@ namespace Crossword.User
                 {
                     for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
                     {
-                        textBoxes[i, word.GetI()].BackColor = Color.White;
+                        textBoxes[i, word.GetI()].BackColor = Color.LightBlue;
                         textBoxes[i, word.GetI()].Tag = word.GetNotion().ElementAt(j).ToString();
                         textBoxes[i, word.GetI()].Enabled = true;
                     }
@@ -90,13 +92,15 @@ namespace Crossword.User
                 {
                     for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
                     {
-                        textBoxes[word.GetJ(), i].BackColor = Color.White;
+                        textBoxes[word.GetJ(), i].BackColor = Color.LightBlue;
                         textBoxes[word.GetJ(), i].Tag = word.GetNotion().ElementAt(j).ToString();
                         textBoxes[word.GetJ(), i].Enabled = true;
                     }
                     listBoxVert.Items.Add(dictionary[word.GetNotion()]);
                 }
             }
+            helpCount = dictionary.Count / 10;
+            labelHelpCount.Text = helpCount > 1 ? helpCount.ToString() : "1";
         }
 
         private void textBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -124,7 +128,7 @@ namespace Crossword.User
                     {
                         if (textBoxes[i, j].Enabled && textBoxes[i, j].BackColor.Equals(Color.Yellow))
                         {
-                            textBoxes[i, j].BackColor = Color.White;
+                            textBoxes[i, j].BackColor = Color.LightBlue;
                         }
                     }
                 }
@@ -152,7 +156,7 @@ namespace Crossword.User
                     {
                         if (textBoxes[i, j].Enabled && textBoxes[i, j].BackColor.Equals(Color.Yellow))
                         {
-                            textBoxes[i, j].BackColor = Color.White;
+                            textBoxes[i, j].BackColor = Color.LightBlue;
                         }
                     }
                 }
@@ -175,6 +179,39 @@ namespace Crossword.User
         {
             formMain.Visible = true;
             Close();
+        }
+
+        private void buttonSaveSolution_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonHelp_Click(object sender, EventArgs e)
+        {
+            if (helpCount > 0)
+            {
+                helpCount--;
+                labelHelpCount.Text = helpCount.ToString();
+                Random rnd = new Random();
+                Word word = words.ElementAt(rnd.Next(words.Count));
+                string notion = word.GetNotion();
+                if (word.GetDirection().Equals(Direction.Horizontal))
+                {
+                    for (int i = word.GetJ(), j = 0; i < word.GetJ() + notion.Length; i++, j++)
+                    {
+                        textBoxes[i, word.GetI()].Text = notion[j].ToString();
+                    }
+                }
+                else
+                {
+                    for (int i = word.GetI(), j = 0; i < word.GetI() + notion.Length; i++, j++)
+                    {
+                        textBoxes[word.GetJ(), i].Text = notion[j].ToString();
+                    }
+                }
+
+
+            }
         }
 
         //поиск ключа словаря по значению
