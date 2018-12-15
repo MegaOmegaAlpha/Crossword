@@ -166,6 +166,11 @@ namespace Crossword.User
 
         }
 
+        private void FormUser_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
         private void buttonBack_Click(object sender, EventArgs e)
         {
             formMain.Visible = true;

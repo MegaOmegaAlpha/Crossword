@@ -514,27 +514,48 @@ namespace Crossword.Admin
                                                 grid.SetInters(j, i, true);
                                                 Button added = listButton.First();
                                                 Node addedNode = (Node)added.Tag;
-                                                //если сосед идет перед новой буквой, то добвить перед ней
+                                                //если сосед идет перед новой буквой, то добавить перед ней
                                                 if ((i == addedNode.J - 1 && j == addedNode.I) ||
                                                     (i == addedNode.J && j == addedNode.I - 1))
                                                 {
                                                     listButton.Insert(0, buttonNeigh);
                                                 }
+                                                //иначе в конец
                                                 else
                                                 {
                                                     listButton.Add(buttonNeigh);
                                                 }
                                             }
-                                            else
-                                            {
-                                                listButton.Remove(buttonNeigh);
-                                            }
                                         }
+                                        //иначе проверка, есть ли вокруг еще нажатые кнопки
                                         else
                                         {
-                                            if (button.BackColor.Equals(Color.Black))
+                                            bool haveClicked = false;
+                                            Node nodeNeighbour = (Node)buttonNeigh.Tag;
+                                            for (int ii = nodeNeighbour.J - 1; ii <= nodeNeighbour.J + 1; ii++)
+                                            {
+                                                for (int jj = nodeNeighbour.I - 1; jj <= nodeNeighbour.I + 1; jj++)
+                                                {
+                                                    if (ii >= 0 && jj >= 0 && ii < width && jj < height && !(jj == width && ii == height))
+                                                    {
+                                                        //игнорирование диагональных соседей
+                                                        if ((!(ii == nodeNeighbour.J - 1 && jj == nodeNeighbour.I - 1) &&
+                                                             !(ii == nodeNeighbour.J + 1 && jj == nodeNeighbour.I + 1) &&
+                                                             !(ii == nodeNeighbour.J - 1 && jj == nodeNeighbour.I + 1) &&
+                                                             !(ii == nodeNeighbour.J + 1 && jj == nodeNeighbour.I - 1)))
+                                                        {
+                                                            if (buttons[jj, ii].BackColor.Equals(Color.White))
+                                                            {
+                                                                haveClicked = true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (!haveClicked)
                                             {
                                                 listButton.Remove(buttonNeigh);
+                                                grid.SetInters(j, i, false);
                                             }
                                         }
                                     }
@@ -809,6 +830,11 @@ namespace Crossword.Admin
         private void listBoxHor_Click(object sender, EventArgs e)
         {
             listBoxVert.SelectedIndex = -1;
+        }
+
+        private void FormHandMadeCros_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            formBefore.Visible = true;
         }
 
         static int Comparer(string a, string b)

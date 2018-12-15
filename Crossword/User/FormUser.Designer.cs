@@ -201,6 +201,7 @@
             this.MinimizeBox = false;
             this.Name = "FormUser";
             this.Text = "РАЗГАДЫВАНИЕ КРОССВОРДА";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormUser_FormClosing);
             this.Load += new System.EventHandler(this.FormUser_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

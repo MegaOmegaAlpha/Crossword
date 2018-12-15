@@ -256,6 +256,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormHandMadeCros";
             this.Text = "СОЗДАНИЕ/РЕДАКТИРОВАНИЕ КРОССВОРДА";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormHandMadeCros_FormClosing);
             this.Load += new System.EventHandler(this.FormHandMadeCros_Load);
             this.groupBoxTasks.ResumeLayout(false);
             this.groupBoxTasks.PerformLayout();
