@@ -63,7 +63,6 @@ namespace Crossword
             openFileDialog.ShowDialog();
             if (openFileDialog.FileName != "")
             {
-                bool editing = true;
                 FormHandMadeCros formDict = new FormHandMadeCros(this, openFileDialog.FileName);
                 formDict.Show();
                 Visible = false;

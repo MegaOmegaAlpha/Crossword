@@ -164,6 +164,7 @@
             this.Controls.Add(this.labelHeight);
             this.Controls.Add(this.textBoxFile);
             this.Controls.Add(this.labelWidth);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

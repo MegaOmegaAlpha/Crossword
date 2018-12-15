@@ -108,7 +108,7 @@ namespace Crossword.User
         {
 
         }
-        bool changedH , changedV;
+
         private int indS1 = -1, indF1 = -1;
         //выбрано пояснение из списка "по горизонтали"
         private void listBoxHor_SelectedIndexChanged(object sender, EventArgs e)

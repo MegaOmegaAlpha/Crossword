@@ -183,6 +183,8 @@
             this.Controls.Add(this.dataGridView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormCreateDict";
             this.Text = "СОЗДАНИЕ/РЕДАКТИРОВАНИЕ СЛОВАРЯ ПОНЯТИЙ";
             this.Load += new System.EventHandler(this.FormCreateDict_Load);

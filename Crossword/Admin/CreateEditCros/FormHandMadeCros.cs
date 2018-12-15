@@ -381,6 +381,7 @@ namespace Crossword.Admin
                 {
                     check = false;
                 }
+
                 if (check)
                 {
                     string not = listBoxDict.SelectedItem.ToString();
@@ -466,9 +467,11 @@ namespace Crossword.Admin
         }
 
         private List<Button> listButton;
+        
         private void GridButtonClicked(object sender, EventArgs e)
         {
-            Button button = (Button)sender;
+            int countOfNeighbours = 0;
+            Button button = (Button)sender;           
             //если на эту кнопку ничего не добавлено
             if (!button.BackColor.Equals(Color.LightBlue))
             {
@@ -487,7 +490,7 @@ namespace Crossword.Admin
                     {
                         listButton.Remove(button);
                     }
-                    #region searching of neighbours
+                    #region looking for intersections
                     //поиск соседних клеток
                     for (int i = node.J - 1; i <= node.J + 1; i++)
                     {
@@ -495,6 +498,10 @@ namespace Crossword.Admin
                         {
                             if (i >= 0 && j >= 0 && i < width && j < height && !(j == width && i == height))
                             {
+                                if (buttons[j, i].BackColor.Equals(Color.LightBlue) || buttons[j, i].BackColor.Equals(Color.White))
+                                {
+                                    countOfNeighbours++;
+                                }
                                 //игнорирование диагональных соседей
                                 if ((!(i == node.J - 1 && j == node.I - 1) &&
                                      !(i == node.J + 1 && j == node.I + 1) &&
@@ -527,7 +534,8 @@ namespace Crossword.Admin
                                                 }
                                             }
                                         }
-                                        //иначе проверка, есть ли вокруг еще нажатые кнопки
+                                        #region check neighbours around intersection
+                                        //иначе проверка, есть ли вокруг пересечения нажатые кнопки
                                         else
                                         {
                                             bool haveClicked = false;
@@ -552,18 +560,25 @@ namespace Crossword.Admin
                                                     }
                                                 }
                                             }
+                                            //если вокруг пересечения нет нажатых кнопок, то оно снимается
+                                            //и удаляется
                                             if (!haveClicked)
                                             {
                                                 listButton.Remove(buttonNeigh);
                                                 grid.SetInters(j, i, false);
                                             }
                                         }
+                                        #endregion
                                     }
                                 }
                             }
                         }
                     }
                     #endregion
+                   /* if (countOfNeighbours >= 4)
+                    {
+                        throw new ArgumentException();
+                    }*/
                     #region searching notion by mask
                     string mask = GetMask();
                     length = listButton.Count;
@@ -590,6 +605,14 @@ namespace Crossword.Admin
                             MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     button.BackColor = Color.White;
                     grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
+                }
+                catch (ArgumentException)
+                {
+                    MessageBox.Show("Попытка выделить недоступное место", "Ошибка", MessageBoxButtons.OK,
+                           MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    listButton.Remove(button);
+                    grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
+                    button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
                 }
             }
         }
@@ -747,10 +770,6 @@ namespace Crossword.Admin
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
         void GenCrossword()
         {
             listBoxHor.Items.Clear();

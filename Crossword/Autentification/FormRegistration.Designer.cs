@@ -122,6 +122,7 @@
             this.Controls.Add(this.textBoxLogin);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.labelLogin);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
