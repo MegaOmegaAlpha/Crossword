@@ -24,7 +24,7 @@ namespace Crossword
         {
             try
             {
-                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\Documents\GitHub\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
+                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Пользователь\Documents\GitHub\Crossword\Crossword\bin\Debug\UsersDB.mdf;Integrated Security=True";
                 sqlConnection = new SqlConnection(connect);
                 sqlConnection.Open();
                 labelConnect.ForeColor = Color.Green;
