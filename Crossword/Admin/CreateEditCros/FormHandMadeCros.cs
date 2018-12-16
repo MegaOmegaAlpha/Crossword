@@ -717,7 +717,7 @@ namespace Crossword.Admin
                         }
                         else
                         {
-                            if (0 < w.GetI() && w.GetI() + w.GetNotion().Length - 1 < height - 1)
+                            if (0 < w.GetI() && w.GetI() + w.GetNotion().Length - 1 == height - 1)
                             {
                                 buttons[w.GetJ(), w.GetI() - 1].Enabled = true;
                             }
