@@ -44,6 +44,7 @@ namespace Crossword.User
             }
             else
             {
+                deserializer.Deserialize(stream);
                 mainCross = (CrosswordCont)deserializer.Deserialize(stream);
             }
             stream.Close();
@@ -397,6 +398,7 @@ namespace Crossword.User
                 else
                 {
                     isSolution = false;
+                    deserializer.Deserialize(stream);
                     mainCross = (CrosswordCont)deserializer.Deserialize(stream);
                     InitializeCrwd();
                 }

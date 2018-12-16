@@ -31,6 +31,8 @@ namespace Crossword.Admin
         private string[] notions;
         CrosswordCont mainCros;
         bool editing;
+        bool isGenerated;
+
         public FormHandMadeCros(FormBeforeCreate formBefore, int width, int height, string fileName)
         {
             this.formBefore = formBefore;
@@ -53,6 +55,7 @@ namespace Crossword.Admin
             InitializeComponent();
             Stream stream = new FileStream(fileName, FileMode.Open);
             BinaryFormatter deserializer = new BinaryFormatter();
+            isGenerated = (bool)deserializer.Deserialize(stream);
             mainCros = (CrosswordCont)deserializer.Deserialize(stream);
             formAdmin = formBefore;
             formAdmin.Visible = false;
@@ -93,7 +96,7 @@ namespace Crossword.Admin
                 grid = new Grid(width, height);
                 _board = new Crossik(width, height, ref grid);
 
-                listButton = new List<Button>();                
+                listButton = new List<Button>();
                 buttons = new Button[width, height];
                 var tableLayoutPanel = new TableLayoutPanel();
                 tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -164,9 +167,9 @@ namespace Crossword.Admin
                 }
             }
             else
-            {
+            {              
                 dictionary = new Dictionary<string, string>();
-                listButton = new List<Button>();
+                listButton = new List<Button>();               
                 grid = mainCros.GetGrid();
                 List<Word> words = grid.GetWords();
                 buttons = new Button[grid.Height, grid.Width];
@@ -177,6 +180,7 @@ namespace Crossword.Admin
                 tableLayoutPanel.RowCount = grid.Height;
                 width = grid.Width;
                 height = grid.Height;
+                _board = new Crossik(width, height, ref grid);
                 //размер колонки и строки в процентах
                 int widthT = 100 / tableLayoutPanel.ColumnCount;
                 int heightT = 100 / tableLayoutPanel.RowCount;
@@ -197,6 +201,7 @@ namespace Crossword.Admin
                         buttons[col, row].BackColor = Color.Black;
                         buttons[col, row].Click += GridButtonClicked;
                         buttons[col, row].Tag = new Node(col, row);
+                        buttons[col, row].Enabled = isGenerated ? false : true;
                         tableLayoutPanel.Controls.Add(buttons[col, row], col, row);
 
                     }
@@ -229,7 +234,11 @@ namespace Crossword.Admin
                         dictionary.Add(word.GetNotion(), mainCros.GetDictionary()[word.GetNotion()]);
                     }
                 }
-
+                if (isGenerated)
+                {
+                    buttonAddNotion.Enabled = false;
+                    buttonDelNotion.Enabled = false;
+                }
             }
         }
 
@@ -749,6 +758,7 @@ namespace Crossword.Admin
                 {
                     Stream s = new FileStream(saveFileDialog.FileName, FileMode.Create);
                     BinaryFormatter serializer = new BinaryFormatter();
+                    serializer.Serialize(s, isGenerated);
                     serializer.Serialize(s, crossword);
                     MessageBox.Show("Кроссворд сохранен", "Сохранение", MessageBoxButtons.OK,
                                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -809,7 +819,14 @@ namespace Crossword.Admin
                         buttons[i, j].BackColor = Color.LightBlue;*/
                     buttons[i, j].BackColor = grid.GetGridItem(i, j) ? Color.White : Color.Black;
                     if (!buttons[i, j].Text.Equals(""))
+                    {
                         buttons[i, j].BackColor = Color.LightBlue;
+                        buttons[i, j].Enabled = true;
+                    }
+                    else
+                    {
+                        buttons[i, j].Enabled = false;
+                    }
                     p++;
                 }
             }
@@ -817,20 +834,23 @@ namespace Crossword.Admin
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            List<string> keyList = new List<string>(dictionary.Keys);
-            for (int i = 0; i < 1000; i++)
-            {
-                string randomKey = keyList[_rand.Next(keyList.Count)];
-                if (randomKey.Length <= height)
-                {
-                    _words.Add(randomKey);
-                }
-            }
+            List<string> _words = new List<string>(dictionary.Keys);
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    string randomKey = keyList[_rand.Next(keyList.Count)];
+            //    if (randomKey.Length <= height)
+            //    {
+            //        _words.Add(randomKey);
+            //    }
+            //}
             _words.Sort(Comparer);
             _words.Reverse();
             _order = _words;
             GenCrossword();
             //grid = _board.GetGrid();
+            buttonDelNotion.Enabled = false;
+            buttonAddNotion.Enabled = false;
+            isGenerated = true;
         }
 
         private void listBoxVert_Click(object sender, EventArgs e)
