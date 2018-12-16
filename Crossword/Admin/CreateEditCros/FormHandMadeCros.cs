@@ -690,7 +690,7 @@ namespace Crossword.Admin
                             {
                                 buttons[w.GetJ(), i].BackColor = Color.Black;
                                 buttons[w.GetJ(), i].Text = "";
-                                grid.SetGridItem(i, w.GetI(), false);
+                                grid.SetGridItem(w.GetJ(), i, false);
                             }
                             else
                             {
