@@ -65,6 +65,7 @@
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(156, 20);
             this.textBoxLogin.TabIndex = 2;
+            this.textBoxLogin.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxLogin_KeyPress);
             // 
             // labelPassword
             // 
@@ -83,6 +84,7 @@
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(156, 20);
             this.textBoxPassword.TabIndex = 4;
+            this.textBoxPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxPassword_KeyPress);
             // 
             // labelPasswordYet
             // 
@@ -101,6 +103,7 @@
             this.textBoxPasswordYet.PasswordChar = '*';
             this.textBoxPasswordYet.Size = new System.Drawing.Size(156, 20);
             this.textBoxPasswordYet.TabIndex = 6;
+            this.textBoxPasswordYet.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxPasswordYet_KeyPress);
             // 
             // buttonCancel
             // 
