@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crossword.User;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -51,6 +52,16 @@ namespace Crossword.Autentification
                             "values ('" + login + "', '" + pass +
                             "', 0);", sqlConnection);
                         sqlCommand.ExecuteNonQuery();
+                        OpenFileDialog openFileDialog = new OpenFileDialog();
+                        openFileDialog.Filter = "Crossword |*.crwd; *.slt";
+                        openFileDialog.Title = "Открыть кроссворд";
+                        openFileDialog.ShowDialog();
+                        if (openFileDialog.FileName != "")
+                        {
+                            FormUser formUser = new FormUser(formMain, openFileDialog.FileName);
+                            formUser.Show();
+                            Visible = false;
+                        }
                     }
                     else
                     {

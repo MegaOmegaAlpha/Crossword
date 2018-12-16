@@ -43,6 +43,8 @@
             this.pictureBoxUp = new System.Windows.Forms.PictureBox();
             this.pictureBoxDown = new System.Windows.Forms.PictureBox();
             this.labelHelpCount = new System.Windows.Forms.Label();
+            this.textBoxСurrentCrwd = new System.Windows.Forms.TextBox();
+            this.buttonChangeCrwd = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDown)).BeginInit();
@@ -95,6 +97,7 @@
             this.listBoxVert.Name = "listBoxVert";
             this.listBoxVert.Size = new System.Drawing.Size(307, 225);
             this.listBoxVert.TabIndex = 1;
+            this.listBoxVert.Click += new System.EventHandler(this.listBoxVert_Click);
             this.listBoxVert.SelectedIndexChanged += new System.EventHandler(this.listBoxVert_SelectedIndexChanged);
             // 
             // listBoxHor
@@ -105,6 +108,7 @@
             this.listBoxHor.Name = "listBoxHor";
             this.listBoxHor.Size = new System.Drawing.Size(307, 225);
             this.listBoxHor.TabIndex = 0;
+            this.listBoxHor.Click += new System.EventHandler(this.listBoxHor_Click);
             this.listBoxHor.SelectedIndexChanged += new System.EventHandler(this.listBoxHor_SelectedIndexChanged);
             // 
             // label1
@@ -185,11 +189,30 @@
             this.labelHelpCount.TabIndex = 18;
             this.labelHelpCount.Text = "1";
             // 
+            // textBoxСurrentCrwd
+            // 
+            this.textBoxСurrentCrwd.Location = new System.Drawing.Point(785, 14);
+            this.textBoxСurrentCrwd.Name = "textBoxСurrentCrwd";
+            this.textBoxСurrentCrwd.Size = new System.Drawing.Size(228, 20);
+            this.textBoxСurrentCrwd.TabIndex = 19;
+            // 
+            // buttonChangeCrwd
+            // 
+            this.buttonChangeCrwd.Location = new System.Drawing.Point(938, 40);
+            this.buttonChangeCrwd.Name = "buttonChangeCrwd";
+            this.buttonChangeCrwd.Size = new System.Drawing.Size(75, 23);
+            this.buttonChangeCrwd.TabIndex = 20;
+            this.buttonChangeCrwd.Text = "Обзор...";
+            this.buttonChangeCrwd.UseVisualStyleBackColor = true;
+            this.buttonChangeCrwd.Click += new System.EventHandler(this.buttonChangeCrwd_Click);
+            // 
             // FormUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1025, 680);
+            this.Controls.Add(this.buttonChangeCrwd);
+            this.Controls.Add(this.textBoxСurrentCrwd);
             this.Controls.Add(this.labelHelpCount);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBoxDown);
@@ -230,5 +253,7 @@
         private System.Windows.Forms.PictureBox pictureBoxUp;
         private System.Windows.Forms.PictureBox pictureBoxDown;
         private System.Windows.Forms.Label labelHelpCount;
+        private System.Windows.Forms.TextBox textBoxСurrentCrwd;
+        private System.Windows.Forms.Button buttonChangeCrwd;
     }
 }

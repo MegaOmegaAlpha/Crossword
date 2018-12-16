@@ -159,8 +159,8 @@ namespace Crossword.Admin.CreateEditCros
         void PutWord(string word, int x, int y, int dir, int value)
         {
             var mat = dir == 0 ? _hWords : _vWords;
-            Direction direction = dir == 0 ? Direction.Horizontal : Direction.Vertical;
-            _grid.AddWord(new Word(x, y, word, direction));
+            Direction direction = dir == 0 ? Direction.Vertical : Direction.Horizontal;
+            _grid.AddWord(new Word(y, x, word, direction));
             for (var i = 0; i < word.Length; i++)
             {
                 int x1 = x + _dirX[dir] * i, y1 = y + _dirY[dir] * i;
