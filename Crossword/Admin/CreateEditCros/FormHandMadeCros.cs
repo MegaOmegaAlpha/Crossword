@@ -741,14 +741,15 @@ namespace Crossword.Admin
             {
 
                 Dictionary<string, string> dictCross = new Dictionary<string, string>();
-                foreach (string item in listBoxHor.Items)
-                {
-                    dictCross.Add(item, dictionary[item]);
-                }
                 foreach (string item in listBoxVert.Items)
                 {
                     dictCross.Add(item, dictionary[item]);
                 }
+                foreach (string item in listBoxHor.Items)
+                {
+                    dictCross.Add(item, dictionary[item]);
+                }
+               
                 CrosswordCont crossword = new CrosswordCont(grid, dictCross);
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "CrosswordFile |*.crwd";
