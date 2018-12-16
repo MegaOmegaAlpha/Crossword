@@ -208,11 +208,16 @@ namespace Crossword.Admin.CreateEditDict
                 dataGridView.Rows.Add();
                 dataGridView.Rows[i].Cells[0].Value = strings[i];
                 dataGridView.Rows[i].Cells[1].Value = dictionary[strings[i]];
+                progressBar1.PerformStep();
             }
         }
 
         private void buttonSortLen_Click(object sender, EventArgs e)
         {
+            progressBar1.Value = 0;
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = dictionary.Count;
+            progressBar1.Step = 1;
             sortLen();
         }
 
