@@ -61,6 +61,7 @@
             // textBoxLogin
             // 
             this.textBoxLogin.Location = new System.Drawing.Point(52, 47);
+            this.textBoxLogin.MaxLength = 15;
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(156, 20);
             this.textBoxLogin.TabIndex = 2;
@@ -77,6 +78,7 @@
             // textBoxPassword
             // 
             this.textBoxPassword.Location = new System.Drawing.Point(52, 103);
+            this.textBoxPassword.MaxLength = 15;
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(156, 20);
@@ -94,6 +96,7 @@
             // textBoxPasswordYet
             // 
             this.textBoxPasswordYet.Location = new System.Drawing.Point(52, 162);
+            this.textBoxPasswordYet.MaxLength = 15;
             this.textBoxPasswordYet.Name = "textBoxPasswordYet";
             this.textBoxPasswordYet.PasswordChar = '*';
             this.textBoxPasswordYet.Size = new System.Drawing.Size(156, 20);

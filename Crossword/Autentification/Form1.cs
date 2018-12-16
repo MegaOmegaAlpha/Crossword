@@ -59,6 +59,7 @@ namespace Crossword
                     {
                         FormAdmin formAdmin = new FormAdmin(this);
                         formAdmin.Show();
+                        Visible = false;
                     }
                     else
                     {
@@ -74,8 +75,7 @@ namespace Crossword
                         }                       
                     }
                     textBoxLogin.Clear();
-                    textBoxPas.Clear();
-                    Visible = false;
+                    textBoxPas.Clear();                    
                 }
                 else
                 {

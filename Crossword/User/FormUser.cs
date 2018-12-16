@@ -425,6 +425,7 @@ namespace Crossword.User
             {
                 pictureBoxUp.Visible = true;
                 pictureBoxDown.Visible = false;
+                MessageBox.Show("Красава!!!");
             }
             else
             {

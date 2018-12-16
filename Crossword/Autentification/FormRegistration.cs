@@ -40,39 +40,47 @@ namespace Crossword.Autentification
             string passY = textBoxPasswordYet.Text;
             if (!login.Equals("") && !pass.Equals("") && !passY.Equals(""))
             {
-                if (pass.Equals(passY))
+                if (login.Length > 5 && pass.Length > 5)
                 {
-                    SqlCommand sqlCommand = new SqlCommand("Select* from Users Where login = '" + login + "';", 
-                        sqlConnection);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    if (!reader.Read())
+                    if (pass.Equals(passY))
                     {
-                        reader.Close();
-                        sqlCommand = new SqlCommand("Insert into Users (login, password, isAdmin) " +
-                            "values ('" + login + "', '" + pass +
-                            "', 0);", sqlConnection);
-                        sqlCommand.ExecuteNonQuery();
-                        OpenFileDialog openFileDialog = new OpenFileDialog();
-                        openFileDialog.Filter = "Crossword |*.crwd; *.slt";
-                        openFileDialog.Title = "Открыть кроссворд";
-                        openFileDialog.ShowDialog();
-                        if (openFileDialog.FileName != "")
+                        SqlCommand sqlCommand = new SqlCommand("Select* from Users Where login = '" + login + "';",
+                            sqlConnection);
+                        SqlDataReader reader = sqlCommand.ExecuteReader();
+                        if (!reader.Read())
                         {
-                            FormUser formUser = new FormUser(formMain, openFileDialog.FileName);
-                            formUser.Show();
-                            Visible = false;
+                            reader.Close();
+                            sqlCommand = new SqlCommand("Insert into Users (login, password, isAdmin) " +
+                                "values ('" + login + "', '" + pass +
+                                "', 0);", sqlConnection);
+                            sqlCommand.ExecuteNonQuery();
+                            OpenFileDialog openFileDialog = new OpenFileDialog();
+                            openFileDialog.Filter = "Crossword |*.crwd; *.slt";
+                            openFileDialog.Title = "Открыть кроссворд";
+                            openFileDialog.ShowDialog();
+                            if (openFileDialog.FileName != "")
+                            {
+                                FormUser formUser = new FormUser(formMain, openFileDialog.FileName);
+                                formUser.Show();
+                                Visible = false;
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Такой пользователь уже есть", "Ошибка", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Такой пользователь уже есть", "Ошибка", MessageBoxButtons.OK, 
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        MessageBox.Show("Пароли не совпадают", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Пароли не совпадают", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error,
-                        MessageBoxDefaultButton.Button1);
+                    MessageBox.Show("Слишком короткий логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
                 }
             }
         }
