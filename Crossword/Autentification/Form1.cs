@@ -30,6 +30,8 @@ namespace Crossword
                 labelConnect.ForeColor = Color.Green;
                 labelConnect.Text = "Соединено";
                 labelConnect.Visible = true;
+                buttonLogIn.Enabled = true;
+                buttonRegistration.Enabled = true;
             }
             catch (Exception)
             {
@@ -61,7 +63,7 @@ namespace Crossword
                     else
                     {
                         OpenFileDialog openFileDialog = new OpenFileDialog();
-                        openFileDialog.Filter = "CrosswordFile |*.crwd";
+                        openFileDialog.Filter = "Crossword |*.crwd; *.slt";
                         openFileDialog.Title = "Открыть кроссворд";
                         openFileDialog.ShowDialog();
                         if (openFileDialog.FileName != "")

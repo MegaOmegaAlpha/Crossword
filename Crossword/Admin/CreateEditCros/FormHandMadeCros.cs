@@ -24,7 +24,6 @@ namespace Crossword.Admin
         private string fileDict;
         private Dictionary<string, string> dictionary;
         private Grid grid;
-        private readonly List<Button> _buttons;
         private readonly List<string> _words = new List<string>();
         private List<string> _order;
         Crossik _board;
@@ -91,10 +90,10 @@ namespace Crossword.Admin
         {
             if (!editing)
             {
-                _board = new Crossik(width, height);
-
-                listButton = new List<Button>();
                 grid = new Grid(width, height);
+                _board = new Crossik(width, height, ref grid);
+
+                listButton = new List<Button>();                
                 buttons = new Button[width, height];
                 var tableLayoutPanel = new TableLayoutPanel();
                 tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -298,14 +297,6 @@ namespace Crossword.Admin
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-            if (editing)
-            {
-                formAdmin.Visible = true;
-            }
-            else
-            {
-                formBefore.Visible = true;
-            }
             Close();
         }
 
@@ -382,6 +373,7 @@ namespace Crossword.Admin
                 {
                     check = false;
                 }
+
                 if (check)
                 {
                     string not = listBoxDict.SelectedItem.ToString();
@@ -456,7 +448,7 @@ namespace Crossword.Admin
                     }
                     grid.AddWord(word);
                     length = 0;
-                    listButton.Clear();
+                    listButton.Clear();                    
                 }
                 else
                 {
@@ -467,9 +459,11 @@ namespace Crossword.Admin
         }
 
         private List<Button> listButton;
+        
         private void GridButtonClicked(object sender, EventArgs e)
         {
-            Button button = (Button)sender;
+            int countOfNeighbours = 0;
+            Button button = (Button)sender;           
             //если на эту кнопку ничего не добавлено
             if (!button.BackColor.Equals(Color.LightBlue))
             {
@@ -488,7 +482,7 @@ namespace Crossword.Admin
                     {
                         listButton.Remove(button);
                     }
-                    #region searching of neighbours
+                    #region looking for intersections
                     //поиск соседних клеток
                     for (int i = node.J - 1; i <= node.J + 1; i++)
                     {
@@ -496,6 +490,10 @@ namespace Crossword.Admin
                         {
                             if (i >= 0 && j >= 0 && i < width && j < height && !(j == width && i == height))
                             {
+                                if (buttons[j, i].BackColor.Equals(Color.LightBlue) || buttons[j, i].BackColor.Equals(Color.White))
+                                {
+                                    countOfNeighbours++;
+                                }
                                 //игнорирование диагональных соседей
                                 if ((!(i == node.J - 1 && j == node.I - 1) &&
                                      !(i == node.J + 1 && j == node.I + 1) &&
@@ -515,35 +513,64 @@ namespace Crossword.Admin
                                                 grid.SetInters(j, i, true);
                                                 Button added = listButton.First();
                                                 Node addedNode = (Node)added.Tag;
-                                                //если сосед идет перед новой буквой, то добвить перед ней
+                                                //если сосед идет перед новой буквой, то добавить перед ней
                                                 if ((i == addedNode.J - 1 && j == addedNode.I) ||
                                                     (i == addedNode.J && j == addedNode.I - 1))
                                                 {
                                                     listButton.Insert(0, buttonNeigh);
                                                 }
+                                                //иначе в конец
                                                 else
                                                 {
                                                     listButton.Add(buttonNeigh);
                                                 }
                                             }
-                                            else
-                                            {
-                                                listButton.Remove(buttonNeigh);
-                                            }
                                         }
+                                        #region check neighbours around intersection
+                                        //иначе проверка, есть ли вокруг пересечения нажатые кнопки
                                         else
                                         {
-                                            if (button.BackColor.Equals(Color.Black))
+                                            bool haveClicked = false;
+                                            Node nodeNeighbour = (Node)buttonNeigh.Tag;
+                                            for (int ii = nodeNeighbour.J - 1; ii <= nodeNeighbour.J + 1; ii++)
+                                            {
+                                                for (int jj = nodeNeighbour.I - 1; jj <= nodeNeighbour.I + 1; jj++)
+                                                {
+                                                    if (ii >= 0 && jj >= 0 && ii < width && jj < height && !(jj == width && ii == height))
+                                                    {
+                                                        //игнорирование диагональных соседей
+                                                        if ((!(ii == nodeNeighbour.J - 1 && jj == nodeNeighbour.I - 1) &&
+                                                             !(ii == nodeNeighbour.J + 1 && jj == nodeNeighbour.I + 1) &&
+                                                             !(ii == nodeNeighbour.J - 1 && jj == nodeNeighbour.I + 1) &&
+                                                             !(ii == nodeNeighbour.J + 1 && jj == nodeNeighbour.I - 1)))
+                                                        {
+                                                            if (buttons[jj, ii].BackColor.Equals(Color.White))
+                                                            {
+                                                                haveClicked = true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            //если вокруг пересечения нет нажатых кнопок, то оно снимается
+                                            //и удаляется
+                                            if (!haveClicked)
                                             {
                                                 listButton.Remove(buttonNeigh);
+                                                grid.SetInters(j, i, false);
                                             }
                                         }
+                                        #endregion
                                     }
                                 }
                             }
                         }
                     }
                     #endregion
+                   /* if (countOfNeighbours >= 4)
+                    {
+                        throw new ArgumentException();
+                    }*/
                     #region searching notion by mask
                     string mask = GetMask();
                     length = listButton.Count;
@@ -570,6 +597,14 @@ namespace Crossword.Admin
                             MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     button.BackColor = Color.White;
                     grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
+                }
+                catch (ArgumentException)
+                {
+                    MessageBox.Show("Попытка выделить недоступное место", "Ошибка", MessageBoxButtons.OK,
+                           MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    listButton.Remove(button);
+                    grid.SetGridItem(node.I, node.J, !grid.GetGridItem(node.I, node.J));
+                    button.BackColor = grid.GetGridItem(node.I, node.J) ? Color.White : Color.Black;
                 }
             }
         }
@@ -693,42 +728,53 @@ namespace Crossword.Admin
 
         private void buttonSaveCros_Click(object sender, EventArgs e)
         {
-            Dictionary<string, string> dictCross = new Dictionary<string, string>();
-            foreach (string item in listBoxHor.Items)
+            try
             {
-                dictCross.Add(item, dictionary[item]);
+
+                Dictionary<string, string> dictCross = new Dictionary<string, string>();
+                foreach (string item in listBoxHor.Items)
+                {
+                    dictCross.Add(item, dictionary[item]);
+                }
+                foreach (string item in listBoxVert.Items)
+                {
+                    dictCross.Add(item, dictionary[item]);
+                }
+                CrosswordCont crossword = new CrosswordCont(grid, dictCross);
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "CrosswordFile |*.crwd";
+                saveFileDialog.Title = "Сохранить кроссворд";
+                saveFileDialog.ShowDialog();
+                if (saveFileDialog.FileName != "")
+                {
+                    Stream s = new FileStream(saveFileDialog.FileName, FileMode.Create);
+                    BinaryFormatter serializer = new BinaryFormatter();
+                    serializer.Serialize(s, crossword);
+                    MessageBox.Show("Кроссворд сохранен", "Сохранение", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    s.Close();
+                }
             }
-            foreach (string item in listBoxVert.Items)
+            catch(ArgumentException)
             {
-                dictCross.Add(item, dictionary[item]);
-            }
-            CrosswordCont crossword = new CrosswordCont(grid, dictCross);
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "CrosswordFile |*.crwd";
-            saveFileDialog.Title = "Сохранить кроссворд";
-            saveFileDialog.ShowDialog();
-            if (saveFileDialog.FileName != "")
-            {
-                Stream s = new FileStream(saveFileDialog.FileName, FileMode.Create);
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(s, crossword);
-                MessageBox.Show("Кроссворд сохранен", "Сохранение", MessageBoxButtons.OK,
-                                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1,
-                                MessageBoxOptions.DefaultDesktopOnly);
-                s.Close();
+                MessageBox.Show("На сетке повторяются слова!", "Ошибка", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
         void GenCrossword()
         {
             listBoxHor.Items.Clear();
             listBoxVert.Items.Clear();
             _board.Reset();
-
+            grid.GetWords().Clear();
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    grid.SetGridItem(i, j, false);
+                }
+            }
             foreach (var word in _order)
             {
                 //var wordToInsert = ((bool)RTLRadioButton.IsChecked) ? word.Reverse().Aggregate("",(x,y) => x + y) : word; 
@@ -757,9 +803,12 @@ namespace Crossword.Admin
                     if (letter != ' ') count--;
                     //((Button)grid1.Children[p]).Content = letter.ToString(); 
                     //((Button)grid1.Children[p]).Background = letter != ' ' ? _buttons[4].Background : _buttons[0].Background; 
-                    buttons[i, j].Text = letter.ToString();
-                    buttons[i, j].BackColor = Color.Black;
-                    if (!buttons[i, j].Text.Equals(" "))
+                    buttons[i, j].Text = letter.ToString().Equals(" ") ? "" : letter.ToString();
+                    //buttons[i, j].BackColor = Color.Black;
+                    /*if (!buttons[i, j].Text.Equals(" "))
+                        buttons[i, j].BackColor = Color.LightBlue;*/
+                    buttons[i, j].BackColor = grid.GetGridItem(i, j) ? Color.White : Color.Black;
+                    if (!buttons[i, j].Text.Equals(""))
                         buttons[i, j].BackColor = Color.LightBlue;
                     p++;
                 }
@@ -781,7 +830,7 @@ namespace Crossword.Admin
             _words.Reverse();
             _order = _words;
             GenCrossword();
-
+            //grid = _board.GetGrid();
         }
 
         private void listBoxVert_Click(object sender, EventArgs e)
@@ -792,6 +841,30 @@ namespace Crossword.Admin
         private void listBoxHor_Click(object sender, EventArgs e)
         {
             listBoxVert.SelectedIndex = -1;
+        }
+
+        private void FormHandMadeCros_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (editing)
+            {
+                formAdmin.Visible = true;
+            }
+            else
+            {
+                formBefore.Visible = true;
+            }
+        }
+
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            listBoxDict.Items.Clear();
+            foreach (string notion in notions)
+            {
+                if (notion.StartsWith(textBoxSearch.Text))
+                {
+                    listBoxDict.Items.Add(notion);
+                }
+            }
         }
 
         static int Comparer(string a, string b)

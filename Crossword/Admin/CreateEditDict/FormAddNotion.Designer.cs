@@ -100,9 +100,13 @@
             this.Controls.Add(this.richTextBoxDef);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxNotion);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormAddNotion";
             this.Text = "ДОБАВЛЕНИЕ/ИЗМЕНЕНИЕ ПОНЯТИЯ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormAddNotion_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

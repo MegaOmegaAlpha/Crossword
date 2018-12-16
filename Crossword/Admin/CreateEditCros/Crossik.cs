@@ -22,8 +22,10 @@ namespace Crossword.Admin.CreateEditCros
         private static char[,] _tempBoard;
         private static int _bestSol;
         DateTime initialTime;
+        //List<Word> words;
+        Grid _grid;
 
-        public Crossik(int xDimen, int yDimen)
+        public Crossik(int xDimen, int yDimen, ref Grid grid)
         {
             _board = new char[xDimen, yDimen];
             _hWords = new int[xDimen, yDimen];
@@ -31,6 +33,9 @@ namespace Crossword.Admin.CreateEditCros
             _n = xDimen;
             _m = yDimen;
             _rand = new Random();
+            //words = new List<Word>();
+            //_grid = new Grid(xDimen, yDimen);
+            _grid = grid;
 
             for (var i = 0; i < _n; i++)
             {
@@ -39,6 +44,11 @@ namespace Crossword.Admin.CreateEditCros
                     _board[i, j] = ' ';
                 }
             }
+        }
+
+        public Grid GetGrid()
+        {
+            return _grid;
         }
 
         public override string ToString()
@@ -149,11 +159,13 @@ namespace Crossword.Admin.CreateEditCros
         void PutWord(string word, int x, int y, int dir, int value)
         {
             var mat = dir == 0 ? _hWords : _vWords;
-
+            Direction direction = dir == 0 ? Direction.Horizontal : Direction.Vertical;
+            _grid.AddWord(new Word(x, y, word, direction));
             for (var i = 0; i < word.Length; i++)
             {
                 int x1 = x + _dirX[dir] * i, y1 = y + _dirY[dir] * i;
                 _board[x1, y1] = word[i];
+                _grid.SetGridItem(x1, y1, true);
                 mat[x1, y1] = value;
             }
 

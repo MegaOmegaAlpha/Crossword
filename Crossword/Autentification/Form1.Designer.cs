@@ -48,6 +48,7 @@
             // 
             // buttonLogIn
             // 
+            this.buttonLogIn.Enabled = false;
             this.buttonLogIn.Location = new System.Drawing.Point(89, 123);
             this.buttonLogIn.Name = "buttonLogIn";
             this.buttonLogIn.Size = new System.Drawing.Size(75, 23);
@@ -84,6 +85,7 @@
             // 
             // buttonRegistration
             // 
+            this.buttonRegistration.Enabled = false;
             this.buttonRegistration.Location = new System.Drawing.Point(12, 180);
             this.buttonRegistration.Name = "buttonRegistration";
             this.buttonRegistration.Size = new System.Drawing.Size(80, 23);

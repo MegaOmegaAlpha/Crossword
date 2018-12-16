@@ -43,7 +43,6 @@ namespace Crossword.Admin
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-            formAdmin.Visible = true;
             Close();
         }
 
@@ -52,7 +51,11 @@ namespace Crossword.Admin
 
         }
 
-      
+        private void FormBeforeCreate_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            formAdmin.Visible = true;
+        }
+
         private void buttonDir_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();

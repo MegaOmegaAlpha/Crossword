@@ -164,11 +164,13 @@
             this.Controls.Add(this.labelHeight);
             this.Controls.Add(this.textBoxFile);
             this.Controls.Add(this.labelWidth);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormBeforeCreate";
             this.Text = "СОЗДАНИЕ КРОССВОРДА";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBeforeCreate_FormClosing);
             this.Load += new System.EventHandler(this.FormCreateCros_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();

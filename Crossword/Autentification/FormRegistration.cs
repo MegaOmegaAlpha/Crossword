@@ -30,7 +30,6 @@ namespace Crossword.Autentification
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             Close();
-            formMain.Visible = true;
         }
 
         private void buttonOk_Click(object sender, EventArgs e)
@@ -65,6 +64,11 @@ namespace Crossword.Autentification
                         MessageBoxDefaultButton.Button1);
                 }
             }
+        }
+
+        private void FormRegistration_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            formMain.Visible = true;
         }
     }
 }

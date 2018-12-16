@@ -29,5 +29,9 @@ namespace Crossword.Admin.CreateEditDict
             Close();
         }
 
+        private void FormAddNotion_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
+        }
     }
 }

@@ -122,11 +122,13 @@
             this.Controls.Add(this.textBoxLogin);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.labelLogin);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormRegistration";
             this.Text = "РЕГИСТРАЦИЯ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRegistration_FormClosing);
             this.Load += new System.EventHandler(this.FormRegistration_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

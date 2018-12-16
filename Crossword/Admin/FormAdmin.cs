@@ -23,7 +23,6 @@ namespace Crossword
 
         private void buttonClose_Click(object sender, EventArgs e)
         {           
-            formMain.Visible = true;
             Close();
         }
 
@@ -63,11 +62,15 @@ namespace Crossword
             openFileDialog.ShowDialog();
             if (openFileDialog.FileName != "")
             {
-                bool editing = true;
                 FormHandMadeCros formDict = new FormHandMadeCros(this, openFileDialog.FileName);
                 formDict.Show();
                 Visible = false;
             }
+        }
+
+        private void FormAdmin_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            formMain.Visible = true;
         }
     }
 }

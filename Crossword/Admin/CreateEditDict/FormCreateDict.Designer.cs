@@ -40,6 +40,7 @@
             this.buttonBack = new System.Windows.Forms.Button();
             this.buttonSortLen = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -156,12 +157,21 @@
             this.button1.Size = new System.Drawing.Size(41, 37);
             this.button1.TabIndex = 9;
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(561, 67);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(91, 23);
+            this.progressBar1.TabIndex = 10;
             // 
             // FormCreateDict
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(657, 445);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonSortLen);
             this.Controls.Add(this.buttonBack);
@@ -173,8 +183,11 @@
             this.Controls.Add(this.dataGridView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormCreateDict";
             this.Text = "СОЗДАНИЕ/РЕДАКТИРОВАНИЕ СЛОВАРЯ ПОНЯТИЙ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCreateDict_FormClosing);
             this.Load += new System.EventHandler(this.FormCreateDict_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
@@ -195,5 +208,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Notion;
         private System.Windows.Forms.DataGridViewTextBoxColumn Definition;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
