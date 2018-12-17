@@ -315,12 +315,16 @@ namespace Crossword.User
 
         private void buttonSaveSolution_Click(object sender, EventArgs e)
         {
+            progressBar1.Value = 0;
+            progressBar1.Step = 1;
+            progressBar1.Maximum = width * height;
             string[,] charGrid = new string[width, height];
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
                     charGrid[j, i] = textBoxes[j, i].Text;
+                    progressBar1.PerformStep();
                 }
             }
             Solution solution = new Solution(dictionary, grid, charGrid, helpCount);

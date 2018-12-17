@@ -45,6 +45,7 @@
             this.labelHelpCount = new System.Windows.Forms.Label();
             this.textBoxСurrentCrwd = new System.Windows.Forms.TextBox();
             this.buttonChangeCrwd = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDown)).BeginInit();
@@ -206,11 +207,19 @@
             this.buttonChangeCrwd.UseVisualStyleBackColor = true;
             this.buttonChangeCrwd.Click += new System.EventHandler(this.buttonChangeCrwd_Click);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(832, 45);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.TabIndex = 21;
+            // 
             // FormUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1025, 680);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonChangeCrwd);
             this.Controls.Add(this.textBoxСurrentCrwd);
             this.Controls.Add(this.labelHelpCount);
@@ -256,5 +265,6 @@
         private System.Windows.Forms.Label labelHelpCount;
         private System.Windows.Forms.TextBox textBoxСurrentCrwd;
         private System.Windows.Forms.Button buttonChangeCrwd;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
