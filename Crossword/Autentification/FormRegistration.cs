@@ -55,7 +55,7 @@ namespace Crossword.Autentification
                                 "values ('" + login + "', '" + pass +
                                 "', 0);", sqlConnection);
                             sqlCommand.ExecuteNonQuery();
-                            OpenFileDialog openFileDialog = new OpenFileDialog();
+                            /*OpenFileDialog openFileDialog = new OpenFileDialog();
                             openFileDialog.Filter = "Crossword |*.crwd; *.slt";
                             openFileDialog.Title = "Открыть кроссворд";
                             openFileDialog.ShowDialog();
@@ -64,13 +64,16 @@ namespace Crossword.Autentification
                                 FormUser formUser = new FormUser(formMain, openFileDialog.FileName);
                                 formUser.Show();
                                 Visible = false;
-                            }
+                            }*/
+                            MessageBox.Show("Успешно");
+                            Close();
                         }
                         else
                         {
                             MessageBox.Show("Такой пользователь уже есть", "Ошибка", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         }
+                        reader.Close();
                     }
                     else
                     {
