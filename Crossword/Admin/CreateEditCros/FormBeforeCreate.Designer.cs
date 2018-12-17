@@ -144,7 +144,7 @@
             // buttonBack
             // 
             this.buttonBack.Image = ((System.Drawing.Image)(resources.GetObject("buttonBack.Image")));
-            this.buttonBack.Location = new System.Drawing.Point(12, 12);
+            this.buttonBack.Location = new System.Drawing.Point(12, 3);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(40, 32);
             this.buttonBack.TabIndex = 11;
@@ -153,11 +153,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(230, 12);
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(58, 3);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(37, 32);
             this.button1.TabIndex = 12;
-            this.button1.Text = "Справка";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 

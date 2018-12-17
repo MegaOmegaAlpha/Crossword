@@ -48,8 +48,8 @@
             this.labelCurrentDict = new System.Windows.Forms.Label();
             this.textBoxCurrentDict = new System.Windows.Forms.TextBox();
             this.buttonDir = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBoxTasks.SuspendLayout();
             this.groupBoxDict.SuspendLayout();
             this.SuspendLayout();
@@ -242,27 +242,27 @@
             this.buttonDir.UseVisualStyleBackColor = true;
             this.buttonDir.Click += new System.EventHandler(this.buttonDir_Click);
             // 
+            // button2
+            // 
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.Location = new System.Drawing.Point(206, 2);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(57, 44);
+            this.button2.TabIndex = 10;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.Transparent;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(153, 12);
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(138, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(116, 23);
+            this.button1.Size = new System.Drawing.Size(62, 44);
             this.button1.TabIndex = 9;
-            this.button1.Text = "Сгенерировать";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(284, 12);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Справка";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // FormHandMadeCros
             // 
@@ -316,8 +316,8 @@
         private System.Windows.Forms.Label labelCurrentDict;
         private System.Windows.Forms.TextBox textBoxCurrentDict;
         private System.Windows.Forms.Button buttonDir;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
     }
 }
