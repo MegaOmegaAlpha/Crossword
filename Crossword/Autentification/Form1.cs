@@ -65,7 +65,7 @@ namespace Crossword
                     {
                         OpenFileDialog openFileDialog = new OpenFileDialog();
                         openFileDialog.Filter = "Crossword |*.crwd; *.slt";
-                        openFileDialog.Title = "Открыть кроссворд";
+                        openFileDialog.Title = "Открыть кроссворд";                        
                         openFileDialog.ShowDialog();
                         if (openFileDialog.FileName != "")
                         {
