@@ -462,6 +462,10 @@ namespace Crossword.User
                     mainCross = (CrosswordCont)deserializer.Deserialize(stream);
                     InitializeCrwd();
                 }
+                buttonHelp.Enabled = true;
+                buttonSaveSolution.Enabled = true;
+                pictureBoxUp.Visible = false;
+                pictureBoxDown.Visible = false;
                 stream.Close();
             }
         }
@@ -490,7 +494,10 @@ namespace Crossword.User
             {
                 pictureBoxUp.Visible = true;
                 pictureBoxDown.Visible = false;
+                buttonHelp.Enabled = false;
+                buttonSaveSolution.Enabled = false;
                 MessageBox.Show("Красава!!!");
+                File.Delete(fileName);
             }
             else
             {
