@@ -271,7 +271,7 @@ namespace Crossword.User
 
         }
 
-        private int indS2 = -1, indF2 = -1;
+        //private int indS2 = -1, indF2 = -1;
         //выбрано пояснение из списка "по вертикали"
         private void listBoxVert_SelectedIndexChanged(object sender, EventArgs e)
         {
