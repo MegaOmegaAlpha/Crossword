@@ -37,6 +37,7 @@
             this.buttonRegistration = new System.Windows.Forms.Button();
             this.buttonInfo = new System.Windows.Forms.Button();
             this.labelConnect = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxLogin
@@ -118,11 +119,22 @@
             this.labelConnect.Text = "label1";
             this.labelConnect.Visible = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(179, 4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(69, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "Справка";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(260, 215);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.labelConnect);
             this.Controls.Add(this.buttonInfo);
             this.Controls.Add(this.buttonRegistration);
@@ -153,6 +165,7 @@
         private System.Windows.Forms.Button buttonRegistration;
         private System.Windows.Forms.Button buttonInfo;
         private System.Windows.Forms.Label labelConnect;
+        private System.Windows.Forms.Button button1;
     }
 }
 

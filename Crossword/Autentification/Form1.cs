@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace Crossword
         {
             try
             {
-                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Repository\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
+                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\Documents\GitHub\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
                 sqlConnection = new SqlConnection(connect);
                 sqlConnection.Open();
                 labelConnect.ForeColor = Color.Green;
@@ -118,6 +119,11 @@ namespace Crossword
                 e.Handled = true;
                 MessageBox.Show("Ввод не латиницы и не цифр запрещен");
             }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -998,6 +999,12 @@ namespace Crossword.Admin
                                 MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
         }
 
         static int Comparer(string a, string b)

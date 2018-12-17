@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -270,6 +271,11 @@ namespace Crossword.Admin.CreateEditDict
         private void FormCreateDict_FormClosing(object sender, FormClosingEventArgs e)
         {
             formAdmin.Visible = true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
         }
     }
 }

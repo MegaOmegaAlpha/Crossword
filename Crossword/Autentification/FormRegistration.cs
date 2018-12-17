@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -123,6 +124,11 @@ namespace Crossword.Autentification
                 e.Handled = true;
                 MessageBox.Show("Ввод не латиницы и не цифр запрещен");
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
         }
     }
 }
