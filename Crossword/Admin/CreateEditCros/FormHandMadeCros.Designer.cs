@@ -37,6 +37,7 @@
             this.listBoxHor = new System.Windows.Forms.ListBox();
             this.listBoxVert = new System.Windows.Forms.ListBox();
             this.groupBoxDict = new System.Windows.Forms.GroupBox();
+            this.buttonSearch = new System.Windows.Forms.Button();
             this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.buttonSortLen = new System.Windows.Forms.Button();
             this.buttonSort = new System.Windows.Forms.Button();
@@ -48,7 +49,6 @@
             this.textBoxCurrentDict = new System.Windows.Forms.TextBox();
             this.buttonDir = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.buttonSearch = new System.Windows.Forms.Button();
             this.groupBoxTasks.SuspendLayout();
             this.groupBoxDict.SuspendLayout();
             this.SuspendLayout();
@@ -137,6 +137,16 @@
             this.groupBoxDict.TabStop = false;
             this.groupBoxDict.Text = "Работа со словарем";
             // 
+            // buttonSearch
+            // 
+            this.buttonSearch.Image = ((System.Drawing.Image)(resources.GetObject("buttonSearch.Image")));
+            this.buttonSearch.Location = new System.Drawing.Point(84, 29);
+            this.buttonSearch.Name = "buttonSearch";
+            this.buttonSearch.Size = new System.Drawing.Size(33, 36);
+            this.buttonSearch.TabIndex = 11;
+            this.buttonSearch.UseVisualStyleBackColor = true;
+            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
+            // 
             // textBoxSearch
             // 
             this.textBoxSearch.Location = new System.Drawing.Point(123, 38);
@@ -172,15 +182,18 @@
             this.buttonAddNotion.Size = new System.Drawing.Size(49, 45);
             this.buttonAddNotion.TabIndex = 6;
             this.buttonAddNotion.UseVisualStyleBackColor = true;
+            this.buttonAddNotion.Visible = false;
             this.buttonAddNotion.Click += new System.EventHandler(this.buttonAddNotion_Click);
             // 
             // listBoxDict
             // 
             this.listBoxDict.FormattingEnabled = true;
+            this.listBoxDict.HorizontalScrollbar = true;
             this.listBoxDict.Location = new System.Drawing.Point(123, 64);
             this.listBoxDict.Name = "listBoxDict";
             this.listBoxDict.Size = new System.Drawing.Size(154, 524);
             this.listBoxDict.TabIndex = 4;
+            this.listBoxDict.DoubleClick += new System.EventHandler(this.listBoxDict_DoubleClick);
             // 
             // buttonSaveCros
             // 
@@ -239,16 +252,6 @@
             this.button1.TabIndex = 9;
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // buttonSearch
-            // 
-            this.buttonSearch.Image = ((System.Drawing.Image)(resources.GetObject("buttonSearch.Image")));
-            this.buttonSearch.Location = new System.Drawing.Point(84, 29);
-            this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(33, 36);
-            this.buttonSearch.TabIndex = 11;
-            this.buttonSearch.UseVisualStyleBackColor = true;
-            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
             // FormHandMadeCros
             // 

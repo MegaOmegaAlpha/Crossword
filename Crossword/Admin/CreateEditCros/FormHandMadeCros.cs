@@ -357,7 +357,7 @@ namespace Crossword.Admin
         private int length;
         private void buttonAddNotion_Click(object sender, EventArgs e)
         {
-            if (listBoxDict.SelectedItem != null && listButton.Count > 0)
+            /*if (listBoxDict.SelectedItem != null && listButton.Count > 0)
             {
                 bool check = true;
                 Node node1, node2, nodeL;
@@ -464,7 +464,7 @@ namespace Crossword.Admin
                     MessageBox.Show("Область выделена неверно!", "Ошибка", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
-            }
+            }*/
         }
 
         private List<Button> listButton;
@@ -884,6 +884,118 @@ namespace Crossword.Admin
                 if (notion.StartsWith(textBoxSearch.Text))
                 {
                     listBoxDict.Items.Add(notion);
+                }
+            }
+        }
+
+        private void listBoxDict_DoubleClick(object sender, EventArgs e)
+        {
+            if (listBoxDict.SelectedItem != null && listButton.Count > 0)
+            {
+                bool check = true;
+                Node node1, node2, nodeL;
+                //проверка корректности выделения области
+                for (int i = 0; i < listButton.Count - 1; i++)
+                {
+                    node1 = (Node)listButton.ElementAt(i).Tag;
+                    node2 = (Node)listButton.ElementAt(i + 1).Tag;
+                    if ((node2.I - node1.I != 1 && node2.J - node1.J == 0) ||
+                        (node2.I - node1.I == 0 && node2.J - node1.J != 1) ||
+                        (node2.I - node1.I != 0 && node2.J - node1.J != 0))
+                    //между кнопками не должно быть разрывов, направление дожно соблюдаться
+                    {
+                        check = false;
+                    }
+
+                }
+                node1 = (Node)listButton.First().Tag;
+                nodeL = (Node)listButton.Last().Tag;
+                //если первая и последняя кнопка не в одной плоскости, то ошибка
+                if (nodeL.I - node1.I != 0 && nodeL.J - node1.J != 0)
+                {
+                    check = false;
+                }
+
+                if (check)
+                {
+                    string not = listBoxDict.SelectedItem.ToString();
+                    char[] charNot = not.ToCharArray();
+                    node1 = (Node)listButton.ElementAt(0).Tag;
+                    node2 = (Node)listButton.ElementAt(1).Tag;
+                    nodeL = (Node)listButton.Last().Tag;
+                    Direction dir;
+                    Word word;
+                    //определение направления
+                    if (node1.I == node2.I - 1)
+                    {
+                        dir = Direction.Horizontal;
+                        listBoxHor.Items.Add(not);
+                        #region block outside buttons
+                        //блокировка крайних положений, чтобы на них нельзя было кликать
+                        if (0 < node1.I && nodeL.I < width - 1)
+                        {
+                            buttons[node1.I - 1, node1.J].Enabled = false;
+                            buttons[nodeL.I + 1, node1.J].Enabled = false;
+                        }
+                        else
+                        {
+                            if (0 < node1.I && nodeL.I == width - 1)
+                            {
+                                buttons[node1.I - 1, node1.J].Enabled = false;
+                            }
+                            else
+                            {
+                                if (0 == node1.I && nodeL.I < width - 1)
+                                {
+                                    buttons[nodeL.I + 1, node1.J].Enabled = false;
+                                }
+                            }
+                        }
+                        #endregion
+                    }
+                    else
+                    {
+                        dir = Direction.Vertical;
+                        listBoxVert.Items.Add(not);
+                        #region block outside buttons
+                        //блокировка крайних положений, чтобы на них нельзя было кликать
+                        if (0 < node1.J && nodeL.J < height - 1)
+                        {
+                            buttons[node1.I, node1.J - 1].Enabled = false;
+                            buttons[node1.I, nodeL.J + 1].Enabled = false;
+                        }
+                        else
+                        {
+                            if (0 < node1.J && nodeL.J == width - 1)
+                            {
+                                buttons[node1.I, node1.J - 1].Enabled = false;
+                            }
+                            else
+                            {
+                                if (0 == node1.J && nodeL.J < width - 1)
+                                {
+                                    buttons[node1.I, nodeL.J + 1].Enabled = false;
+                                }
+                            }
+                        }
+                        #endregion
+                    }
+                    int intI = node1.I;
+                    int intJ = node1.J;
+                    word = new Word(intJ, intI, not, dir);
+                    for (int i = 0; i < charNot.Length; i++)
+                    {
+                        listButton.ElementAt(i).BackColor = Color.LightBlue;
+                        listButton.ElementAt(i).Text = charNot[i].ToString();
+                    }
+                    grid.AddWord(word);
+                    length = 0;
+                    listButton.Clear();
+                }
+                else
+                {
+                    MessageBox.Show("Область выделена неверно!", "Ошибка", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
         }
