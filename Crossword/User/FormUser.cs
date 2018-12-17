@@ -175,6 +175,7 @@ namespace Crossword.User
                     textBoxes[col, row].Enabled = false;
                     textBoxes[col, row].KeyPress += textBox_KeyPress;
                     textBoxes[col, row].ScrollBars = RichTextBoxScrollBars.None;
+                    textBoxes[col, row].KeyPress += KeyPress;
                     tableLayoutPanel.Controls.Add(textBoxes[col, row], col, row);
                 }
             }
@@ -227,6 +228,15 @@ namespace Crossword.User
             else
             {
                 InitializeSolution();
+            }
+        }
+
+        private void KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char keyChar = e.KeyChar;
+            if (keyChar < 'А' || 'Я' < keyChar)
+            {
+                e.Handled = true;
             }
         }
 
