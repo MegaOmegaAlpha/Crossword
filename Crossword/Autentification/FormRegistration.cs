@@ -90,5 +90,39 @@ namespace Crossword.Autentification
             formMain.Visible = true;
         }
 
+
+        private void textBoxPassword_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char l = e.KeyChar;
+            if ((l < '0' || l > '9') && (l < 'A' || l > 'z') && l != '\b' && l != '.')
+            {
+                e.Handled = true;
+                MessageBox.Show("Ввод не латиницы и не цифр запрещен");
+            }
+            //else if ((l < 'А' || l > 'я') && l != '\b' && l != '.') { MessageBox.Show("Ввод не латиницы и цифр запрещен"); }
+        }
+
+
+        private void textBoxPasswordYet_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char l = e.KeyChar;
+            if ((l < '0' || l > '9') && (l < 'A' || l > 'z') && l != '\b' && l != '.')
+            {
+                e.Handled = true;
+                MessageBox.Show("Ввод не латиницы и не цифр запрещен");
+            }
+
+        }
+
+
+        private void textBoxLogin_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char l = e.KeyChar;
+            if ((l < '0' || l > '9') && (l < 'A' || l > 'z') && l != '\b' && l != '.')
+            {
+                e.Handled = true;
+                MessageBox.Show("Ввод не латиницы и не цифр запрещен");
+            }
+        }
     }
 }

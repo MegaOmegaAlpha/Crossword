@@ -24,7 +24,7 @@ namespace Crossword
         {
             try
             {
-                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Repository\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
+                string connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\Documents\GitHub\Crossword\Crossword\UsersDB.mdf;Integrated Security=True";
                 sqlConnection = new SqlConnection(connect);
                 sqlConnection.Open();
                 labelConnect.ForeColor = Color.Green;
@@ -42,7 +42,7 @@ namespace Crossword
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
-    
+
         private void button1_Click(object sender, EventArgs e)
         {
             string login = textBoxLogin.Text;
@@ -72,14 +72,14 @@ namespace Crossword
                             FormUser formUser = new FormUser(this, openFileDialog.FileName);
                             formUser.Show();
                             Visible = false;
-                        }                       
+                        }
                     }
                     textBoxLogin.Clear();
-                    textBoxPas.Clear();                    
+                    textBoxPas.Clear();
                 }
                 else
                 {
-                    MessageBox.Show("Логин или пароль введен неверно", "Ошибка", MessageBoxButtons.OK, 
+                    MessageBox.Show("Логин или пароль введен неверно", "Ошибка", MessageBoxButtons.OK,
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
                 reader.Close();
@@ -98,6 +98,26 @@ namespace Crossword
             MessageBox.Show("КЛАССИЧЕСКИЙ КРОССВОРД!\nРазработчики ПО:\n 1. Байрамов Владимир Алексеевич\n 2. Мавлютов Владимир Дмитриевич\n 3. Перевозчиков Никита Дмитриевич \n 4. Фёдоров Сергей Владимирович\n Самарский университет\n Группа 6402-090301D", "АВТОРЫ");
         }
 
-        
+        private void textBoxPas_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char l = e.KeyChar;
+            if ((l < '0' || l > '9') && (l < 'A' || l > 'z') && l != '\b' && l != '.')
+            {
+                e.Handled = true;
+                MessageBox.Show("Ввод не латиницы и не цифр запрещен");
+            }
+
+        }
+
+
+        private void textBoxLogin_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char l = e.KeyChar;
+            if ((l < '0' || l > '9') && (l < 'A' || l > 'z') && l != '\b' && l != '.')
+            {
+                e.Handled = true;
+                MessageBox.Show("Ввод не латиницы и не цифр запрещен");
+            }
+        }
     }
 }
