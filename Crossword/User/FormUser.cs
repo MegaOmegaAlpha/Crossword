@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -421,6 +422,11 @@ namespace Crossword.User
                 }
             }
             return null;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
         }
 
         private void buttonCheckSolution_Click(object sender, EventArgs e)
