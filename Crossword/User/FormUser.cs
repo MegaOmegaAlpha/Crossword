@@ -230,7 +230,7 @@ namespace Crossword.User
         {
             float fontSize = 10f;
             float coeff = 2.14f;
-            switch(width)
+            switch (width)
             {
                 case 7:
                     return fontSize + coeff * 14;
@@ -400,31 +400,71 @@ namespace Crossword.User
 
         }
 
+        private bool checkWord(Word word)
+        {
+            bool check = false;
+            if (word.GetDirection().Equals(Direction.Vertical))
+            {
+                for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
+                {
+                    if (textBoxes[word.GetJ(), i].Text.Equals(textBoxes[word.GetJ(), i].Tag.ToString()))
+                    {
+                        check = true;
+                    } 
+                    else
+                    {
+                        check = false;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
+                {
+                    if (textBoxes[i, word.GetI()].Text.Equals(textBoxes[i, word.GetI()].Tag.ToString()))
+                    {
+                        check = true;
+                    }
+                    else
+                    {
+                        check = false;
+                    }
+                }
+            }
+            return check;
+        }
+
         private void buttonHelp_Click(object sender, EventArgs e)
         {
-            if (helpCount > 0)
+            if (helpCount > 0 && (listBoxHor.SelectedIndex > -1 || listBoxVert.SelectedIndex > -1))
             {
-                helpCount--;
-                labelHelpCount.Text = helpCount.ToString();
-                Random rnd = new Random();
-                Word word = words.ElementAt(rnd.Next(words.Count));
-                string notion = word.GetNotion();
-                if (word.GetDirection().Equals(Direction.Horizontal))
+                if (listBoxVert.SelectedIndex > -1)
                 {
-                    for (int i = word.GetJ(), j = 0; i < word.GetJ() + notion.Length; i++, j++)
+                    string notion = FindKey(listBoxVert.SelectedItem.ToString());
+                    Word word = grid.GetWord(notion);
+                    if (!checkWord(word))
                     {
-                        textBoxes[i, word.GetI()].Text = notion[j].ToString();
+                        for (int i = word.GetI(), j = 0; i < word.GetI() + notion.Length; i++, j++)
+                        {
+                            textBoxes[word.GetJ(), i].Text = notion[j].ToString();
+                        }
+                        helpCount--;
                     }
                 }
                 else
                 {
-                    for (int i = word.GetI(), j = 0; i < word.GetI() + notion.Length; i++, j++)
+                    string notion = FindKey(listBoxHor.SelectedItem.ToString());
+                    Word word = grid.GetWord(notion);
+                    if (!checkWord(word))
                     {
-                        textBoxes[word.GetJ(), i].Text = notion[j].ToString();
+                        for (int i = word.GetJ(), j = 0; i < word.GetJ() + notion.Length; i++, j++)
+                        {
+                            textBoxes[i, word.GetI()].Text = notion[j].ToString();
+                        }
+                        helpCount--;
                     }
                 }
-
-
+                labelHelpCount.Text = helpCount.ToString();
             }
         }
 
@@ -454,7 +494,7 @@ namespace Crossword.User
                     isSolution = true;
                     solution = (Solution)deserializer.Deserialize(stream);
                     InitializeSolution();
-                } 
+                }
                 else
                 {
                     isSolution = false;
