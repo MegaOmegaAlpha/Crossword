@@ -88,6 +88,7 @@ namespace Crossword.User
             tableLayoutPanel.RowCount = height;
             int widthT = 100 / tableLayoutPanel.ColumnCount;
             int heightT = 100 / tableLayoutPanel.RowCount;
+            float fontSize = ScaleFont();
             // добавляем колонки и строки
             for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
             {
@@ -106,6 +107,9 @@ namespace Crossword.User
                     textBoxes[col, row].Enabled = false;
                     textBoxes[col, row].KeyPress += textBox_KeyPress;
                     textBoxes[col, row].ScrollBars = RichTextBoxScrollBars.None;
+                    textBoxes[col, row].KeyPress += KeyPress;
+                    textBoxes[col, row].SelectionAlignment = HorizontalAlignment.Center;
+                    textBoxes[col, row].Font = new Font(textBoxes[col, row].Font.FontFamily, fontSize, FontStyle.Regular);
                     tableLayoutPanel.Controls.Add(textBoxes[col, row], col, row);
                 }
             }
@@ -157,6 +161,7 @@ namespace Crossword.User
             tableLayoutPanel.RowCount = height;
             int widthT = 100 / tableLayoutPanel.ColumnCount;
             int heightT = 100 / tableLayoutPanel.RowCount;
+            float fontSize = ScaleFont();
             // добавляем колонки и строки
             for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
             {
@@ -176,6 +181,8 @@ namespace Crossword.User
                     textBoxes[col, row].KeyPress += textBox_KeyPress;
                     textBoxes[col, row].ScrollBars = RichTextBoxScrollBars.None;
                     textBoxes[col, row].KeyPress += KeyPress;
+                    textBoxes[col, row].SelectionAlignment = HorizontalAlignment.Center;
+                    textBoxes[col, row].Font = new Font(textBoxes[col, row].Font.FontFamily, fontSize, FontStyle.Regular);
                     tableLayoutPanel.Controls.Add(textBoxes[col, row], col, row);
                 }
             }
@@ -217,6 +224,44 @@ namespace Crossword.User
             helpCount = solution.GetHelpCount();
             labelHelpCount.Text = helpCount > 1 ? helpCount.ToString() : "1";
             tableContainer.Update();
+        }
+
+        private float ScaleFont()
+        {
+            float fontSize = 10f;
+            float coeff = 2.14f;
+            switch(width)
+            {
+                case 7:
+                    return fontSize + coeff * 14;
+                case 8:
+                    return fontSize + coeff * 13;
+                case 9:
+                    return fontSize + coeff * 12;
+                case 10:
+                    return fontSize + coeff * 11;
+                case 11:
+                    return fontSize + coeff * 10;
+                case 12:
+                    return fontSize + coeff * 9;
+                case 13:
+                    return fontSize + coeff * 8;
+                case 14:
+                    return fontSize + coeff * 7;
+                case 15:
+                    return fontSize + coeff * 6;
+                case 16:
+                    return fontSize + coeff * 5;
+                case 17:
+                    return fontSize + coeff * 4;
+                case 18:
+                    return fontSize + coeff * 3;
+                case 19:
+                    return fontSize + coeff * 2;
+                case 20:
+                    return fontSize + coeff * 1;
+            }
+            return 0;
         }
 
         private void FormUser_Load(object sender, EventArgs e)
