@@ -137,7 +137,7 @@
             this.buttonSaveSolution.Image = ((System.Drawing.Image)(resources.GetObject("buttonSaveSolution.Image")));
             this.buttonSaveSolution.Location = new System.Drawing.Point(91, 9);
             this.buttonSaveSolution.Name = "buttonSaveSolution";
-            this.buttonSaveSolution.Size = new System.Drawing.Size(69, 51);
+            this.buttonSaveSolution.Size = new System.Drawing.Size(59, 48);
             this.buttonSaveSolution.TabIndex = 11;
             this.buttonSaveSolution.UseVisualStyleBackColor = true;
             this.buttonSaveSolution.Click += new System.EventHandler(this.buttonSaveSolution_Click);
@@ -217,11 +217,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(192, 10);
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(166, 9);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(59, 48);
             this.button1.TabIndex = 22;
-            this.button1.Text = "Справка";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
