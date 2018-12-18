@@ -29,6 +29,7 @@ namespace Crossword.User
         List<Word> words;
         bool isSolution;
         Solution solution;
+        bool isLoaded;
 
         public FormUser(FormMain formMain, string fileName)
         {
@@ -38,17 +39,36 @@ namespace Crossword.User
             Stream stream = new FileStream(fileName, FileMode.Open);
             BinaryFormatter deserializer = new BinaryFormatter();
             textBoxСurrentCrwd.Text = fileName;
-            if (fileName.EndsWith("slt"))
-            {
-                isSolution = true;
-                solution = (Solution)deserializer.Deserialize(stream);
+            try
+            {               
+                if (fileName.EndsWith("slt"))
+                {
+                    isSolution = true;
+                    solution = (Solution)deserializer.Deserialize(stream);
+                }
+                else
+                {
+                    deserializer.Deserialize(stream);
+                    mainCross = (CrosswordCont)deserializer.Deserialize(stream);
+                }
+                stream.Close();
+                isLoaded = true;
             }
-            else
+            catch (System.Runtime.Serialization.SerializationException)
             {
-                deserializer.Deserialize(stream);
-                mainCross = (CrosswordCont)deserializer.Deserialize(stream);
+                MessageBox.Show("Структура файла нарушена", "Ошибка", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                stream.Close();
+                isLoaded = false;
             }
-            stream.Close();
+            catch (IndexOutOfRangeException)
+            {
+                MessageBox.Show("Структура файла нарушена", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                stream.Close();
+                isLoaded = false;
+            }
+            InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(new System.Globalization.CultureInfo("ru"));
         }
 
         /*public FormUser(string fileName)
@@ -72,158 +92,164 @@ namespace Crossword.User
 
         private void InitializeCrwd()
         {
-            tableContainer.Controls.Clear();
-            listBoxHor.Items.Clear();
-            listBoxVert.Items.Clear();
-            grid = mainCross.GetGrid();
-            dictionary = mainCross.GetDictionary();
-            words = grid.GetWords();
-            width = grid.Width;
-            height = grid.Height;
-            textBoxes = new RichTextBox[width, height];
-            var tableLayoutPanel = new TableLayoutPanel();
-            tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel.Visible = true;
-            tableLayoutPanel.ColumnCount = width;
-            tableLayoutPanel.RowCount = height;
-            int widthT = 100 / tableLayoutPanel.ColumnCount;
-            int heightT = 100 / tableLayoutPanel.RowCount;
-            float fontSize = ScaleFont();
-            // добавляем колонки и строки
-            for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
+            if (isLoaded)
             {
-                //добавляем колонку
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
-                for (int row = 0; row < tableLayoutPanel.RowCount; row++)
+                tableContainer.Controls.Clear();
+                listBoxHor.Items.Clear();
+                listBoxVert.Items.Clear();
+                grid = mainCross.GetGrid();
+                dictionary = mainCross.GetDictionary();
+                words = grid.GetWords();
+                width = grid.Width;
+                height = grid.Height;
+                textBoxes = new RichTextBox[width, height];
+                var tableLayoutPanel = new TableLayoutPanel();
+                tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+                tableLayoutPanel.Visible = true;
+                tableLayoutPanel.ColumnCount = width;
+                tableLayoutPanel.RowCount = height;
+                int widthT = 100 / tableLayoutPanel.ColumnCount;
+                int heightT = 100 / tableLayoutPanel.RowCount;
+                float fontSize = ScaleFont();
+                // добавляем колонки и строки
+                for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
                 {
-                    //строка
-                    if (col == 0)
+                    //добавляем колонку
+                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
+                    for (int row = 0; row < tableLayoutPanel.RowCount; row++)
                     {
-                        tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
+                        //строка
+                        if (col == 0)
+                        {
+                            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
+                        }
+                        textBoxes[col, row] = new RichTextBox();
+                        textBoxes[col, row].Dock = DockStyle.Fill;
+                        textBoxes[col, row].MaxLength = 1;
+                        textBoxes[col, row].Enabled = false;
+                        textBoxes[col, row].KeyPress += textBox_KeyPress;
+                        textBoxes[col, row].ScrollBars = RichTextBoxScrollBars.None;
+                        textBoxes[col, row].KeyPress += KeyPress;
+                        textBoxes[col, row].SelectionAlignment = HorizontalAlignment.Center;
+                        textBoxes[col, row].Font = new Font(textBoxes[col, row].Font.FontFamily, fontSize, FontStyle.Regular);
+                        tableLayoutPanel.Controls.Add(textBoxes[col, row], col, row);
                     }
-                    textBoxes[col, row] = new RichTextBox();
-                    textBoxes[col, row].Dock = DockStyle.Fill;
-                    textBoxes[col, row].MaxLength = 1;
-                    textBoxes[col, row].Enabled = false;
-                    textBoxes[col, row].KeyPress += textBox_KeyPress;
-                    textBoxes[col, row].ScrollBars = RichTextBoxScrollBars.None;
-                    textBoxes[col, row].KeyPress += KeyPress;
-                    textBoxes[col, row].SelectionAlignment = HorizontalAlignment.Center;
-                    textBoxes[col, row].Font = new Font(textBoxes[col, row].Font.FontFamily, fontSize, FontStyle.Regular);
-                    tableLayoutPanel.Controls.Add(textBoxes[col, row], col, row);
                 }
-            }
-            //таблицу в контейнер
-            tableContainer.Controls.Add(tableLayoutPanel);
-            //заполнение сетки
-            foreach (Word word in words)
-            {
-                if (word.GetDirection().Equals(Direction.Horizontal))
+                //таблицу в контейнер
+                tableContainer.Controls.Add(tableLayoutPanel);
+                //заполнение сетки
+                foreach (Word word in words)
                 {
-                    for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
+                    if (word.GetDirection().Equals(Direction.Horizontal))
                     {
-                        textBoxes[i, word.GetI()].BackColor = Color.LightBlue;
-                        textBoxes[i, word.GetI()].Tag = word.GetNotion().ElementAt(j).ToString();
-                        textBoxes[i, word.GetI()].Enabled = true;
+                        for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
+                        {
+                            textBoxes[i, word.GetI()].BackColor = Color.LightBlue;
+                            textBoxes[i, word.GetI()].Tag = word.GetNotion().ElementAt(j).ToString();
+                            textBoxes[i, word.GetI()].Enabled = true;
+                        }
+                        listBoxHor.Items.Add(dictionary[word.GetNotion()]);
                     }
-                    listBoxHor.Items.Add(dictionary[word.GetNotion()]);
-                }
-                else
-                {
-                    for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
+                    else
                     {
-                        textBoxes[word.GetJ(), i].BackColor = Color.LightBlue;
-                        textBoxes[word.GetJ(), i].Tag = word.GetNotion().ElementAt(j).ToString();
-                        textBoxes[word.GetJ(), i].Enabled = true;
+                        for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
+                        {
+                            textBoxes[word.GetJ(), i].BackColor = Color.LightBlue;
+                            textBoxes[word.GetJ(), i].Tag = word.GetNotion().ElementAt(j).ToString();
+                            textBoxes[word.GetJ(), i].Enabled = true;
+                        }
+                        listBoxVert.Items.Add(dictionary[word.GetNotion()]);
                     }
-                    listBoxVert.Items.Add(dictionary[word.GetNotion()]);
                 }
-            }
-            helpCount = dictionary.Count / 10 > 0 ? dictionary.Count / 10 : 1;
+                helpCount = dictionary.Count / 10 > 0 ? dictionary.Count / 10 : 1;
 
-            labelHelpCount.Text = helpCount.ToString();
-            tableContainer.Update();
+                labelHelpCount.Text = helpCount.ToString();
+                tableContainer.Update();
+            }
         }
 
         private void InitializeSolution()
         {
-            tableContainer.Controls.Clear();
-            grid = solution.GetGrid();
-            dictionary = solution.GetDictionary();
-            words = grid.GetWords();
-            width = grid.Width;
-            height = grid.Height;
-            textBoxes = new RichTextBox[width, height];
-            var tableLayoutPanel = new TableLayoutPanel();
-            tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel.Visible = true;
-            tableLayoutPanel.ColumnCount = width;
-            tableLayoutPanel.RowCount = height;
-            int widthT = 100 / tableLayoutPanel.ColumnCount;
-            int heightT = 100 / tableLayoutPanel.RowCount;
-            float fontSize = ScaleFont();
-            // добавляем колонки и строки
-            for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
+            if (isLoaded)
             {
-                //добавляем колонку
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
-                for (int row = 0; row < tableLayoutPanel.RowCount; row++)
+                tableContainer.Controls.Clear();
+                grid = solution.GetGrid();
+                dictionary = solution.GetDictionary();
+                words = grid.GetWords();
+                width = grid.Width;
+                height = grid.Height;
+                textBoxes = new RichTextBox[width, height];
+                var tableLayoutPanel = new TableLayoutPanel();
+                tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+                tableLayoutPanel.Visible = true;
+                tableLayoutPanel.ColumnCount = width;
+                tableLayoutPanel.RowCount = height;
+                int widthT = 100 / tableLayoutPanel.ColumnCount;
+                int heightT = 100 / tableLayoutPanel.RowCount;
+                float fontSize = ScaleFont();
+                // добавляем колонки и строки
+                for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
                 {
-                    //строка
-                    if (col == 0)
+                    //добавляем колонку
+                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
+                    for (int row = 0; row < tableLayoutPanel.RowCount; row++)
                     {
-                        tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
-                    }
-                    textBoxes[col, row] = new RichTextBox();
-                    textBoxes[col, row].Dock = DockStyle.Fill;
-                    textBoxes[col, row].MaxLength = 1;
-                    textBoxes[col, row].Enabled = false;
-                    textBoxes[col, row].KeyPress += textBox_KeyPress;
-                    textBoxes[col, row].ScrollBars = RichTextBoxScrollBars.None;
-                    textBoxes[col, row].KeyPress += KeyPress;
-                    textBoxes[col, row].SelectionAlignment = HorizontalAlignment.Center;
-                    textBoxes[col, row].Font = new Font(textBoxes[col, row].Font.FontFamily, fontSize, FontStyle.Regular);
-                    tableLayoutPanel.Controls.Add(textBoxes[col, row], col, row);
-                }
-            }
-            //таблицу в контейнер
-            tableContainer.Controls.Add(tableLayoutPanel);
-            //заполнение сетки
-            string[,] solutionGrid = solution.GetSolutionGrid();
-            foreach (Word word in words)
-            {
-                if (word.GetDirection().Equals(Direction.Horizontal))
-                {
-                    for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
-                    {
-                        textBoxes[i, word.GetI()].BackColor = Color.LightBlue;
-                        textBoxes[i, word.GetI()].Tag = word.GetNotion().ElementAt(j).ToString();
-                        textBoxes[i, word.GetI()].Enabled = true;
-                        if (!solutionGrid[i, word.GetI()].Equals(""))
+                        //строка
+                        if (col == 0)
                         {
-                            textBoxes[i, word.GetI()].Text = solutionGrid[i, word.GetI()];
+                            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
                         }
+                        textBoxes[col, row] = new RichTextBox();
+                        textBoxes[col, row].Dock = DockStyle.Fill;
+                        textBoxes[col, row].MaxLength = 1;
+                        textBoxes[col, row].Enabled = false;
+                        textBoxes[col, row].KeyPress += textBox_KeyPress;
+                        textBoxes[col, row].ScrollBars = RichTextBoxScrollBars.None;
+                        textBoxes[col, row].KeyPress += KeyPress;
+                        textBoxes[col, row].SelectionAlignment = HorizontalAlignment.Center;
+                        textBoxes[col, row].Font = new Font(textBoxes[col, row].Font.FontFamily, fontSize, FontStyle.Regular);
+                        tableLayoutPanel.Controls.Add(textBoxes[col, row], col, row);
                     }
-                    listBoxHor.Items.Add(dictionary[word.GetNotion()]);
                 }
-                else
+                //таблицу в контейнер
+                tableContainer.Controls.Add(tableLayoutPanel);
+                //заполнение сетки
+                string[,] solutionGrid = solution.GetSolutionGrid();
+                foreach (Word word in words)
                 {
-                    for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
+                    if (word.GetDirection().Equals(Direction.Horizontal))
                     {
-                        textBoxes[word.GetJ(), i].BackColor = Color.LightBlue;
-                        textBoxes[word.GetJ(), i].Tag = word.GetNotion().ElementAt(j).ToString();
-                        textBoxes[word.GetJ(), i].Enabled = true;
-                        if (!solutionGrid[word.GetJ(), i].Equals(""))
+                        for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
                         {
-                            textBoxes[word.GetJ(), i].Text = solutionGrid[word.GetJ(), i];
+                            textBoxes[i, word.GetI()].BackColor = Color.LightBlue;
+                            textBoxes[i, word.GetI()].Tag = word.GetNotion().ElementAt(j).ToString();
+                            textBoxes[i, word.GetI()].Enabled = true;
+                            if (!solutionGrid[i, word.GetI()].Equals(""))
+                            {
+                                textBoxes[i, word.GetI()].Text = solutionGrid[i, word.GetI()];
+                            }
                         }
+                        listBoxHor.Items.Add(dictionary[word.GetNotion()]);
                     }
-                    listBoxVert.Items.Add(dictionary[word.GetNotion()]);
+                    else
+                    {
+                        for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
+                        {
+                            textBoxes[word.GetJ(), i].BackColor = Color.LightBlue;
+                            textBoxes[word.GetJ(), i].Tag = word.GetNotion().ElementAt(j).ToString();
+                            textBoxes[word.GetJ(), i].Enabled = true;
+                            if (!solutionGrid[word.GetJ(), i].Equals(""))
+                            {
+                                textBoxes[word.GetJ(), i].Text = solutionGrid[word.GetJ(), i];
+                            }
+                        }
+                        listBoxVert.Items.Add(dictionary[word.GetNotion()]);
+                    }
                 }
+                helpCount = solution.GetHelpCount();
+                labelHelpCount.Text = helpCount.ToString();
+                tableContainer.Update();
             }
-            helpCount = solution.GetHelpCount();
-            labelHelpCount.Text = helpCount > 1 ? helpCount.ToString() : "1";
-            tableContainer.Update();
         }
 
         private float ScaleFont()
@@ -371,6 +397,7 @@ namespace Crossword.User
 
         private void buttonSaveSolution_Click(object sender, EventArgs e)
         {
+            Enabled = false;
             progressBar1.Value = 0;
             progressBar1.Step = 1;
             progressBar1.Maximum = width * height;
@@ -397,7 +424,7 @@ namespace Crossword.User
                                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 s.Close();
             }
-
+            Enabled = true;
         }
 
         private bool checkWord(Word word)
@@ -489,24 +516,43 @@ namespace Crossword.User
                 Stream stream = new FileStream(openFileDialog.FileName, FileMode.Open);
                 BinaryFormatter deserializer = new BinaryFormatter();
                 textBoxСurrentCrwd.Text = openFileDialog.FileName;
-                if (openFileDialog.FileName.EndsWith("slt"))
+                try
                 {
-                    isSolution = true;
-                    solution = (Solution)deserializer.Deserialize(stream);
-                    InitializeSolution();
+                    if (openFileDialog.FileName.EndsWith("slt"))
+                    {
+                        isSolution = true;
+                        solution = (Solution)deserializer.Deserialize(stream);
+                        isLoaded = true;
+                        InitializeSolution();
+                    }
+                    else
+                    {
+                        isSolution = false;
+                        deserializer.Deserialize(stream);
+                        mainCross = (CrosswordCont)deserializer.Deserialize(stream);
+                        isLoaded = true;
+                        InitializeCrwd();
+                    }
+                    buttonHelp.Enabled = true;
+                    buttonSaveSolution.Enabled = true;
+                    pictureBoxUp.Visible = false;
+                    pictureBoxDown.Visible = false;
+                    stream.Close();
                 }
-                else
+                catch (System.Runtime.Serialization.SerializationException)
                 {
-                    isSolution = false;
-                    deserializer.Deserialize(stream);
-                    mainCross = (CrosswordCont)deserializer.Deserialize(stream);
-                    InitializeCrwd();
+                    MessageBox.Show("Структура файла нарушена", "Ошибка", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    stream.Close();
+                    isLoaded = false;
                 }
-                buttonHelp.Enabled = true;
-                buttonSaveSolution.Enabled = true;
-                pictureBoxUp.Visible = false;
-                pictureBoxDown.Visible = false;
-                stream.Close();
+                catch(IndexOutOfRangeException)
+                {
+                    MessageBox.Show("Структура файла нарушена", "Ошибка", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    stream.Close();
+                    isLoaded = false;
+                }
             }
         }
 
@@ -525,7 +571,15 @@ namespace Crossword.User
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
+            try
+            {
+                Process.Start(@"D:\Repository\Crossword\index.html");
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                MessageBox.Show("Файл справки не найден", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
 
         private void buttonCheckSolution_Click(object sender, EventArgs e)

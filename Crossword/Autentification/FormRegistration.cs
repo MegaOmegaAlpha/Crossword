@@ -55,16 +55,6 @@ namespace Crossword.Autentification
                                 "values ('" + login + "', '" + pass +
                                 "', 0);", sqlConnection);
                             sqlCommand.ExecuteNonQuery();
-                            /*OpenFileDialog openFileDialog = new OpenFileDialog();
-                            openFileDialog.Filter = "Crossword |*.crwd; *.slt";
-                            openFileDialog.Title = "Открыть кроссворд";
-                            openFileDialog.ShowDialog();
-                            if (openFileDialog.FileName != "")
-                            {
-                                FormUser formUser = new FormUser(formMain, openFileDialog.FileName);
-                                formUser.Show();
-                                Visible = false;
-                            }*/
                             MessageBox.Show("Успешно");
                             Close();
                         }
@@ -131,7 +121,15 @@ namespace Crossword.Autentification
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
+            try
+            {
+                Process.Start(@"D:\Repository\Crossword\index.html");
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                MessageBox.Show("Файл справки не найден", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
     }
 }

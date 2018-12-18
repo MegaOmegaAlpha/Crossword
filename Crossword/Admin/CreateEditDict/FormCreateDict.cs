@@ -31,32 +31,36 @@ namespace Crossword.Admin.CreateEditDict
             dictionary = new Dictionary<string, string>();
             this.fileName = fileName;
             this.formAdmin = formAdmin;
+            StreamReader streamReader = new StreamReader(fileName, Encoding.GetEncoding("Windows-1251"));
             InitializeComponent();
             try
-            {
-                StreamReader streamReader = new StreamReader(fileName, Encoding.GetEncoding("Windows-1251"));
+            {                
                 string dataFromFile = "";
                 while (dataFromFile != null)
                 {
                     dataFromFile = streamReader.ReadLine();
                     if (dataFromFile != null)
                     {
-                        string[] stringArr = dataFromFile.Split(' ');
-                        string notion = stringArr[0];
-                        string def = "";
-                        for (int i = 1; i < stringArr.Length; i++)
+                        if (!dataFromFile.Equals(""))
                         {
-                            def += " " + stringArr[i];
+                            string[] stringArr = dataFromFile.Split(' ');
+                            string notion = stringArr[0];
+                            string def = "";
+                            for (int i = 1; i < stringArr.Length - 1; i++)
+                            {
+                                def += stringArr[i] + " ";
+                            }
+                            def += stringArr[stringArr.Length - 1];
+                            dictionary.Add(notion.ToUpper(), def.ToLower());
                         }
-                        dictionary.Add(notion.ToUpper(), def.ToLower());
                     }
                 }
-                updateGrid();
             }
             catch (ArgumentException)
             {
                 MessageBox.Show("Понятие повторяется!", "Ошибка", MessageBoxButtons.OK,
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                streamReader.Close();
             }
         }
 
@@ -93,6 +97,16 @@ namespace Crossword.Admin.CreateEditDict
             formAdd = new FormAddNotion();
             formAdd.Show();
             formAdd.buttonSave.Click += new EventHandler(buttonSaveNotion_Click);
+            formAdd.FormClosing += FormAddEditNotion_Closing;
+            Enabled = false;
+        }
+
+        private void FormAddEditNotion_Closing(object sender, FormClosingEventArgs e)
+        {
+            buttonAdd.Enabled = true;
+            buttonEdit.Enabled = true;
+            buttonDelete.Enabled = true;
+            Enabled = true;
         }
 
         private void buttonSaveNotion_Click(object sender, EventArgs e)
@@ -115,7 +129,6 @@ namespace Crossword.Admin.CreateEditDict
                     formAdd.Close();
                 }
             }
-
             catch (System.ArgumentException)
             {
                 MessageBox.Show("Понятие повторяется!", "Ошибка", MessageBoxButtons.OK,
@@ -134,6 +147,7 @@ namespace Crossword.Admin.CreateEditDict
                 formAdd = new FormAddNotion(not, def);
                 formAdd.buttonSave.Click += new EventHandler(buttonSaveEditedNotion_Click);
                 formAdd.Show();
+                Enabled = false; 
             }
         }
 
@@ -215,15 +229,18 @@ namespace Crossword.Admin.CreateEditDict
 
         private void buttonSortLen_Click(object sender, EventArgs e)
         {
+            Enabled = false;
             progressBar1.Value = 0;
             progressBar1.Minimum = 0;
             progressBar1.Maximum = dictionary.Count;
             progressBar1.Step = 1;
             sortLen();
+            Enabled = true;
         }
 
         private void buttonSaveDict_Click(object sender, EventArgs e)
         {
+            Enabled = false;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Text |*.txt";
             saveFileDialog.Title = "Сохранить словарь";
@@ -232,18 +249,23 @@ namespace Crossword.Admin.CreateEditDict
             {
                 Stream s = new FileStream(saveFileDialog.FileName, FileMode.Create);
                 StreamWriter stream = new StreamWriter(s, Encoding.GetEncoding("Windows-1251"));
+                progressBar1.Value = 0;
+                progressBar1.Maximum = dictionary.Count;
                 for (int i = 0; i < dictionary.Count; i++)
                 {
                     stream.WriteLine(dictionary.ElementAt(i).Key + " " + dictionary.ElementAt(i).Value);
+                    progressBar1.PerformStep();
                 }
                 stream.Close();
             }
+            Enabled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (!textBoxSearch.Text.Equals(""))
             {
+                Enabled = false;
                 dataGridView.Rows.Clear();
                 progressBar1.Value = 0;
                 progressBar1.Minimum = 0;
@@ -261,6 +283,7 @@ namespace Crossword.Admin.CreateEditDict
                     }
                     progressBar1.PerformStep();
                 }
+                Enabled = true;
             }  
             else
             {
@@ -275,7 +298,20 @@ namespace Crossword.Admin.CreateEditDict
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
+            try
+            {
+                Process.Start(@"D:\Repository\Crossword\index.html");
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                MessageBox.Show("Файл справки не найден", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
+        }
+
+        private void FormCreateDict_Shown(object sender, EventArgs e)
+        {
+            updateGrid();
         }
     }
 }

@@ -44,6 +44,7 @@
             this.textBoxNotion.Name = "textBoxNotion";
             this.textBoxNotion.Size = new System.Drawing.Size(250, 20);
             this.textBoxNotion.TabIndex = 0;
+            this.textBoxNotion.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxNotion_KeyPress);
             // 
             // label1
             // 
@@ -61,6 +62,7 @@
             this.richTextBoxDef.Size = new System.Drawing.Size(225, 147);
             this.richTextBoxDef.TabIndex = 2;
             this.richTextBoxDef.Text = "";
+            this.richTextBoxDef.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.richTextBoxDef_KeyPress);
             // 
             // buttonSave
             // 
@@ -70,6 +72,7 @@
             this.buttonSave.TabIndex = 3;
             this.buttonSave.Text = "Сохранить";
             this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // label2
             // 
@@ -119,6 +122,7 @@
             this.Name = "FormAddNotion";
             this.Text = "ДОБАВЛЕНИЕ/ИЗМЕНЕНИЕ ПОНЯТИЯ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormAddNotion_FormClosing);
+            this.Load += new System.EventHandler(this.FormAddNotion_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -23,6 +23,7 @@ namespace Crossword.Admin.CreateEditDict
             InitializeComponent();
             textBoxNotion.Text = notion;
             richTextBoxDef.Text = def;
+            InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(new System.Globalization.CultureInfo("ru"));
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -37,7 +38,43 @@ namespace Crossword.Admin.CreateEditDict
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
+            try
+            {
+                Process.Start(@"D:\Repository\Crossword\index.html");
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                MessageBox.Show("Файл справки не найден", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxNotion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char keyChar = e.KeyChar;
+            if ((keyChar < 'а' || keyChar > 'я') && (keyChar < 'А' || keyChar > 'Я'))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void FormAddNotion_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void richTextBoxDef_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char keyChar = e.KeyChar;
+            if ((keyChar < 'а' || keyChar > 'я') && (keyChar < 'А' || keyChar > 'Я') && !e.KeyChar.Equals(' '))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

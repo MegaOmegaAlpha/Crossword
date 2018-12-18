@@ -33,6 +33,7 @@ namespace Crossword.Admin
         CrosswordCont mainCros;
         bool editing;
         bool isGenerated;
+        bool isLoaded;
 
         public FormHandMadeCros(FormBeforeCreate formBefore, int width, int height, string fileName)
         {
@@ -41,6 +42,7 @@ namespace Crossword.Admin
             this.height = height;
             fileDict = fileName;
             InitializeComponent();
+            isLoaded = true;
         }
 
         public FormHandMadeCros(string fileName)
@@ -54,13 +56,23 @@ namespace Crossword.Admin
         public FormHandMadeCros(FormAdmin formBefore, string fileName)
         {
             InitializeComponent();
-            Stream stream = new FileStream(fileName, FileMode.Open);
-            BinaryFormatter deserializer = new BinaryFormatter();
-            isGenerated = (bool)deserializer.Deserialize(stream);
-            mainCros = (CrosswordCont)deserializer.Deserialize(stream);
             formAdmin = formBefore;
-            formAdmin.Visible = false;
             editing = true;
+            Stream stream = new FileStream(fileName, FileMode.Open);
+            try
+            {
+                BinaryFormatter deserializer = new BinaryFormatter();
+                isGenerated = (bool)deserializer.Deserialize(stream);
+                mainCros = (CrosswordCont)deserializer.Deserialize(stream);
+                formAdmin.Visible = false;
+            }
+            catch (System.Runtime.Serialization.SerializationException)
+            {
+                MessageBox.Show("Структура файла нарушена", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                stream.Close();
+                isLoaded = false;
+            }
         }
 
         private void tableLayoutPanel_Paint(object sender, PaintEventArgs e)
@@ -92,153 +104,175 @@ namespace Crossword.Admin
 
         private void FormHandMadeCros_Load(object sender, EventArgs e)
         {
-            if (!editing)
+            if (isLoaded)
             {
-                grid = new Grid(width, height);
-                _board = new Crossik(width, height, ref grid);
-
-                listButton = new List<Button>();
-                buttons = new Button[width, height];
-                var tableLayoutPanel = new TableLayoutPanel();
-                tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-                tableLayoutPanel.Visible = true;
-                tableLayoutPanel.ColumnCount = width;
-                tableLayoutPanel.RowCount = height;
-                //размер колонки и строки в процентах
-                int widthT = 100 / tableLayoutPanel.ColumnCount;
-                int heightT = 100 / tableLayoutPanel.RowCount;
-                // добавляем колонки и строки
-                for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
+                if (!editing)
                 {
-                    //добавляем колонку
-                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
-                    for (int row = 0; row < tableLayoutPanel.RowCount; row++)
+                    try
                     {
-                        //строка
-                        if (col == 0)
-                        {
-                            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
-                        }
-                        //инициализация экземпляра
-                        buttons[col, row] = new Button();
-                        buttons[col, row].Dock = DockStyle.Fill;
-                        buttons[col, row].BackColor = Color.Black;
-                        buttons[col, row].Click += GridButtonClicked;
-                        buttons[col, row].Tag = new Node(col, row);
-                        grid.SetGridItem(col, row, false);
-                        tableLayoutPanel.Controls.Add(buttons[col, row], col, row);
-                    }
-                }
-                //таблицу в контейнер
-                TableContainer.Controls.Add(tableLayoutPanel);
+                        grid = new Grid(width, height);
+                        _board = new Crossik(width, height, ref grid);
 
-                textBoxCurrentDict.Text = fileDict;
-
-                //заполнение словаря
-                StreamReader reader = new StreamReader(fileDict, Encoding.GetEncoding("Windows-1251"));
-                string dataFromFile = "";
-                dictionary = new Dictionary<string, string>();
-                try
-                {
-                    while (dataFromFile != null)
-                    {
-                        dataFromFile = reader.ReadLine();
-                        if (dataFromFile != null)
+                        listButton = new List<Button>();
+                        buttons = new Button[width, height];
+                        var tableLayoutPanel = new TableLayoutPanel();
+                        tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+                        tableLayoutPanel.Visible = true;
+                        tableLayoutPanel.ColumnCount = width;
+                        tableLayoutPanel.RowCount = height;
+                        //размер колонки и строки в процентах
+                        int widthT = 100 / tableLayoutPanel.ColumnCount;
+                        int heightT = 100 / tableLayoutPanel.RowCount;
+                        // добавляем колонки и строки
+                        for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
                         {
-                            string[] stringArr = dataFromFile.Split(' ');
-                            string notion = stringArr[0];
-                            string def = "";
-                            for (int i = 1; i < stringArr.Length; i++)
+                            //добавляем колонку
+                            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
+                            for (int row = 0; row < tableLayoutPanel.RowCount; row++)
                             {
-                                def += " " + stringArr[i];
+                                //строка
+                                if (col == 0)
+                                {
+                                    tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
+                                }
+                                //инициализация экземпляра
+                                buttons[col, row] = new Button();
+                                buttons[col, row].Dock = DockStyle.Fill;
+                                buttons[col, row].BackColor = Color.Black;
+                                buttons[col, row].Click += GridButtonClicked;
+                                buttons[col, row].Tag = new Node(col, row);
+                                grid.SetGridItem(col, row, false);
+                                tableLayoutPanel.Controls.Add(buttons[col, row], col, row);
                             }
-                            dictionary.Add(notion, def);
-                            listBoxDict.Items.Add(notion);
                         }
-                    }
-                    notions = new string[dictionary.Count];
-                    notions = dictionary.Keys.ToArray();
-                }
-                catch (ArgumentException)
-                {
-                    MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    formBefore.Visible = true;
-                    Close();
-                }
-            }
-            else
-            {              
-                dictionary = new Dictionary<string, string>();
-                listButton = new List<Button>();               
-                grid = mainCros.GetGrid();
-                List<Word> words = grid.GetWords();
-                buttons = new Button[grid.Height, grid.Width];
-                var tableLayoutPanel = new TableLayoutPanel();
-                tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-                tableLayoutPanel.Visible = true;
-                tableLayoutPanel.ColumnCount = grid.Width;
-                tableLayoutPanel.RowCount = grid.Height;
-                width = grid.Width;
-                height = grid.Height;
-                _board = new Crossik(width, height, ref grid);
-                //размер колонки и строки в процентах
-                int widthT = 100 / tableLayoutPanel.ColumnCount;
-                int heightT = 100 / tableLayoutPanel.RowCount;
-                // добавляем колонки и строки
-                for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
-                {
-                    //добавляем колонку
-                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
-                    for (int row = 0; row < tableLayoutPanel.RowCount; row++)
-                    {
-                        //строка
-                        if (col == 0)
-                        {
-                            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
-                        }
-                        buttons[col, row] = new Button();
-                        buttons[col, row].Dock = DockStyle.Fill;
-                        buttons[col, row].BackColor = Color.Black;
-                        buttons[col, row].Click += GridButtonClicked;
-                        buttons[col, row].Tag = new Node(col, row);
-                        buttons[col, row].Enabled = isGenerated ? false : true;
-                        tableLayoutPanel.Controls.Add(buttons[col, row], col, row);
+                        //таблицу в контейнер
+                        TableContainer.Controls.Add(tableLayoutPanel);
 
-                    }
-                }
-                //таблицу в контейнер
-                TableContainer.Controls.Add(tableLayoutPanel);
+                        textBoxCurrentDict.Text = fileDict;
 
-                textBoxCurrentDict.Text = fileDict;
-                //размещение букв на сетке
-                foreach (Word word in words)
-                {
-                    if (word.GetDirection().Equals(Direction.Horizontal))
-                    {
-                        for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
+                        //заполнение словаря
+                        StreamReader reader = new StreamReader(fileDict, Encoding.GetEncoding("Windows-1251"));
+                        string dataFromFile = "";
+                        dictionary = new Dictionary<string, string>();
+
+                        while (dataFromFile != null)
                         {
-                            buttons[i, word.GetI()].BackColor = Color.LightBlue;
-                            buttons[i, word.GetI()].Text = word.GetNotion().ElementAt(j).ToString();
+                            dataFromFile = reader.ReadLine();
+                            if (dataFromFile != null)
+                            {
+                                if (!dataFromFile.Equals(""))
+                                {
+                                    string[] stringArr = dataFromFile.Split(' ');
+                                    string notion = stringArr[0];
+                                    string def = "";
+                                    for (int i = 1; i < stringArr.Length; i++)
+                                    {
+                                        def += " " + stringArr[i];
+                                    }
+                                    dictionary.Add(notion, def);
+                                    listBoxDict.Items.Add(notion);
+                                }
+                            }
                         }
-                        listBoxHor.Items.Add(word.GetNotion());
-                        dictionary.Add(word.GetNotion(), mainCros.GetDictionary()[word.GetNotion()]);
+                        notions = new string[dictionary.Count];
+                        notions = dictionary.Keys.ToArray();
                     }
-                    else
+                    catch (ArgumentException)
                     {
-                        for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
-                        {
-                            buttons[word.GetJ(), i].BackColor = Color.LightBlue;
-                            buttons[word.GetJ(), i].Text = word.GetNotion().ElementAt(j).ToString();
-                        }
-                        listBoxVert.Items.Add(word.GetNotion());
-                        dictionary.Add(word.GetNotion(), mainCros.GetDictionary()[word.GetNotion()]);
+                        MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        listBoxDict.Items.Clear();
+                        /*formBefore.Visible = true;
+                        Close();*/
+                    }
+                    catch (System.Runtime.Serialization.SerializationException)
+                    {
+                        MessageBox.Show("Словарь испорчен!", "Ошибка", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        /*formBefore.Visible = true;
+                        Close();*/
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        MessageBox.Show("Файл не найден", "Ошибка", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        /*formBefore.Visible = true;
+                        Close();*/
                     }
                 }
-                if (isGenerated)
+                else
                 {
-                    buttonAddNotion.Enabled = false;
-                    buttonDelNotion.Enabled = false;
+                    dictionary = new Dictionary<string, string>();
+                    listButton = new List<Button>();
+                    grid = mainCros.GetGrid();
+                    List<Word> words = grid.GetWords();
+                    buttons = new Button[grid.Height, grid.Width];
+                    var tableLayoutPanel = new TableLayoutPanel();
+                    tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+                    tableLayoutPanel.Visible = true;
+                    tableLayoutPanel.ColumnCount = grid.Width;
+                    tableLayoutPanel.RowCount = grid.Height;
+                    width = grid.Width;
+                    height = grid.Height;
+                    _board = new Crossik(width, height, ref grid);
+                    //размер колонки и строки в процентах
+                    int widthT = 100 / tableLayoutPanel.ColumnCount;
+                    int heightT = 100 / tableLayoutPanel.RowCount;
+                    // добавляем колонки и строки
+                    for (int col = 0; col < tableLayoutPanel.ColumnCount; col++)
+                    {
+                        //добавляем колонку
+                        tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, widthT));
+                        for (int row = 0; row < tableLayoutPanel.RowCount; row++)
+                        {
+                            //строка
+                            if (col == 0)
+                            {
+                                tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, heightT));
+                            }
+                            buttons[col, row] = new Button();
+                            buttons[col, row].Dock = DockStyle.Fill;
+                            buttons[col, row].BackColor = Color.Black;
+                            buttons[col, row].Click += GridButtonClicked;
+                            buttons[col, row].Tag = new Node(col, row);
+                            buttons[col, row].Enabled = isGenerated ? false : true;
+                            tableLayoutPanel.Controls.Add(buttons[col, row], col, row);
+
+                        }
+                    }
+                    //таблицу в контейнер
+                    TableContainer.Controls.Add(tableLayoutPanel);
+
+                    textBoxCurrentDict.Text = fileDict;
+                    //размещение букв на сетке
+                    foreach (Word word in words)
+                    {
+                        if (word.GetDirection().Equals(Direction.Horizontal))
+                        {
+                            for (int i = word.GetJ(), j = 0; i < word.GetJ() + word.GetNotion().Length; i++, j++)
+                            {
+                                buttons[i, word.GetI()].BackColor = Color.LightBlue;
+                                buttons[i, word.GetI()].Text = word.GetNotion().ElementAt(j).ToString();
+                            }
+                            listBoxHor.Items.Add(word.GetNotion());
+                            dictionary.Add(word.GetNotion(), mainCros.GetDictionary()[word.GetNotion()]);
+                        }
+                        else
+                        {
+                            for (int i = word.GetI(), j = 0; i < word.GetI() + word.GetNotion().Length; i++, j++)
+                            {
+                                buttons[word.GetJ(), i].BackColor = Color.LightBlue;
+                                buttons[word.GetJ(), i].Text = word.GetNotion().ElementAt(j).ToString();
+                            }
+                            listBoxVert.Items.Add(word.GetNotion());
+                            dictionary.Add(word.GetNotion(), mainCros.GetDictionary()[word.GetNotion()]);
+                        }
+                    }
+                    if (isGenerated)
+                    {
+                        buttonAddNotion.Enabled = false;
+                        buttonDelNotion.Enabled = false;
+                    }
                 }
             }
         }
@@ -271,7 +305,9 @@ namespace Crossword.Admin
 
         private void buttonSort_Click(object sender, EventArgs e)
         {
+            buttonSort.Enabled = false;
             sortLetter();
+            buttonSort.Enabled = true;
         }
 
         private bool isSortLen;
@@ -302,7 +338,9 @@ namespace Crossword.Admin
 
         private void buttonSortLen_Click(object sender, EventArgs e)
         {
+            buttonSortLen.Enabled = false;
             sortLen();
+            buttonSortLen.Enabled = true;
         }
 
         private void buttonBack_Click(object sender, EventArgs e)
@@ -312,45 +350,67 @@ namespace Crossword.Admin
 
         private void buttonDir_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Text |*.txt";
-            openFileDialog.Title = "Открыть словарь";
-            openFileDialog.ShowDialog();
-            if (openFileDialog.FileName != null)
+            if (!textBoxCurrentDict.Text.Equals(""))
             {
-                textBoxCurrentDict.Text = openFileDialog.FileName;
-                fileDict = openFileDialog.FileName;
-                StreamReader reader = new StreamReader(fileDict, Encoding.GetEncoding("Windows-1251"));
-                string dataFromFile = "";
-                dictionary.Clear();
-                listBoxDict.Items.Clear();
+                StreamReader reader = new StreamReader(textBoxCurrentDict.Text, Encoding.GetEncoding("Windows-1251"));
                 try
                 {
-                    while (dataFromFile != null)
+                    Enabled = false;
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+                    openFileDialog.Filter = "Text |*.txt";
+                    openFileDialog.Title = "Открыть словарь";
+                    openFileDialog.ShowDialog();
+                    if (DialogResult == DialogResult.OK)
                     {
-                        dataFromFile = reader.ReadLine();
-                        if (dataFromFile != null)
+                        if (openFileDialog.FileName != null)
                         {
-                            string[] stringArr = dataFromFile.Split(' ');
-                            string notion = stringArr[0];
-                            string def = "";
-                            for (int i = 1; i < stringArr.Length; i++)
+                            textBoxCurrentDict.Text = openFileDialog.FileName;
+                            fileDict = openFileDialog.FileName;
+                            string dataFromFile = "";
+                            dictionary.Clear();
+                            listBoxDict.Items.Clear();
+                            while (dataFromFile != null)
                             {
-                                def += " " + stringArr[i];
+                                dataFromFile = reader.ReadLine();
+                                if (dataFromFile != null)
+                                {
+                                    if (!dataFromFile.Equals(""))
+                                    {
+                                        string[] stringArr = dataFromFile.Split(' ');
+                                        string notion = stringArr[0];
+                                        string def = "";
+                                        for (int i = 1; i < stringArr.Length; i++)
+                                        {
+                                            def += " " + stringArr[i];
+                                        }
+                                        dictionary.Add(notion.ToUpper(), def.ToLower());
+                                        listBoxDict.Items.Add(notion);
+                                        notions = new string[dictionary.Count];
+                                        notions = dictionary.Keys.ToArray();
+                                    }
+                                }
                             }
-                            dictionary.Add(notion.ToUpper(), def.ToLower());
-                            listBoxDict.Items.Add(notion);
-                            notions = new string[dictionary.Count];
-                            notions = dictionary.Keys.ToArray();
                         }
                     }
+                    Enabled = true;
                 }
                 catch (ArgumentException)
                 {
                     MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
                             MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    formBefore.Visible = true;
-                    Close();
+                    /*formBefore.Visible = true;
+                    Close();*/
+                    reader.Close();
+                    Enabled = true;
+                }
+                catch (FileNotFoundException)
+                {
+                    MessageBox.Show("Файл не найден", "Ошибка", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    /*formBefore.Visible = true;
+                    Close();*/
+                    reader.Close();
+                    Enabled = true;
                 }
             }
         }
@@ -469,11 +529,11 @@ namespace Crossword.Admin
         }
 
         private List<Button> listButton;
-        
+
         private void GridButtonClicked(object sender, EventArgs e)
         {
             int countOfNeighbours = 0;
-            Button button = (Button)sender;           
+            Button button = (Button)sender;
             //если на эту кнопку ничего не добавлено
             if (!button.BackColor.Equals(Color.LightBlue))
             {
@@ -577,10 +637,10 @@ namespace Crossword.Admin
                         }
                     }
                     #endregion
-                   /* if (countOfNeighbours >= 4)
-                    {
-                        throw new ArgumentException();
-                    }*/
+                    /* if (countOfNeighbours >= 4)
+                     {
+                         throw new ArgumentException();
+                     }*/
                     #region searching notion by mask
                     string mask = GetMask();
                     length = listButton.Count;
@@ -740,7 +800,7 @@ namespace Crossword.Admin
         {
             try
             {
-
+                Enabled = false;
                 Dictionary<string, string> dictCross = new Dictionary<string, string>();
                 foreach (string item in listBoxVert.Items)
                 {
@@ -750,7 +810,7 @@ namespace Crossword.Admin
                 {
                     dictCross.Add(item, dictionary[item]);
                 }
-               
+
                 CrosswordCont crossword = new CrosswordCont(grid, dictCross);
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "CrosswordFile |*.crwd";
@@ -766,11 +826,13 @@ namespace Crossword.Admin
                                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     s.Close();
                 }
+                Enabled = true;
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 MessageBox.Show("На сетке повторяются слова!", "Ошибка", MessageBoxButtons.OK,
                             MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                Enabled = true;
             }
         }
 
@@ -836,6 +898,7 @@ namespace Crossword.Admin
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            Enabled = false;
             List<string> _words = new List<string>(dictionary.Keys);
             //for (int i = 0; i < 1000; i++)
             //{
@@ -853,6 +916,7 @@ namespace Crossword.Admin
             buttonDelNotion.Enabled = false;
             buttonAddNotion.Enabled = false;
             isGenerated = true;
+            Enabled = true;
         }
 
         private void listBoxVert_Click(object sender, EventArgs e)
@@ -879,14 +943,16 @@ namespace Crossword.Admin
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
+            buttonSearch.Enabled = false;
             listBoxDict.Items.Clear();
             foreach (string notion in notions)
             {
-                if (notion.StartsWith(textBoxSearch.Text))
+                if (notion.StartsWith(textBoxSearch.Text.ToUpper()))
                 {
                     listBoxDict.Items.Add(notion);
                 }
             }
+            buttonSearch.Enabled = true;
         }
 
         private void listBoxDict_DoubleClick(object sender, EventArgs e)
@@ -1003,8 +1069,15 @@ namespace Crossword.Admin
 
         private void button2_Click(object sender, EventArgs e)
         {
-
-            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
+            try
+            {
+                Process.Start(@"D:\Repository\Crossword\index.html");
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                MessageBox.Show("Файл справки не найден", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
 
         static int Comparer(string a, string b)

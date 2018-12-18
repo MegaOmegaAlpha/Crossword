@@ -39,9 +39,9 @@
             // 
             // buttonOpenCreateCros
             // 
-            this.buttonOpenCreateCros.Location = new System.Drawing.Point(48, 35);
+            this.buttonOpenCreateCros.Location = new System.Drawing.Point(12, 56);
             this.buttonOpenCreateCros.Name = "buttonOpenCreateCros";
-            this.buttonOpenCreateCros.Size = new System.Drawing.Size(185, 23);
+            this.buttonOpenCreateCros.Size = new System.Drawing.Size(194, 23);
             this.buttonOpenCreateCros.TabIndex = 0;
             this.buttonOpenCreateCros.Text = "Создать кроссворд";
             this.buttonOpenCreateCros.UseVisualStyleBackColor = true;
@@ -49,9 +49,9 @@
             // 
             // buttonOpenEditCros
             // 
-            this.buttonOpenEditCros.Location = new System.Drawing.Point(48, 75);
+            this.buttonOpenEditCros.Location = new System.Drawing.Point(12, 95);
             this.buttonOpenEditCros.Name = "buttonOpenEditCros";
-            this.buttonOpenEditCros.Size = new System.Drawing.Size(185, 23);
+            this.buttonOpenEditCros.Size = new System.Drawing.Size(194, 23);
             this.buttonOpenEditCros.TabIndex = 1;
             this.buttonOpenEditCros.Text = "Редактировать кроссворд";
             this.buttonOpenEditCros.UseVisualStyleBackColor = true;
@@ -59,9 +59,9 @@
             // 
             // buttonOpenCreateDict
             // 
-            this.buttonOpenCreateDict.Location = new System.Drawing.Point(48, 117);
+            this.buttonOpenCreateDict.Location = new System.Drawing.Point(12, 135);
             this.buttonOpenCreateDict.Name = "buttonOpenCreateDict";
-            this.buttonOpenCreateDict.Size = new System.Drawing.Size(185, 23);
+            this.buttonOpenCreateDict.Size = new System.Drawing.Size(194, 23);
             this.buttonOpenCreateDict.TabIndex = 2;
             this.buttonOpenCreateDict.Text = "Создать словарь понятий";
             this.buttonOpenCreateDict.UseVisualStyleBackColor = true;
@@ -69,9 +69,9 @@
             // 
             // buttonOpenEditDict
             // 
-            this.buttonOpenEditDict.Location = new System.Drawing.Point(48, 158);
+            this.buttonOpenEditDict.Location = new System.Drawing.Point(12, 177);
             this.buttonOpenEditDict.Name = "buttonOpenEditDict";
-            this.buttonOpenEditDict.Size = new System.Drawing.Size(185, 23);
+            this.buttonOpenEditDict.Size = new System.Drawing.Size(194, 23);
             this.buttonOpenEditDict.TabIndex = 3;
             this.buttonOpenEditDict.Text = "Редактировать словарь понятий";
             this.buttonOpenEditDict.UseVisualStyleBackColor = true;
@@ -79,7 +79,7 @@
             // 
             // buttonClose
             // 
-            this.buttonClose.Location = new System.Drawing.Point(107, 217);
+            this.buttonClose.Location = new System.Drawing.Point(71, 220);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 23);
             this.buttonClose.TabIndex = 4;
@@ -89,11 +89,12 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(199, 6);
+            this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(166, 12);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(40, 38);
             this.button1.TabIndex = 5;
-            this.button1.Text = "Справка";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -101,7 +102,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(277, 252);
+            this.ClientSize = new System.Drawing.Size(218, 255);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpenEditDict);
@@ -115,6 +116,7 @@
             this.Name = "FormAdmin";
             this.Text = "РЕЖИМ АДМИНИСТРАТОРА";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormAdmin_FormClosing);
+            this.Load += new System.EventHandler(this.FormAdmin_Load);
             this.ResumeLayout(false);
 
         }

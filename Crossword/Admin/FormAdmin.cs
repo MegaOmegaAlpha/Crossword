@@ -76,7 +76,20 @@ namespace Crossword
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
+            try
+            {
+                Process.Start(@"D:\Repository\Crossword\index.html");
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                MessageBox.Show("Файл справки не найден", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
+        }
+
+        private void FormAdmin_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
