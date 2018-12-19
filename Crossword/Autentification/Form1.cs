@@ -64,24 +64,6 @@ namespace Crossword
                     }
                     else
                     {
-                        /*OpenFileDialog openFileDialog = new OpenFileDialog();
-                        openFileDialog.Filter = "Crossword |*.crwd; *.slt";
-                        openFileDialog.Title = "Открыть кроссворд";                        
-                        openFileDialog.ShowDialog();
-                        bool check = true;
-                        if (openFileDialog.FileName != "")
-                        {                           
-                            FormUser formUser = new FormUser(this, openFileDialog.FileName, ref check);
-                            if (check)
-                            {
-                                formUser.Show();
-                                Visible = false;
-                            }
-                            else
-                            {
-
-                            }
-                        }*/
                         CallOpenFileDialog();
                     }
                     textBoxLogin.Clear();
@@ -102,11 +84,11 @@ namespace Crossword
             openFileDialog.Filter = "Crossword |*.crwd; *.slt";
             openFileDialog.Title = "Открыть кроссворд";
             openFileDialog.ShowDialog();
-            bool check = true;
+            bool isOpened = true;
             if (openFileDialog.FileName != "")
             {
-                FormUser formUser = new FormUser(this, openFileDialog.FileName, ref check);
-                if (check)
+                FormUser formUser = new FormUser(this, openFileDialog.FileName, ref isOpened);
+                if (isOpened)
                 {
                     formUser.Show();
                     Visible = false;
@@ -127,7 +109,16 @@ namespace Crossword
 
         private void buttonInfo_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("КЛАССИЧЕСКИЙ КРОССВОРД!\nРазработчики ПО:\n 1. Байрамов Владимир Алексеевич\n 2. Мавлютов Владимир Дмитриевич\n 3. Перевозчиков Никита Дмитриевич \n 4. Фёдоров Сергей Владимирович\n Самарский университет\n Группа 6402-090301D", "АВТОРЫ");
+            MessageBox.Show("Лабораторный практикум по дисциплине\n" +
+                "'Технологии программирования'\n" +
+                "Классический кроссворд\n" + 
+                "1. Байрамов Владимир Алексеевич\n " +
+                "2. Мавлютов Владимир Дмитриевич\n " +
+                "3. Перевозчиков Никита Дмитриевич \n " +
+                "4. Фёдоров Сергей Владимирович\n " +
+                "Самарский университет\n " +
+                "Группа 6402-090301D\n" +
+                "Все права защищены.", "АВТОРЫ");
         }
 
         private void textBoxPas_KeyPress(object sender, KeyPressEventArgs e)
