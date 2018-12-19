@@ -53,7 +53,7 @@ namespace Crossword.Admin
             this.fileDict = fileName;
         }
 
-        public FormHandMadeCros(FormAdmin formBefore, string fileName)
+        public FormHandMadeCros(FormAdmin formBefore, string fileName, ref bool check)
         {
             InitializeComponent();
             formAdmin = formBefore;
@@ -65,6 +65,7 @@ namespace Crossword.Admin
                 isGenerated = (bool)deserializer.Deserialize(stream);
                 mainCros = (CrosswordCont)deserializer.Deserialize(stream);
                 formAdmin.Visible = false;
+                isLoaded = true;
             }
             catch (System.Runtime.Serialization.SerializationException)
             {
@@ -72,6 +73,17 @@ namespace Crossword.Admin
                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 stream.Close();
                 isLoaded = false;
+                check = false;
+                Close();
+            }
+            catch (IndexOutOfRangeException)
+            {
+                MessageBox.Show("Структура файла нарушена", "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                stream.Close();
+                isLoaded = false;
+                check = false;
+                Close();
             }
         }
 
@@ -350,68 +362,69 @@ namespace Crossword.Admin
 
         private void buttonDir_Click(object sender, EventArgs e)
         {
-            if (!textBoxCurrentDict.Text.Equals(""))
+            StreamReader reader = null; //= new StreamReader(textBoxCurrentDict.Text, Encoding.GetEncoding("Windows-1251"));
+            try
             {
-                StreamReader reader = new StreamReader(textBoxCurrentDict.Text, Encoding.GetEncoding("Windows-1251"));
-                try
+                Enabled = false;
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Text |*.txt";
+                openFileDialog.Title = "Открыть словарь";
+                openFileDialog.ShowDialog();
+                if (openFileDialog.FileName != null)
                 {
-                    Enabled = false;
-                    OpenFileDialog openFileDialog = new OpenFileDialog();
-                    openFileDialog.Filter = "Text |*.txt";
-                    openFileDialog.Title = "Открыть словарь";
-                    openFileDialog.ShowDialog();
-                    if (DialogResult == DialogResult.OK)
+                    textBoxCurrentDict.Text = openFileDialog.FileName;
+                    fileDict = openFileDialog.FileName;
+                    string dataFromFile = "";
+                    dictionary.Clear();
+                    listBoxDict.Items.Clear();
+                    reader = new StreamReader(openFileDialog.FileName, Encoding.GetEncoding("Windows-1251"));
+                    while (dataFromFile != null)
                     {
-                        if (openFileDialog.FileName != null)
+                        dataFromFile = reader.ReadLine();
+                        if (dataFromFile != null)
                         {
-                            textBoxCurrentDict.Text = openFileDialog.FileName;
-                            fileDict = openFileDialog.FileName;
-                            string dataFromFile = "";
-                            dictionary.Clear();
-                            listBoxDict.Items.Clear();
-                            while (dataFromFile != null)
+                            if (!dataFromFile.Equals(""))
                             {
-                                dataFromFile = reader.ReadLine();
-                                if (dataFromFile != null)
+                                string[] stringArr = dataFromFile.Split(' ');
+                                string notion = stringArr[0];
+                                string def = "";
+                                for (int i = 1; i < stringArr.Length; i++)
                                 {
-                                    if (!dataFromFile.Equals(""))
-                                    {
-                                        string[] stringArr = dataFromFile.Split(' ');
-                                        string notion = stringArr[0];
-                                        string def = "";
-                                        for (int i = 1; i < stringArr.Length; i++)
-                                        {
-                                            def += " " + stringArr[i];
-                                        }
-                                        dictionary.Add(notion.ToUpper(), def.ToLower());
-                                        listBoxDict.Items.Add(notion);
-                                        notions = new string[dictionary.Count];
-                                        notions = dictionary.Keys.ToArray();
-                                    }
+                                    def += " " + stringArr[i];
                                 }
+                                dictionary.Add(notion.ToUpper(), def.ToLower());
+                                listBoxDict.Items.Add(notion);
+                                notions = new string[dictionary.Count];
+                                notions = dictionary.Keys.ToArray();
                             }
                         }
                     }
-                    Enabled = true;
                 }
-                catch (ArgumentException)
+                Enabled = true;
+            }
+            catch (ArgumentException)
+            {
+                MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                /*formBefore.Visible = true;
+                Close();*/
+                if (reader != null)
                 {
-                    MessageBox.Show("В словаре повторяется понятие!", "Ошибка", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    /*formBefore.Visible = true;
-                    Close();*/
                     reader.Close();
-                    Enabled = true;
                 }
-                catch (FileNotFoundException)
+                Enabled = true;
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Файл не найден", "Ошибка", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                /*formBefore.Visible = true;
+                Close();*/
+                if (reader != null)
                 {
-                    MessageBox.Show("Файл не найден", "Ошибка", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    /*formBefore.Visible = true;
-                    Close();*/
                     reader.Close();
-                    Enabled = true;
                 }
+                Enabled = true;
             }
         }
 
@@ -898,25 +911,28 @@ namespace Crossword.Admin
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            Enabled = false;
-            List<string> _words = new List<string>(dictionary.Keys);
-            //for (int i = 0; i < 1000; i++)
-            //{
-            //    string randomKey = keyList[_rand.Next(keyList.Count)];
-            //    if (randomKey.Length <= height)
-            //    {
-            //        _words.Add(randomKey);
-            //    }
-            //}
-            _words.Sort(Comparer);
-            _words.Reverse();
-            _order = _words;
-            GenCrossword();
-            //grid = _board.GetGrid();
-            buttonDelNotion.Enabled = false;
-            buttonAddNotion.Enabled = false;
-            isGenerated = true;
-            Enabled = true;
+            if (listBoxDict.Items.Count != 0)
+            {
+                Enabled = false;
+                List<string> _words = new List<string>(dictionary.Keys);
+                //for (int i = 0; i < 1000; i++)
+                //{
+                //    string randomKey = keyList[_rand.Next(keyList.Count)];
+                //    if (randomKey.Length <= height)
+                //    {
+                //        _words.Add(randomKey);
+                //    }
+                //}
+                _words.Sort(Comparer);
+                _words.Reverse();
+                _order = _words;
+                GenCrossword();
+                //grid = _board.GetGrid();
+                buttonDelNotion.Enabled = false;
+                buttonAddNotion.Enabled = false;
+                isGenerated = true;
+                Enabled = true;
+            }
         }
 
         private void listBoxVert_Click(object sender, EventArgs e)

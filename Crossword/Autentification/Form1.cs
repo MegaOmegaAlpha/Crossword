@@ -47,7 +47,7 @@ namespace Crossword
         private void button1_Click(object sender, EventArgs e)
         {
             string login = textBoxLogin.Text;
-            string password = textBoxPas.Text;
+            string password = textBoxPas.Text;           
             if (!login.Equals("") && !password.Equals(""))
             {
                 SqlCommand sqlCommand = new SqlCommand("SELECT* FROM Users Where login ='" + login + "' " +
@@ -64,16 +64,25 @@ namespace Crossword
                     }
                     else
                     {
-                        OpenFileDialog openFileDialog = new OpenFileDialog();
+                        /*OpenFileDialog openFileDialog = new OpenFileDialog();
                         openFileDialog.Filter = "Crossword |*.crwd; *.slt";
                         openFileDialog.Title = "Открыть кроссворд";                        
                         openFileDialog.ShowDialog();
+                        bool check = true;
                         if (openFileDialog.FileName != "")
-                        {
-                            FormUser formUser = new FormUser(this, openFileDialog.FileName);
-                            formUser.Show();
-                            Visible = false;
-                        }
+                        {                           
+                            FormUser formUser = new FormUser(this, openFileDialog.FileName, ref check);
+                            if (check)
+                            {
+                                formUser.Show();
+                                Visible = false;
+                            }
+                            else
+                            {
+
+                            }
+                        }*/
+                        CallOpenFileDialog();
                     }
                     textBoxLogin.Clear();
                     textBoxPas.Clear();
@@ -84,6 +93,28 @@ namespace Crossword
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
                 reader.Close();
+            }
+        }
+
+        private void CallOpenFileDialog()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Crossword |*.crwd; *.slt";
+            openFileDialog.Title = "Открыть кроссворд";
+            openFileDialog.ShowDialog();
+            bool check = true;
+            if (openFileDialog.FileName != "")
+            {
+                FormUser formUser = new FormUser(this, openFileDialog.FileName, ref check);
+                if (check)
+                {
+                    formUser.Show();
+                    Visible = false;
+                }
+                else
+                {
+                    CallOpenFileDialog();
+                }
             }
         }
 

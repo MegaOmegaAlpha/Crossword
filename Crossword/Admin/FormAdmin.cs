@@ -63,9 +63,13 @@ namespace Crossword
             openFileDialog.ShowDialog();
             if (openFileDialog.FileName != "")
             {
-                FormHandMadeCros formDict = new FormHandMadeCros(this, openFileDialog.FileName);
-                formDict.Show();
-                Visible = false;
+                bool check = true;
+                FormHandMadeCros formDict = new FormHandMadeCros(this, openFileDialog.FileName, ref check);
+                if (check)
+                {
+                    formDict.Show();
+                    Visible = false;
+                }
             }
         }
 

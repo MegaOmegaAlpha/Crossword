@@ -31,7 +31,7 @@ namespace Crossword.User
         Solution solution;
         bool isLoaded;
 
-        public FormUser(FormMain formMain, string fileName)
+        public FormUser(FormMain formMain, string fileName, ref bool check)
         {
             InitializeComponent();
             this.formMain = formMain;
@@ -60,6 +60,8 @@ namespace Crossword.User
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 stream.Close();
                 isLoaded = false;
+                check = false;
+                Close();
             }
             catch (IndexOutOfRangeException)
             {
@@ -67,6 +69,8 @@ namespace Crossword.User
                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 stream.Close();
                 isLoaded = false;
+                check = false;
+                Close();
             }
             InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(new System.Globalization.CultureInfo("ru"));
         }
