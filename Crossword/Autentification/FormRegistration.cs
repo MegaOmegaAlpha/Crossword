@@ -123,7 +123,7 @@ namespace Crossword.Autentification
         {
             try
             {
-                Process.Start(@"D:\Repository\Crossword\index.html");
+                Process.Start(@"C:\Users\nikit\Documents\GitHub\Crossword\index.html");
             }
             catch (System.ComponentModel.Win32Exception)
             {
